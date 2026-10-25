@@ -364,27 +364,27 @@ button.secret-item:hover{border-color:var(--ink)}
 (function(){
 const ISLES = {
   inv: {
-    name:'碳盤查島', owner:'碳集', facilities:['碳排監測塔', '環境感測器', '研究觀測站'], q:'一個組織，一年排了多少？', std:'GHG Protocol・ISO 14064-1:2018',
+    name:'碳盤查島', owner:'碳集', facilities:['碳排監測塔', '環境感測器', '研究觀測站'], eco:['資源回收站', '綠色屋頂'], q:'一個組織，一年排了多少？', std:'GHG Protocol・ISO 14064-1:2018',
     shape:'中央是組織邊界，後方是範疇一、範疇二；左半邊是上游 C1–C8，右半邊是下游 C9–C15，最後一排是 ISO 對照與盤查流程。',
     intro:'碳盤查（組織型溫室氣體盤查）計算一個組織一年內的溫室氣體排放。GHG Protocol 分成三個範疇：範疇一是自己直接排放，範疇二是外購能源的間接排放，範疇三是價值鏈上其他的間接排放，再細分成 15 個類別，上游 C1–C8、下游 C9–C15。台灣常用的 ISO 14064-1:2018 則分成六大類別，兩套可以互相對照。'
   },
   cfp: {
-    name:'碳足跡島', owner:'咚咚', facilities:['森林步道', '產品運輸碼頭'], q:'一件產品，從出生到報廢排了多少？', std:'ISO 14067:2018・PAS 2050',
+    name:'碳足跡島', owner:'咚咚', facilities:['森林步道', '產品運輸碼頭'], eco:['自行車道', '充電站'], q:'一件產品，從出生到報廢排了多少？', std:'ISO 14067:2018・PAS 2050',
     shape:'島的形狀是一個腳印，從腳跟的起點與範疇對照，一路走到腳尖的碳足跡標籤。',
     intro:'產品碳足跡計算一項產品或服務在整個生命週期排放的溫室氣體：原料取得、製造、配送銷售、使用到廢棄處理，結果以二氧化碳當量（CO₂e）表示。碳足跡不分範疇，但每個階段都對應得到組織盤查的範疇與類別。這座島用「一件棉 T 恤」當例子。'
   },
   rdc: {
-    name:'碳減量島', owner:'綠豆芽', facilities:['太陽能農場', '風力發電', '節能建築', '電動交通工具'], q:'排放怎麼一路降到淨零？', std:'SBTi・ISO 14068-1・氣候變遷因應法',
+    name:'碳減量島', owner:'綠豆芽', facilities:['太陽能農場', '風力發電', '節能建築', '電動交通工具'], eco:['雨水回收池'], q:'排放怎麼一路降到淨零？', std:'SBTi・ISO 14068-1・氣候變遷因應法',
     shape:'島是一座山：山頂是基準年的排放，順著階梯繞山而下，走到海平面就是淨零。',
     intro:'盤查告訴你排了多少，碳足跡告訴你熱點在哪，減量才是真正的目的。這座島從目標與原則開始，依序走過範疇一、二與範疇三的減量做法、管理工具與里程碑，最後抵達 2050 淨零。'
   },
   ofs: {
-    name:'碳抵換島', owner:'魔豆', facilities:['森林復育區', '造林苗圃', '碳信用發光水晶'], q:'減不掉的排放，怎麼抵才對？', std:'自願減量專案管理辦法・ICVCM・ISO 14068-1',
+    name:'碳抵換島', owner:'魔豆', facilities:['森林復育區', '造林苗圃', '碳信用發光水晶'], eco:['植樹區', '環保研究站'], q:'減不掉的排放，怎麼抵才對？', std:'自願減量專案管理辦法・ICVCM・ISO 14068-1',
     shape:'島的形狀像一枚認證印章，中央是一座天平：一邊是排放，一邊是額度。',
     intro:'抵換是用別人減少或移除的排放，來平衡自己減不掉的部分。這座島從額度怎麼產生（減量與移除專案、方法學、查證、核發），走到額度怎麼買賣與註銷，最後是額度的用途與誠實宣告。'
   },
   neu: {
-    name:'碳中和島', owner:'圓寶', facilities:['綠色能源中心', '生態保護區', '象徵平衡的環形水池'], q:'一段期間內，淨排放怎麼歸零？', std:'ISO 14068-1・企業宣告碳中和指引',
+    name:'碳中和島', owner:'圓寶', facilities:['綠色能源中心', '生態保護區', '象徵平衡的環形水池'], eco:['社區菜園', '電動接駁車'], q:'一段期間內，淨排放怎麼歸零？', std:'ISO 14068-1・企業宣告碳中和指引',
     shape:'島排成一個「0」，中間是潟湖：繞一圈就是一期碳中和，走完再從頭開始下一期。',
     intro:'碳中和把前面四座島串在一起：先用盤查或碳足跡量化排放，再依計畫減量，最後用額度抵換殘餘排放，並誠實宣告。這座島依 ISO 14068-1 與環境部的《企業宣告碳中和指引》，帶你走完一整期。'
   }
@@ -1136,6 +1136,7 @@ function isleHTML(k){
     <p class="lead" style="margin-top:10px">${I.intro}</p>
     <p class="isle-shape">${I.shape}</p>
     <p class="isle-fac">島上設施：<b>${I.facilities.join('・')}</b></p>
+    <p class="isle-fac">永續行動：<b>${I.eco.join('・')}</b></p>
     <div class="btns"><button type="button" class="btn primary" data-go="tour:${k}">開始調查</button></div>
     <h3>${ORDER[k].length} 條線索</h3>
     <ol class="stations">${stationsHTML(k)}</ol>`;
@@ -2212,6 +2213,180 @@ function secretWorld(s){
   return c;
 }
 
+function ovalLane(a, b, w, color){ const s = new THREE.Shape(); s.absellipse(0, 0, a + w/2, b + w/2, 0, Math.PI*2, false); const h = new THREE.Path(); h.absellipse(0, 0, a - w/2, b - w/2, 0, Math.PI*2, true); s.holes.push(h); const m = new THREE.Mesh(new THREE.ShapeGeometry(s, 40).rotateX(-Math.PI/2), mat(color)); m.position.y = 0.006; m.receiveShadow = true; return m; }
+function laneDashes(g, a, b, n, c = '#FFFFFF'){ for (let i = 0; i < n; i++){ const t = i/n*Math.PI*2, d = box(0.06, 0.004, 0.012, c, Math.cos(t)*a, 0.008, Math.sin(t)*b); d.rotation.y = Math.atan2(-b*Math.cos(t), -a*Math.sin(t)); g.add(d); } }
+const onOval = (o, a, b, t, dir = 1) => { o.position.x = Math.cos(t)*a; o.position.z = Math.sin(t)*b; o.rotation.y = Math.atan2(-dir*b*Math.cos(t), -dir*a*Math.sin(t)); };
+const barXY = (x1, y1, x2, y2, r, c) => { const len = Math.hypot(x2 - x1, y2 - y1), m = part(new THREE.CylinderGeometry(r, r, len, 5), mat(c), (x1 + x2)/2, (y1 + y2)/2, 0); m.rotation.z = Math.atan2(x1 - x2, y2 - y1); return m; };
+const wheelGeo = new THREE.TorusGeometry(0.06, 0.011, 5, 14);
+function bicycle(frame = '#2F8A6B', rider = null){
+  const g = new THREE.Group();
+  for (const x of [-0.105, 0.105]){ const w = new THREE.Mesh(wheelGeo, mat('#2B3138')); w.position.set(x, 0.06, 0); g.add(w); }
+  g.add(barXY(-0.105, 0.06, -0.03, 0.17, 0.007, frame), barXY(-0.03, 0.17, 0.08, 0.17, 0.007, frame), barXY(-0.105, 0.06, 0.0, 0.06, 0.007, frame), barXY(0.0, 0.06, 0.08, 0.17, 0.007, frame), barXY(0.08, 0.17, 0.105, 0.06, 0.007, frame), barXY(-0.03, 0.17, -0.035, 0.2, 0.006, '#55626B'));
+  g.add(box(0.05, 0.012, 0.028, '#2B3138', -0.04, 0.2, 0), box(0.012, 0.012, 0.09, '#2B3138', 0.08, 0.2, 0), barXY(0.08, 0.17, 0.08, 0.2, 0.006, '#55626B'));
+  if (rider){
+    const torso = cyl(0.03, 0.034, 0.12, 8, rider, 0, 0, 0); torso.position.set(-0.01, 0.27, 0); torso.rotation.z = -0.35; g.add(torso);
+    g.add(sball(0.036, '#F2C9A0', 0.03, 0.37, 0)); const helm = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 6, 0, Math.PI*2, 0, Math.PI/2), smat('#F2C230')); helm.position.set(0.03, 0.375, 0); g.add(helm);
+    for (const z of [-0.03, 0.03]){ g.add(barXY(-0.02, 0.22, 0.0, 0.09, 0.01, '#2F4858').translateZ(z)); g.add(barXY(0.01, 0.31, 0.08, 0.2, 0.008, rider).translateZ(z)); }
+  }
+  return g;
+}
+function shuttle(){
+  const g = new THREE.Group();
+  g.add(box(0.46, 0.2, 0.22, '#F4F6F7', 0, 0.05, 0), box(0.465, 0.05, 0.225, '#3FAF6A', 0, 0.05, 0));
+  g.add(win(0.34, 0.07, 0.226, -0.03, 0.17, 0), win(0.012, 0.08, 0.18, 0.232, 0.17, 0));
+  const roof = part(new THREE.CylinderGeometry(0.11, 0.11, 0.44, 12, 1, false, 0, Math.PI), mat('#F4F6F7'), 0, 0.25, 0); roof.rotation.z = Math.PI/2; roof.scale.set(1, 1, 0.25); g.add(roof);
+  const tex = textTex([['電動接駁', 30]], '#F4F6F7', '#2E7D4F', 160, 44), side = new THREE.MeshStandardMaterial({ map:tex, roughness:0.6 });
+  for (const s of [-1, 1]){ const p = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.055), side); p.position.set(-0.04, 0.11, s*0.1135); if (s < 0) p.rotation.y = Math.PI; g.add(p); }
+  for (const s of [-1, 1]){ const hl = new THREE.Mesh(sphG(0.016), glowM('#FFF4D6', 0.3)); hl.position.set(0.232, 0.09, s*0.07); g.add(hl); }
+  wheels(g, [[0.14, 0.1], [-0.14, 0.1], [0.14, -0.1], [-0.14, -0.1]], 0.04);
+  return g;
+}
+const ECO = {
+  inv: [
+    { name:'資源回收站', make(){
+      const g = new THREE.Group(); g.add(box(1.0, 0.03, 0.62, '#C9CED3', 0, 0, -0.05));
+      const roof = new THREE.Group(); roof.position.y = 0.42; g.add(roof);
+      for (const [x, z] of [[-0.46, -0.32], [0.46, -0.32], [-0.46, 0.12], [0.46, 0.12]]) g.add(cyl(0.015, 0.015, 0.42, 5, '#9AA5AD', x, 0.03, z));
+      roof.add(box(1.0, 0.04, 0.52, '#E9ECEE', 0, 0, -0.1), box(0.96, 0.04, 0.48, '#5DAE4E', 0, 0.04, -0.1));
+      for (let k = 0; k < 7; k++) roof.add(ball(0.05, k % 2 ? '#4E9E37' : '#6DBB55', -0.4 + k*0.13, 0.09, -0.1 + (k % 3 - 1)*0.12, 0));
+      [['#2F6FB5', '紙'], ['#E8B931', '塑'], ['#3F8F4F', '玻'], ['#8C5A3A', '廚'], ['#8A8F98', '一般']].forEach(([c, t], i) => {
+        const x = -0.38 + i*0.19, b = new THREE.Group(); b.position.set(x, 0.03, -0.12); g.add(b);
+        b.add(box(0.14, 0.18, 0.14, c), box(0.15, 0.025, 0.15, c, 0, 0.18, 0));
+        const lt = textTex([[t, 52]], '#FFFFFF', c, 96, 64), lm = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.06), new THREE.MeshStandardMaterial({ map:lt, roughness:0.7 })); lm.position.set(0, 0.11, 0.0705); b.add(lm);
+      });
+      for (const [x, z, c] of [[-0.28, 0.25, '#B8864E'], [-0.12, 0.25, '#B8864E'], [-0.2, 0.25, '#C49460']]) g.add(box(0.13, 0.1, 0.11, c, x, 0.03, z));
+      g.add(box(0.13, 0.1, 0.11, '#C49460', -0.2, 0.13, 0.25), box(0.14, 0.12, 0.12, '#9FD3F0', 0.02, 0.03, 0.28));
+      const tr = BUILD.truck('#3F8F4F'); tr.position.set(0.32, 0.03, 0.3); tr.scale.setScalar(1.3); g.add(tr);
+      const rc = BUILD.recycle(); rc.position.set(-0.52, 0, 0.32); rc.scale.setScalar(0.8); g.add(rc);
+      const sg = signBoard('資源回收', '#3F8F4F', 0.32, 0.12, 0.3); sg.position.set(0.0, 0.42 + 0.06, 0.16); sg.children[0].visible = false; sg.position.y = 0.12; g.add(sg);
+      return g; } },
+    { name:'綠色屋頂', make(){
+      const g = new THREE.Group(), b = new THREE.Group(); b.position.set(0, 0, -0.05); g.add(b);
+      b.add(box(0.7, 0.46, 0.5, '#F2EEE6')); windows(b, 0.7, 0.5, 0.11, 2, 0.17, 0.06);
+      b.add(box(0.12, 0.16, 0.02, '#7A5A3A', 0.18, 0, 0.255));
+      b.add(box(0.74, 0.04, 0.54, '#E2DCCE', 0, 0.46, 0), box(0.68, 0.04, 0.48, '#5DAE4E', 0, 0.5, 0));
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++){ if (i === 3 && j < 2) continue; b.add(ball(0.045 + ((i + j) % 2)*0.012, ['#4E9E37', '#6DBB55', '#3F8F3A'][(i + j) % 3], -0.25 + i*0.15, 0.55, -0.15 + j*0.15, 0)); }
+      for (const [x, z, c] of [[-0.18, 0.18, '#FF8FA3'], [-0.05, 0.2, '#FFD45E'], [0.08, 0.17, '#FFFFFF'], [-0.3, 0.05, '#FF8FA3']]) b.add(ball(0.02, c, x, 0.56, z, 0));
+      for (const [x, z] of [[-0.24, -0.14], [0.02, -0.16]]){ const t = BUILD.tree(); t.position.set(x, 0.52, z); t.scale.setScalar(0.85); b.add(t); }
+      for (let k = 0; k < 2; k++){ const pv = box(0.13, 0.012, 0.18, '#1F3F73', 0.22, 0.56, -0.12 + k*0.2); pv.rotation.x = -0.3; b.add(pv); }
+      g.add(cyl(0.06, 0.06, 0.16, 10, '#7FB7D9', 0.42, 0, 0.12), cyl(0.008, 0.008, 0.36, 5, '#9AA5AD', 0.36, 0.14, 0.2));
+      const sg = signBoard('綠色屋頂', '#4A9A5C', 0.3, 0.12, 0.24); sg.position.set(-0.42, 0, 0.32); g.add(sg);
+      return g; } }
+  ],
+  cfp: [
+    { name:'自行車道', make(){
+      const g = new THREE.Group(), A = 0.62, B = 0.42;
+      g.add(ovalLane(A, B, 0.15, '#3FAF6A')); laneDashes(g, A, B, 18);
+      for (const [x, z, s] of [[0, 0, 1.3], [-0.22, 0.05, 1.0], [0.22, -0.04, 1.1]]){ const t = BUILD.tree(); t.position.set(x, 0, z); t.scale.setScalar(s); g.add(t); }
+      const riders = [['#E0602F', '#2F6FB5'], ['#2F8A6B', '#F2C230'], ['#8A62BF', '#E0602F']].map(([shirt, fr], i) => { const bk = bicycle(fr, shirt); bk.scale.setScalar(1.15); g.add(bk); return { bk, ph:i*2.1 }; });
+      lifeAnims.push(t => riders.forEach(({ bk, ph }) => onOval(bk, A, B, (reduceMotion ? 0 : -t*0.45) + ph, -1)));
+      const rack = new THREE.Group(); rack.position.set(0.2, 0, 0.66); g.add(rack);
+      rack.add(box(0.5, 0.02, 0.06, '#9AA5AD', 0, 0.12, -0.04));
+      for (let k = 0; k < 3; k++){ const bk = bicycle(['#2F8A6B', '#F28C28', '#2F6FB5'][k]); bk.rotation.y = Math.PI/2; bk.position.set(-0.16 + k*0.16, 0, 0); rack.add(bk); }
+      const sg = signBoard('自行車道', '#2E7D4F', 0.28, 0.12, 0.26); sg.position.set(-0.45, 0, 0.6); g.add(sg);
+      return g; } },
+    { name:'充電站', make(){
+      const g = new THREE.Group(); g.add(box(0.98, 0.025, 0.6, '#8A949C', 0, 0, 0));
+      for (let k = -1; k <= 1; k++) g.add(box(0.012, 0.004, 0.5, '#F4F6F7', k*0.3 + 0.15, 0.026, 0));
+      for (const [x, z] of [[-0.45, -0.26], [0.45, -0.26], [-0.45, 0.26], [0.45, 0.26]]) g.add(cyl(0.016, 0.016, 0.44, 5, '#E9ECEE', x, 0.025, z));
+      const roof = new THREE.Group(); roof.position.y = 0.47; roof.rotation.x = -0.08; g.add(roof);
+      roof.add(box(1.0, 0.03, 0.62, '#E9ECEE'));
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) roof.add(box(0.23, 0.012, 0.27, '#1F3F73', -0.36 + i*0.24, 0.032, -0.14 + j*0.28));
+      const strip = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.008, 0.04), glowM('#FFF4D6', 0.2)); strip.position.y = -0.02; roof.add(strip);
+      for (const x of [-0.3, 0.0, 0.3]){ g.add(box(0.07, 0.22, 0.06, '#F4F6F7', x, 0.025, -0.24)); const sc = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.035, 0.006), glowM('#3CFF8F', 0.5)); sc.position.set(x, 0.19, -0.207); g.add(sc); g.add(box(0.075, 0.03, 0.065, '#3FAF6A', x, 0.245, -0.24)); }
+      const tr = BUILD.truck('#4A9A5C'); tr.position.set(-0.15, 0.025, -0.02); tr.rotation.y = Math.PI/2; tr.scale.setScalar(1.35); g.add(tr);
+      const car = BUILD.car('#F4F6F7'); car.position.set(0.3, 0.025, -0.02); car.rotation.y = Math.PI/2; car.scale.setScalar(1.35); g.add(car);
+      g.add(box(0.16, 0.2, 0.12, '#D8DEE2', -0.55, 0, 0.3), box(0.17, 0.02, 0.13, '#3FAF6A', -0.55, 0.2, 0.3));
+      const bolt = textTex([['充電站', 40]], '#2E7D4F', '#FFFFFF', 200, 70), bm = new THREE.MeshStandardMaterial({ map:bolt, roughness:0.6 }), edge = mat('#2E7D4F');
+      const board = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.12, 0.02), [edge, edge, edge, edge, bm, bm]); board.position.set(0, 0.44, 0.31); roof.add(board); board.position.y = 0.0; board.position.z = 0.32;
+      return g; } }
+  ],
+  rdc: [
+    { name:'雨水回收池', make(){
+      const g = new THREE.Group();
+      const pond = new THREE.Mesh(new THREE.CircleGeometry(0.36, 28).rotateX(-Math.PI/2), new THREE.MeshStandardMaterial({ color:'#3CC3DA', roughness:0.2, metalness:0.1 })); pond.scale.set(1.25, 1, 0.9); pond.position.set(0.12, 0.012, 0.16); g.add(pond);
+      const rim = part(new THREE.TorusGeometry(0.36, 0.03, 5, 28), mat('#A9A49A'), 0.12, 0.02, 0.16); rim.rotation.x = Math.PI/2; rim.scale.set(1.25, 0.9, 1); g.add(rim);
+      for (const [x, z] of [[0.0, 0.1], [0.3, 0.22], [0.2, 0.02]]){ const lp = new THREE.Mesh(blushGeo, mat('#4FAE3A')); lp.scale.setScalar(0.045); lp.rotation.x = -Math.PI/2; lp.position.set(x, 0.016, z); g.add(lp); }
+      g.add(ball(0.018, '#FF8FA3', 0.02, 0.03, 0.1, 0));
+      for (let k = 0; k < 8; k++){ const a = 2.4 + k*0.16; g.add(cyl(0, 0.01, 0.16, 4, '#6E9E52', 0.12 + Math.cos(a)*0.46, 0, 0.16 + Math.sin(a)*0.33)); }
+      const shed = new THREE.Group(); shed.position.set(-0.32, 0, -0.3); g.add(shed);
+      shed.add(box(0.34, 0.24, 0.26, '#E8E2D4'), prism(0.4, 0.12, 0.3, '#8EA2B4', 0, 0.24, 0));
+      shed.add(box(0.36, 0.025, 0.03, '#9AA5AD', 0, 0.23, 0.15), cyl(0.012, 0.012, 0.2, 6, '#9AA5AD', 0.17, 0.04, 0.15));
+      for (const [x, z] of [[0.08, -0.36], [0.26, -0.34]]){ g.add(cyl(0.085, 0.085, 0.3, 14, '#7FB7D9', x, 0, z), cyl(0.088, 0.088, 0.02, 14, '#4F86A8', x, 0.3, z)); }
+      const pipe = part(new THREE.CylinderGeometry(0.012, 0.012, 0.24, 6), mat('#9AA5AD'), 0.22, 0.06, -0.15); pipe.rotation.x = Math.PI/2 - 0.3; g.add(pipe);
+      const drops = Array.from({ length:4 }, (_, k) => { const d = new THREE.Mesh(sphG(0.014), new THREE.MeshStandardMaterial({ color:'#9FE0FF', transparent:true, opacity:0.9 })); g.add(d); return { d, ph:k/4 }; });
+      lifeAnims.push(t => drops.forEach(({ d, ph }) => { const k = ((reduceMotion ? 0.5 : t*0.9) + ph) % 1; d.position.set(0.22, 0.05 - k*0.04, -0.03 + k*0.08); d.material.opacity = 0.9*(1 - k); }));
+      const sg = signBoard('雨水回收', '#2F6FB5', 0.3, 0.12, 0.26); sg.position.set(-0.5, 0, 0.3); g.add(sg);
+      return g; } }
+  ],
+  ofs: [
+    { name:'植樹區', make(){
+      const g = new THREE.Group(), saps = [];
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++){
+        const x = -0.36 + i*0.3, z = -0.32 + j*0.26 + (i % 2)*0.06, s = new THREE.Group(); s.position.set(x, 0, z); g.add(s);
+        const mound = ball(0.07, '#7A5230', 0, 0, 0, 0); mound.scale.y = 0.35; s.add(mound);
+        s.add(cyl(0.006, 0.006, 0.24, 4, '#C9A27A', 0.04, 0, 0));
+        const t = BUILD.tree(); t.scale.setScalar(0.45 + ((i + j) % 3)*0.08); s.add(t); saps.push({ t, ph:i + j*1.7 });
+      }
+      const sh = new THREE.Group(); sh.position.set(0.45, 0, 0.32); sh.rotation.z = 0.35; g.add(sh); sh.add(cyl(0.008, 0.008, 0.26, 5, '#A8754A', 0, 0.06, 0), box(0.06, 0.08, 0.012, '#8A949C', 0, 0.03, 0));
+      const can = new THREE.Group(); can.position.set(0.32, 0, 0.42); g.add(can); can.add(cyl(0.04, 0.045, 0.08, 10, '#3FAF6A')); const sp = part(new THREE.CylinderGeometry(0.006, 0.01, 0.1, 5), mat('#3FAF6A'), 0.06, 0.07, 0); sp.rotation.z = -0.9; can.add(sp);
+      const wb = new THREE.Group(); wb.position.set(-0.42, 0, 0.42); wb.rotation.y = 0.5; g.add(wb);
+      const tray = box(0.24, 0.08, 0.16, '#C8463A', 0, 0.08, 0); tray.rotation.z = 0.15; wb.add(tray); const wh = new THREE.Mesh(wheelGeo, mat('#2B3138')); wh.position.set(0.14, 0.06, 0); wb.add(wh);
+      for (const z of [-0.04, 0.04]){ const p = BUILD.tree(); p.position.set(-0.02, 0.15, z); p.scale.setScalar(0.4); wb.add(p); }
+      const sg = signBoard('植樹區', '#3F8650', 0.26, 0.12, 0.26); sg.position.set(0.05, 0, 0.5); g.add(sg);
+      lifeAnims.push(t => { if (reduceMotion) return; saps.forEach(({ t: s, ph }) => { s.rotation.z = Math.sin(t*1.6 + ph)*0.06; }); });
+      return g; } },
+    { name:'環保研究站', make(){
+      const g = new THREE.Group(), lab = new THREE.Group(); lab.position.set(-0.12, 0, -0.18); g.add(lab);
+      lab.add(box(0.56, 0.28, 0.34, '#F4F6F7'), box(0.565, 0.04, 0.345, '#3FAF6A', 0, 0.06, 0)); lab.add(win(0.44, 0.08, 0.346, 0, 0.17, 0));
+      lab.add(box(0.6, 0.025, 0.38, '#C9D2D9', 0, 0.28, 0)); for (let k = 0; k < 3; k++){ const pv = box(0.15, 0.012, 0.26, '#1F3F73', -0.18 + k*0.18, 0.31, 0); pv.rotation.x = -0.25; lab.add(pv); }
+      lab.add(box(0.1, 0.15, 0.02, '#2E7D4F', -0.18, 0, 0.175));
+      for (const [x, c] of [[0.2, '#5DB548'], [0.36, '#3CC3DA']]){ g.add(box(0.13, 0.03, 0.13, '#8A949C', x, 0, 0.22)); const tank = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.12), glassM); tank.position.set(x, 0.09, 0.22); g.add(tank); g.add(box(0.1, 0.05, 0.1, c, x, 0.035, 0.22)); for (let k = 0; k < 3; k++) g.add(cyl(0.004, 0.006, 0.08, 4, '#4FAE3A', x - 0.03 + k*0.03, 0.06, 0.22)); }
+      const mast = new THREE.Group(); mast.position.set(0.42, 0, -0.32); g.add(mast); mast.add(cyl(0.01, 0.012, 0.55, 5, '#9AA5AD'));
+      const anem = new THREE.Group(); anem.position.y = 0.56; mast.add(anem); for (let i = 0; i < 3; i++){ const arm = new THREE.Group(); arm.rotation.y = i*2.094; anem.add(arm); arm.add(part(new THREE.BoxGeometry(0.1, 0.006, 0.006), mat('#9AA5AD'), 0.05, 0, 0), ball(0.02, '#F4F6F7', 0.1, 0, 0, 1)); }
+      const drone = new THREE.Group(); g.add(drone); drone.add(box(0.08, 0.03, 0.08, '#F4F6F7'));
+      const rotors = [];
+      for (const [x, z] of [[0.07, 0.07], [-0.07, 0.07], [0.07, -0.07], [-0.07, -0.07]]){ drone.add(box(0.1, 0.008, 0.01, '#55626B', x/2, 0.01, z/2).rotateY(Math.atan2(z, x))); const r = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.004, 10), new THREE.MeshStandardMaterial({ color:'#B9C2C8', transparent:true, opacity:0.55 })); r.position.set(x, 0.025, z); drone.add(r); rotors.push(r); }
+      const led = new THREE.Mesh(sphG(0.012), glowM('#3CFF8F', 0.6)); led.position.set(0.04, 0.0, 0); drone.add(led);
+      const sg = signBoard('環保研究站', '#2E7D4F', 0.36, 0.12, 0.26); sg.position.set(-0.45, 0, 0.32); g.add(sg);
+      lifeAnims.push(t => { const tt = reduceMotion ? 0.7 : t; anem.rotation.y = tt*3; drone.position.set(0.15 + Math.cos(tt*0.5)*0.3, 0.6 + Math.sin(tt*1.7)*0.04, -0.02 + Math.sin(tt*0.5)*0.25); drone.rotation.y = -tt*0.5; rotors.forEach(r => { r.rotation.y = tt*25; }); });
+      return g; } }
+  ],
+  neu: [
+    { name:'社區菜園', make(){
+      const g = new THREE.Group();
+      [[-0.3, -0.25, 'lettuce'], [0.06, -0.25, 'carrot'], [-0.3, 0.05, 'tomato'], [0.06, 0.05, 'cabbage']].forEach(([x, z, crop], i) => {
+        const bed = new THREE.Group(); bed.position.set(x, 0, z); g.add(bed);
+        bed.add(box(0.3, 0.07, 0.22, '#A8754A'), box(0.27, 0.075, 0.19, '#5B4127'));
+        for (let k = 0; k < 6; k++){ const px = -0.09 + (k % 3)*0.09, pz = k < 3 ? -0.05 : 0.05;
+          if (crop === 'lettuce') bed.add(ball(0.04, k % 2 ? '#7CCB4F' : '#5DB548', px, 0.1, pz, 1));
+          else if (crop === 'carrot'){ for (let s = 0; s < 3; s++) bed.add(cyl(0, 0.012, 0.07, 4, '#4FAE3A', px + (s - 1)*0.012, 0.075, pz)); bed.add(ball(0.016, '#F28C28', px, 0.08, pz, 0)); }
+          else if (crop === 'tomato'){ bed.add(cyl(0.004, 0.004, 0.2, 4, '#A8754A', px, 0.075, pz), ball(0.035, '#4FAE3A', px, 0.17, pz, 0), ball(0.016, '#E0402F', px + 0.025, 0.13, pz + 0.01, 0), ball(0.014, '#E0402F', px - 0.02, 0.18, pz, 0)); }
+          else bed.add(ball(0.045, k % 2 ? '#A6D98A' : '#8CC66E', px, 0.105, pz, 1)); }
+      });
+      const sc = new THREE.Group(); sc.position.set(0.4, 0, -0.1); g.add(sc);
+      sc.add(cyl(0.008, 0.008, 0.36, 4, '#7A5230'), box(0.22, 0.01, 0.01, '#7A5230', 0, 0.26, 0), box(0.1, 0.12, 0.06, '#3E8DBF', 0, 0.2, 0), sball(0.04, '#E8D29A', 0, 0.32, 0), cyl(0.0, 0.08, 0.05, 10, '#C9A44A', 0, 0.35, 0));
+      const shed = BUILD.house(); shed.position.set(0.38, 0, 0.32); shed.scale.setScalar(0.8); shed.rotation.y = -0.5; g.add(shed);
+      for (let k = 0; k < 2; k++){ g.add(box(0.12, 0.1, 0.12, '#8A5E38', -0.42 + k*0.14, 0, 0.36)); g.add(box(0.1, 0.02, 0.1, '#5B4127', -0.42 + k*0.14, 0.09, 0.36)); }
+      for (const [x, z] of [[-0.12, 0.38], [0.0, 0.42], [0.12, 0.36]]){ g.add(cyl(0.006, 0.006, 0.34, 4, '#4FAE3A', x, 0, z)); const f = new THREE.Group(); f.position.set(x, 0.34, z); f.rotation.x = -0.4; g.add(f); f.add(part(new THREE.CylinderGeometry(0.05, 0.05, 0.01, 12), mat('#FFC72C')), part(new THREE.CylinderGeometry(0.022, 0.022, 0.014, 10), mat('#6B4A2A'))); }
+      const sg = signBoard('社區菜園', '#4A9A5C', 0.3, 0.12, 0.26); sg.position.set(-0.48, 0, 0.0); g.add(sg);
+      return g; } },
+    { name:'電動接駁車', make(){
+      const g = new THREE.Group(), A = 0.6, B = 0.4;
+      g.add(ovalLane(A, B, 0.17, '#6B7480')); laneDashes(g, A, B, 16);
+      for (const [x, z, s] of [[0, 0, 1.2], [-0.25, 0.02, 0.9], [0.25, -0.02, 1.0]]){ const t = BUILD.tree(); t.position.set(x, 0, z); t.scale.setScalar(s); g.add(t); }
+      const stop = new THREE.Group(); stop.position.set(0, 0, 0.66); g.add(stop);
+      for (const x of [-0.16, 0.16]) stop.add(cyl(0.01, 0.01, 0.3, 5, '#9AA5AD', x, 0, -0.04));
+      stop.add(box(0.4, 0.025, 0.16, '#5DAE4E', 0, 0.3, 0), box(0.24, 0.012, 0.12, '#1F3F73', 0, 0.33, 0), box(0.26, 0.03, 0.06, '#A8754A', 0, 0.09, -0.02));
+      const st = textTex([['接駁站', 34]], '#2E7D4F', '#FFFFFF', 140, 56), sm = new THREE.MeshStandardMaterial({ map:st, roughness:0.6 }), ed = mat('#2E7D4F');
+      const plate = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.08, 0.015), [ed, ed, ed, ed, sm, sm]); plate.position.set(0, 0.24, 0.06); stop.add(plate);
+      stop.add(box(0.06, 0.18, 0.05, '#F4F6F7', 0.26, 0, -0.02)); const sc = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.03, 0.006), glowM('#3CFF8F', 0.5)); sc.position.set(0.26, 0.15, 0.007); stop.add(sc);
+      const bus = shuttle(); bus.scale.setScalar(1.0); g.add(bus);
+      lifeAnims.push(t => { const tt = reduceMotion ? 0 : t, cyc = tt % 14, run = cyc < 11 ? cyc/11 : 1, th = -Math.PI/2 + (Math.floor(tt/14) + (run < 1 ? (1 - Math.cos(run*Math.PI))/2 : 1))*Math.PI*2; onOval(bus, A, B, -th, -1); });
+      return g; } }
+  ]
+};
+
 function registerFacility(f, name){
   f.scale.multiplyScalar(1.15);
   const tag = document.createElement('div'); tag.className = 'fac-tag'; tag.textContent = name;
@@ -2315,6 +2490,29 @@ D.KEYS.forEach((key, ki) => {
       seed += 4; info.land.push([hide.lx, hide.lz, 1.13]);
     }
   }
+  const ecoT = [];
+  if (ECO[key]){
+    const occ3 = new Set(hexes.map(({ h }) => `${h.q},${h.r}`)), cand = [], wharf = terr.find(t => t.spec && t.spec.low);
+    for (const { h } of hexes) for (const [dq, dr] of DIRS6){
+      const q = h.q + dq, r = h.r + dr, id = `${q},${r}`; if (occ3.has(id) || cand.some(c => c.id === id)) continue;
+      if ((knoll && q === knoll.q && r === knoll.r) || (hide && q === hide.q && r === hide.r) || terr.some(t => t.q === q && t.r === r)) continue;
+      if (key === 'neu' && (Math.abs(q) + Math.abs(r) + Math.abs(q + r))/2 <= 1) continue;
+      const ap = axial(q, r), lx = ap.x - cx, lz = ap.z - cz;
+      if (toes.some(([x, z]) => Math.hypot(x - cx - lx, z - cz - lz) < 1.8)) continue;
+      if (knoll && Math.hypot(lx - knoll.lx, lz - knoll.lz) < 1.9) continue;
+      if (hide && Math.hypot(lx - hide.lx, lz - hide.lz) < 1.9) continue;
+      if (wharf && Math.hypot(lx - wharf.lx, lz - wharf.lz) < 2.2) continue;
+      cand.push({ id, q, r, lx, lz, sc:lz*0.5 + Math.abs(lx)*0.6 + hash(q, r, ki, 81)*0.8 });
+    }
+    cand.sort((a, b) => b.sc - a.sc);
+    for (const gap of [2.6, 1.8]) for (const c of cand){ if (ecoT.length >= ECO[key].length) break; if (ecoT.some(t => t.id === c.id || Math.hypot(t.lx - c.lx, t.lz - c.lz) < gap)) continue; ecoT.push(c); }
+    ecoT.forEach((t, i) => {
+      const spec = ECO[key][i], topY = TOP - SLAB, hh = topY + SEA_Y;
+      const kr = new THREE.Mesh(cliffGeo(seed++, hh, 1.0, 1.14), [cliffMat, grassMat, grassMat]); kr.position.set(t.lx, topY - hh/2, t.lz); kr.castShadow = kr.receiveShadow = true; grp.add(kr);
+      info.land.push([t.lx, t.lz, 1.13]);
+      const f = spec.make(); f.position.set(t.lx, topY, t.lz); f.rotation.y = Math.atan2(t.lx, t.lz); grp.add(f); registerFacility(f, spec.name);
+    });
+  }
   const occ = new Set(hexes.map(({ h }) => `${h.q},${h.r}`)), seen = new Set();
   for (const { h } of hexes) for (const [dq, dr] of DIRS6){
     const q = h.q + dq, r = h.r + dr, id = `${q},${r}`;
@@ -2322,6 +2520,7 @@ D.KEYS.forEach((key, ki) => {
     if (knoll && q === knoll.q && r === knoll.r) continue;
     if (terr.some(t => t.q === q && t.r === r)) continue;
     if (hide && q === hide.q && r === hide.r) continue;
+    if (ecoT.some(t => t.q === q && t.r === r)) continue;
     if (key === 'neu' && (Math.abs(q) + Math.abs(r) + Math.abs(q + r))/2 <= 1) continue;
     const ap = axial(q, r), lx = ap.x - cx, lz = ap.z - cz;
     if (toes.some(([x, z]) => Math.hypot(x - cx - lx, z - cz - lz) < 1.6)) continue;
