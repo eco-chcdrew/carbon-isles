@@ -150,6 +150,19 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 .isle-fac b{font-weight:500;color:var(--ink)}
 .fac-tag{pointer-events:none;opacity:0;transition:opacity .2s;font-family:var(--f-hand);font-size:14px;line-height:1.2;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:6px;padding:3px 9px;white-space:nowrap;box-shadow:var(--shadow)}
 .fac-tag.show{opacity:1}
+.toggle.secret::before{content:"✦";width:auto;height:auto;border:0;border-radius:0;background:none;color:#D9A441;font-size:13px;line-height:1}
+.toggle.secret b{font-family:var(--f-type);font-weight:700}
+.secret-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;margin:16px 0 0;padding:10px 12px;border:1px dashed var(--line);border-radius:4px;font-size:14px}
+.secret-cta b{font-family:var(--f-type);color:var(--accent)}
+.secret-progress{margin:12px 0 0;font-size:14px;color:var(--muted)}
+.secret-progress b{font-family:var(--f-type);font-size:16px;color:var(--accent)}
+.secret-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.secret-item{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;box-sizing:border-box;text-align:left;appearance:none;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:9px 12px;font:inherit;color:var(--ink);cursor:pointer}
+button.secret-item:hover{border-color:var(--ink)}
+.secret-item b{font-family:var(--f-display);font-weight:700;font-size:15.5px}
+.secret-item small{font-size:12.5px;color:var(--muted)}
+.locked .secret-item{cursor:default;border-style:dashed;background:transparent}
+.locked .secret-item b{color:var(--muted);letter-spacing:.2em}
 .tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:2px}
 .cmp{width:100%;border-collapse:collapse;font-size:13.5px;line-height:1.5}
 .cmp th,.cmp td{text-align:left;vertical-align:top;padding:8px 8px;border-bottom:1px dashed var(--line)}
@@ -321,6 +334,7 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
     <div class="dock">
       <button type="button" class="toggle" id="tgTags" aria-pressed="true">標籤</button>
       <button type="button" class="toggle links" id="tgLinks" aria-pressed="false">全部紅線</button>
+      <button type="button" class="toggle secret" id="tgSecrets">祕境 <b data-secret-count>0/11</b></button>
       <span class="hint" id="hint">點六角島查看線索・拖曳旋轉・滾輪或雙指縮放</span>
     </div>
   </div>
@@ -1005,9 +1019,22 @@ const ELEC_EF = 0.467;
 const byId = {}; HEXES.forEach(h => byId[h.id] = h);
 ORDER.rdc.forEach((id, i, a) => { byId[id].elev = +(1.2 * (1 - i/(a.length-1))).toFixed(3); });
 byId['ofs-what'].elev = 0.3;
-window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId };
+const SECRETS = [
+  { id:'inv-deck', isle:'inv', name:'山頂觀景台', hint:'碳盤查島最高的地方', note:'沿著石階爬上山頂，五座島一覽無遺。碳盤查也一樣：先把組織的全貌看清楚，才找得到排放熱點。' },
+  { id:'inv-fall', isle:'inv', name:'隱藏瀑布', hint:'碳盤查島的山，要繞到背面看', note:'瀑布藏在山的背面，從正面完全看不到。範疇三的排放也常藏在供應鏈的另一頭，要繞過去才找得到。' },
+  { id:'inv-islet', isle:'inv', name:'無人島', hint:'碳盤查島後方的海上', note:'沙灘上擱淺了一艘小船，船上的航海日誌記著每天用了多少油。排放紀錄，就是從這些日常數據開始累積的。' },
+  { id:'cfp-forest', isle:'cfp', name:'森林祕密小徑', hint:'碳足跡島旁那片最密的樹林', note:'踏石小徑通往樹林深處的空地，那裡立著一塊刻著問號的石碑。森林在生長時把碳存進樹幹和土壤，是陸地上重要的碳匯。' },
+  { id:'cfp-islet', isle:'cfp', name:'無人島', hint:'碳足跡島後方的海上', note:'半埋在沙裡的寶箱，裝著一件 T 恤的完整履歷：棉田、工廠、貨輪，一路到你的衣櫃。' },
+  { id:'rdc-arch', isle:'rdc', name:'天然石拱門', hint:'碳減量島的外海', note:'海浪把岬角兩側的海蝕洞打穿，才留下這座石拱門。減碳也要一年一年持續減，最後才走得到淨零。' },
+  { id:'rdc-islet', isle:'rdc', name:'無人島', hint:'碳減量島後方的海上', note:'小島四周的淺灘長滿海草。海草床和紅樹林這類「藍碳」生態系，能把碳長期封存在海底的泥土裡。' },
+  { id:'ofs-cave', isle:'ofs', name:'沙灘神祕洞穴', hint:'碳抵換島的沙灘上', note:'洞口的火把還亮著，沙灘上有一串腳印走進去。洞裡藏著一箱舊憑證：每一筆額度都要註銷、留下紀錄，才不會被重複使用。' },
+  { id:'ofs-islet', isle:'ofs', name:'無人島', hint:'碳抵換島後方的海上', note:'寶箱裡有一張泛黃的藏寶圖，背面寫著：好的碳權要有額外性、永久性，而且不能重複計算。' },
+  { id:'neu-cave', isle:'neu', name:'海蝕洞', hint:'碳中和島海邊的岩壁', note:'海浪日夜拍打岩壁，掏出了這個洞穴。海洋吸收了人類排放的二氧化碳中約四分之一，是地球上最大的碳匯之一。' },
+  { id:'neu-islet', isle:'neu', name:'無人島', hint:'碳中和島後方的海上', note:'從這座無人島回頭看，碳中和島剛好是一個完整的「0」。繞一圈，就是一期碳中和。' }
+];
+window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS };
 
-const bridge = window.ISLE3D = { ready:false, focusHex(){}, focusIsle(){}, focusHome(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
+const bridge = window.ISLE3D = { ready:false, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
 const $ = s => document.querySelector(s);
 const panel = $('#panel'), body = $('#panelBody'), list = $('#list');
 const state = { view:'home', hex:null, isle:null, no3d:false, interacted:false };
@@ -1019,6 +1046,42 @@ const fmt = (n, d=0) => n.toLocaleString('zh-TW', { maximumFractionDigits:d, min
 
 function setModes(m){ document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m))); }
 const fileLabel = $('#fileLabel'), stampEl = $('#stamp');
+const secretById = Object.fromEntries(SECRETS.map(s => [s.id, s])), found = new Set();
+try { JSON.parse(localStorage.getItem('tanbao-secrets') || '[]').forEach(id => { if (secretById[id]) found.add(id); }); } catch (e) {}
+const saveFound = () => { try { localStorage.setItem('tanbao-secrets', JSON.stringify([...found])); } catch (e) {} };
+const foundCount = () => SECRETS.filter(s => found.has(s.id)).length;
+function updateSecretCount(){ document.querySelectorAll('[data-secret-count]').forEach(el => { el.textContent = `${foundCount()}/${SECRETS.length}`; }); }
+function secretHTML(s, isNew){
+  const n = foundCount(), all = n === SECRETS.length;
+  return `
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="secrets">祕境筆記</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
+    <p class="eyebrow">${isNew ? '發現祕境！' : '祕境'}</p>
+    <h2>${esc(s.name)}</h2>
+    <p class="isle-meta">${ISLES[s.isle].name}</p>
+    <p class="lead" style="margin-top:10px">${esc(s.note)}</p>
+    <p class="secret-progress">已發現 <b>${n}</b> / ${SECRETS.length} 個祕境${all ? '，全部找到了！' : '。'}</p>
+    <div class="btns"><button type="button" class="btn" data-go="secrets">祕境筆記</button><button type="button" class="btn primary" data-go="isle:${s.isle}">回到${ISLES[s.isle].name}</button></div>`;
+}
+function secretsHTML(){
+  const items = SECRETS.map(s => found.has(s.id)
+    ? `<li><button type="button" class="secret-item" data-secret="${s.id}"><b>${esc(s.name)}</b><small>${ISLES[s.isle].name}</small></button></li>`
+    : `<li class="locked"><span class="secret-item"><b>？？？</b><small>線索：${esc(s.hint)}</small></span></li>`).join('');
+  return `
+    <p class="eyebrow">祕境筆記</p>
+    <h2>地圖上的祕境</h2>
+    <p class="lead">島嶼四周藏著海蝕洞、天然石拱門、隱藏瀑布、無人島、山頂觀景台、森林祕密小徑和沙灘上的神祕洞穴。留意閃閃發亮的地方，轉動地圖、靠近一點，點下去就會記進這本筆記。</p>
+    <p class="secret-progress">已發現 <b>${foundCount()}</b> / ${SECRETS.length} 個祕境</p>
+    <ul class="secret-list">${items}</ul>`;
+}
+function showSecret(id){
+  const s = secretById[id]; if (!s) return;
+  interacted(); closeList();
+  const isNew = !found.has(id); found.add(id); saveFound(); updateSecretCount();
+  state.view = 'secret'; state.hex = null; state.isle = null; setModes('');
+  openPanel(secretHTML(s, isNew), `祕境 ─ ${ISLES[s.isle].name}`, isNew ? '新發現' : '');
+  bridge.secretFound(id); bridge.focusSecret(id);
+}
+function showSecrets(){ interacted(); closeList(); state.view = 'secrets'; state.hex = null; setModes(''); openPanel(secretsHTML(), '祕境筆記'); }
 function openPanel(html, label = 'CASE FILE', stamp = ''){ body.innerHTML = html; fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
 
 function homeHTML(){
@@ -1035,6 +1098,7 @@ function homeHTML(){
     <h2>五座島</h2>
     <p class="lead">碳盤查、碳足跡、碳減量、碳抵換、碳中和，五座島各查一個案子。每塊六角島是一條線索，點下去就能調閱卷宗；打開線索時，紅線會連到其他島上的相關線索。</p>
     <div class="isles">${cards}</div>
+    <p class="secret-cta"><span>✦ 祕境探索：已發現 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn" data-go="secrets">打開祕境筆記</button></p>
     <h3>五案對照</h3>
     <div class="tablewrap"><table class="cmp wide">
       <thead><tr><th scope="col"><span hidden>項目</span></th><th scope="col">碳盤查</th><th scope="col">碳足跡</th><th scope="col">碳減量</th><th scope="col">碳抵換</th><th scope="col">碳中和</th></tr></thead>
@@ -1159,10 +1223,12 @@ function openList(){
 function closeList(){ if (state.no3d || list.hidden) return; list.hidden = true; setModes(listPrevMode); }
 
 body.addEventListener('click', e => {
-  const t = e.target.closest('[data-go],[data-hex]'); if (!t) return;
+  const t = e.target.closest('[data-go],[data-hex],[data-secret]'); if (!t) return;
   if (t.dataset.hex) return showHex(t.dataset.hex);
+  if (t.dataset.secret) return showSecret(t.dataset.secret);
   const g = t.dataset.go;
   if (g === 'home') showHome();
+  else if (g === 'secrets') showSecrets();
   else if (g.startsWith('isle:')) showIsle(g.slice(5));
   else if (g.startsWith('tour:')) showHex(ORDER[g.slice(5)][0]);
 });
@@ -1181,6 +1247,8 @@ list.addEventListener('click', e => { if (e.target === list) closeList(); });
 function toggle(btn, fn){ btn.addEventListener('click', () => { const on = btn.getAttribute('aria-pressed') !== 'true'; btn.setAttribute('aria-pressed', String(on)); fn(on); }); }
 toggle($('#tgTags'), on => bridge.setTags(on));
 toggle($('#tgLinks'), on => bridge.setLinks(on));
+$('#tgSecrets').addEventListener('click', showSecrets);
+updateSecretCount();
 const dnBtns = document.querySelectorAll('.daynight button');
 const darkNow = () => { const a = document.documentElement.getAttribute('data-theme'); return a ? a === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
 const syncDayNight = () => dnBtns.forEach(b => b.setAttribute('aria-pressed', String((b.dataset.theme === 'dark') === darkNow())));
@@ -1198,7 +1266,7 @@ document.addEventListener('keydown', e => {
 new ResizeObserver(() => bridge.relayout()).observe(panel);
 
 window.UI = {
-  state, showHex, showIsle, showHome, closePanel, interacted,
+  state, showHex, showIsle, showHome, closePanel, interacted, showSecret, showSecrets, isFound: id => found.has(id),
   mascotClicked(){ interacted(); if (state.view === 'hex') step(1); else showHex(ORDER[state.view === 'isle' ? state.isle : 'inv'][0]); },
   no3d(msg){
     if (state.no3d) return; state.no3d = true;
@@ -1596,7 +1664,7 @@ function hash(x,y,z,s){ const v = Math.sin(x*12.9898 + y*78.233 + z*37.719 + s*4
 const CLIFF = ['#9A7550','#B48C5E','#866445','#C29D6C','#A98259'];
 const cliffMat = new THREE.MeshStandardMaterial({ vertexColors:true, flatShading:true, roughness:1 });
 const grassMat = mat('#4E9E37'), sandMat = mat('#EED9A2'), wetSandMat = mat('#C9AE7C');
-function cliffGeo(seed, hh, r0 = 1.06, r1 = 1.17, segs = 6){
+function cliffGeo(seed, hh, r0 = 1.06, r1 = 1.17, segs = 6, pal = CLIFF){
   const g = new THREE.CylinderGeometry(r0, r1, hh, segs, 3), p = g.attributes.position, col = [], c = new THREE.Color();
   for (let i = 0; i < p.count; i++){
     const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
@@ -1605,7 +1673,7 @@ function cliffGeo(seed, hh, r0 = 1.06, r1 = 1.17, segs = 6){
       if (y > -hh/2 + 0.01) p.setY(i, y + (hash(z,x,y,seed) - 0.5)*hh*0.16);
     }
     const band = Math.floor((y + hh/2)/0.28 + hash(x, z, 1, seed)*0.8);
-    c.set(CLIFF[(band + seed) % CLIFF.length]); col.push(c.r, c.g, c.b);
+    c.set(pal[(band + seed) % pal.length]); col.push(c.r, c.g, c.b);
   }
   g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
   g.computeVertexNormals(); return g;
@@ -2001,6 +2069,139 @@ const FAC = {
       return g; } }
   ]
 };
+const MOSS = ['#3F7F33', '#4E9240', '#33702F', '#5C9F49', '#46863A', '#6B5A44'], DARKROCK = ['#5E5248', '#6E6052', '#4E443B', '#7A6A5A'];
+function bandColors(geo, pal, sd){ const p = geo.attributes.position, col = [], c = new THREE.Color(); for (let i = 0; i < p.count; i++){ c.set(pal[(Math.floor((p.getY(i) + 5)/0.28) + sd) % pal.length]); col.push(c.r, c.g, c.b); } geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); return geo; }
+const fallTex = canvasTex(64, 128, (c, w, h) => { c.fillStyle = '#D8F3FF'; c.fillRect(0, 0, w, h); for (let i = 0; i < 26; i++){ c.fillStyle = i % 3 ? 'rgba(255,255,255,0.95)' : 'rgba(120,200,235,0.8)'; const x = (i*37) % w, y = (i*53) % h; c.fillRect(x, y, 3 + (i % 3)*2, 18 + (i % 5)*8); } });
+fallTex.wrapS = fallTex.wrapT = THREE.RepeatWrapping; fallTex.repeat.set(1, 2);
+const fallMat = new THREE.MeshStandardMaterial({ map:fallTex, emissive:'#BFEFFF', emissiveIntensity:0.25, transparent:true, opacity:0.9, roughness:0.2, side:THREE.DoubleSide, depthWrite:false });
+lifeAnims.push(t => { fallTex.offset.y = reduceMotion ? 0 : -t*1.4; });
+const mouthTex = canvasTex(128, 64, (c, w, h) => { const g = c.createRadialGradient(w/2, h, 0, w/2, h, w/2); g.addColorStop(0, '#000000'); g.addColorStop(0.7, '#0B0806'); g.addColorStop(1, '#2A1E14'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+const mouthMat = new THREE.MeshBasicMaterial({ map:mouthTex, side:THREE.DoubleSide });
+const sparkTex = canvasTex(64, 64, (c, w, h) => { const g = c.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.25, 'rgba(255,255,255,0.5)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h); c.fillStyle = '#FFFFFF'; c.beginPath(); c.moveTo(32, 0); c.lineTo(36, 28); c.lineTo(64, 32); c.lineTo(36, 36); c.lineTo(32, 64); c.lineTo(28, 36); c.lineTo(0, 32); c.lineTo(28, 28); c.closePath(); c.fill(); });
+function caveMouth(r){
+  const g = new THREE.Group();
+  const m = new THREE.Mesh(new THREE.CircleGeometry(r, 18, 0, Math.PI), mouthMat); g.add(m);
+  const fr = new THREE.Mesh(new THREE.TorusGeometry(r + 0.04, 0.075, 5, 12, Math.PI), cliffMat); fr.geometry = bandColors(fr.geometry, DARKROCK, 2); fr.castShadow = true; g.add(fr);
+  for (const [x, y, s] of [[-r - 0.08, 0.05, 0.11], [r + 0.1, 0.03, 0.13], [r*0.6, -0.02, 0.07]]) g.add(ball(s, '#6E6052', x, y, 0.06, 0));
+  return g;
+}
+function flameTorch(){
+  const g = new THREE.Group(); g.add(cyl(0.014, 0.018, 0.34, 5, '#5B4127'), cyl(0.032, 0.022, 0.05, 6, '#3E2A1A', 0, 0.32, 0));
+  const fl = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.11, 7), glowM('#FFA53A', 0.8)); fl.position.y = 0.42; g.add(fl);
+  const hm = new THREE.SpriteMaterial(addGlow({ map:glowTex, color:'#FFB44A', opacity:0.9 })), halo = new THREE.Sprite(hm); halo.position.y = 0.42; halo.scale.setScalar(0.45); halo.userData.nightOnly = true; g.add(halo);
+  const ph = Math.random()*6; lifeAnims.push(t => { if (reduceMotion) return; const k = 1 + Math.sin(t*13 + ph)*0.12 + Math.sin(t*7.3 + ph)*0.08; fl.scale.set(1, k, 1); halo.scale.setScalar(0.45*k); });
+  return g;
+}
+const HIDE = {
+  inv(g, sd){
+    const base = TOP - SLAB, holders = { deck:new THREE.Group(), fall:new THREE.Group() }, body = new THREE.Group(); g.add(body, holders.deck, holders.fall);
+    const tiers = [[1.0, 1.14, base + SEA_Y + 0.95, -SEA_Y], [0.7, 0.84, 0.85, base + 0.95], [0.44, 0.54, 0.62, base + 1.8]];
+    for (const [r0, r1, h, y0] of tiers){ const m = new THREE.Mesh(cliffGeo(sd++, h, r0, r1, 7, MOSS), [cliffMat, grassMat, grassMat]); m.position.y = y0 + h/2; m.castShadow = m.receiveShadow = true; body.add(m); }
+    const yTop = base + 2.42, y1 = base + 0.95, y2 = base + 1.8;
+    for (let i = 0; i <= 26; i++){
+      const u = i/26, y = TOP + u*(yTop - TOP), rr = y < y1 + 0.02 ? 1.14 : y < y2 + 0.02 ? 0.86 : 0.58, ph = Math.PI - 1.25 + u*2.5;
+      const st = box(0.17, 0.035, 0.11, '#A8754A', Math.sin(ph)*rr, y - 0.03, Math.cos(ph)*rr); st.rotation.y = ph; body.add(st);
+      if (i % 3 === 0) body.add(cyl(0.008, 0.008, 0.16, 4, '#5B4127', Math.sin(ph)*(rr + 0.08), y - 0.03, Math.cos(ph)*(rr + 0.08)));
+    }
+    for (const [a, rr, y, s, palm] of [[0.9, 0.93, y1, 1.3, true], [-0.8, 0.93, y1, 1.2, false], [2.2, 0.92, y1, 1.1, false], [0.6, 0.63, y2, 1.0, false], [-1.9, 0.63, y2, 1.1, true]]){ const tr = palm ? BUILD.palm() : BUILD.tree(); tr.position.set(Math.sin(a)*rr, y, Math.cos(a)*rr); tr.scale.setScalar(s); body.add(tr); }
+    const d = holders.deck; d.position.y = yTop;
+    d.add(cyl(0.4, 0.4, 0.05, 16, '#A8754A'));
+    for (let k = 0; k < 12; k++){ const a = k/12*Math.PI*2; if (Math.abs(Math.atan2(Math.sin(a - Math.PI), Math.cos(a - Math.PI))) < 0.3) continue; d.add(cyl(0.008, 0.008, 0.16, 4, '#7A5230', Math.sin(a)*0.37, 0.05, Math.cos(a)*0.37)); }
+    const rail = part(new THREE.TorusGeometry(0.37, 0.009, 4, 24, Math.PI*1.8), mat('#7A5230'), 0, 0.2, 0); rail.rotation.set(Math.PI/2, 0, -Math.PI/2 + 0.31); d.add(rail);
+    const sc = new THREE.Group(); sc.position.set(0.08, 0.05, 0.1); d.add(sc);
+    for (const a of [0, 2.1, 4.2]){ const lg = cyl(0.006, 0.006, 0.2, 4, '#55626B', Math.sin(a)*0.04, 0, Math.cos(a)*0.04); lg.rotation.set(Math.cos(a)*0.2, 0, -Math.sin(a)*0.2); sc.add(lg); }
+    const tube = part(new THREE.CylinderGeometry(0.022, 0.03, 0.2, 10), mat('#2F5D7C'), 0, 0.22, 0.03); tube.rotation.x = 1.15; sc.add(tube);
+    const fl = BUILD.flag('#22476F'); fl.position.set(-0.22, 0.05, -0.12); fl.scale.setScalar(0.7); d.add(fl);
+    d.add(box(0.2, 0.03, 0.07, '#8A5E38', -0.12, 0.13, 0.18), box(0.02, 0.08, 0.06, '#5B4127', -0.2, 0.05, 0.18), box(0.02, 0.08, 0.06, '#5B4127', -0.04, 0.05, 0.18));
+    const w = holders.fall, fall = (wd, y0, y1, z, tilt = 0) => { const p = new THREE.Mesh(new THREE.PlaneGeometry(wd, y0 - y1), fallMat); p.position.set(0, (y0 + y1)/2, z); p.rotation.x = tilt; w.add(p); };
+    fall(0.24, y2 + 0.04, y1, 0.87, -0.06);
+    const stream = new THREE.Mesh(new THREE.PlaneGeometry(0.24, 0.3), fallMat); stream.rotation.x = -Math.PI/2; stream.position.set(0, y1 + 0.012, 1.0); w.add(stream);
+    fall(0.3, y1 + 0.01, -0.03, 1.2, -0.05);
+    const pool = new THREE.Mesh(foamGeo, foamMat); pool.scale.setScalar(0.32); pool.position.set(0, 0.03, 1.32); w.add(pool);
+    const mist = Array.from({ length:6 }, (_, k) => { const m = new THREE.Mesh(sphG(0.07), new THREE.MeshBasicMaterial({ color:'#FFFFFF', transparent:true, opacity:0.6, depthWrite:false })); w.add(m); return { m, ph:k/6 }; });
+    lifeAnims.push(t => { mist.forEach(({ m, ph }) => { const k = ((reduceMotion ? 0.3 : t*0.45) + ph) % 1; m.position.set(Math.sin(ph*20)*0.18*k, 0.05 + k*0.45, 1.32 + Math.cos(ph*20)*0.12*k); m.scale.setScalar(0.8 + k*1.6); m.material.opacity = 0.6*(1 - k); }); });
+    return [{ id:'inv-deck', holder:d, center:new V3(0, 0.2, 0), pick:[body, d], r:2.4, el:42, labelY:0.75 }, { id:'inv-fall', holder:w, center:new V3(0, 1.0, 1.25), pick:[w], r:2.4, el:24, out:true, labelY:1.2 }];
+  },
+  cfp(g, sd){
+    const base = TOP - SLAB, hh = base + SEA_Y, f = new THREE.Group(); f.position.y = base; g.add(f);
+    const ter = new THREE.Mesh(cliffGeo(sd, hh, 1.0, 1.14), [cliffMat, grassMat, grassMat]); ter.position.y = -hh/2; ter.castShadow = ter.receiveShadow = true; f.add(ter);
+    const path = new THREE.CatmullRomCurve3([new V3(0.1, 0, -0.98), new V3(0.38, 0, -0.55), new V3(-0.25, 0, -0.18), new V3(0.08, 0, 0.18)]), pp = path.getSpacedPoints(30);
+    pp.forEach((p, i) => { if (i % 2) return; const s = ball(0.06 + (i % 3)*0.01, '#A9A49A', p.x, 0.005, p.z, 0); s.scale.y = 0.3; f.add(s); });
+    const clear = new V3(0.08, 0, 0.28); let n = 0;
+    for (let i = 0; i < 40 && n < 16; i++){
+      const a = i*2.399, rr = 0.22 + Math.sqrt(i/40)*0.7, x = Math.sin(a)*rr, z = Math.cos(a)*rr;
+      if (Math.hypot(x - clear.x, z - clear.z) < 0.34 || pp.some(p => Math.hypot(p.x - x, p.z - z) < 0.17)) continue;
+      const tr = BUILD.tree(); tr.position.set(x, 0, z); tr.scale.setScalar(1.45 + hash(i, sd, 1, 1)*0.65); f.add(tr); n++;
+    }
+    const tabTex = canvasTex(64, 96, (c, w, h) => { c.fillStyle = '#9A9488'; c.fillRect(0, 0, w, h); c.fillStyle = '#6B655A'; c.font = `700 64px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('?', w/2, h/2 + 4); });
+    const stone = mat('#9A9488'), face = new THREE.MeshStandardMaterial({ map:tabTex, roughness:0.9 });
+    const tab = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.2, 0.04), [stone, stone, stone, stone, face, stone]); tab.position.set(clear.x, 0.1, clear.z - 0.08); tab.castShadow = true; f.add(tab);
+    for (let k = 0; k < 7; k++){ const a = k/7*Math.PI*2, x = clear.x + Math.sin(a)*0.2, z = clear.z + Math.cos(a)*0.2; f.add(cyl(0.008, 0.01, 0.04, 5, '#F4F1EA', x, 0, z)); const cap = new THREE.Mesh(new THREE.SphereGeometry(0.024, 10, 6, 0, Math.PI*2, 0, Math.PI/2), glowM(k % 2 ? '#59E3FF' : '#FF7A9A', 0.25)); cap.position.set(x, 0.035, z); f.add(cap); }
+    return [{ id:'cfp-forest', holder:f, center:new V3(0, 0.3, 0), pick:[f], r:2.0, el:56, labelY:0.9 }];
+  },
+  ofs(g, sd){
+    const top = 0.32, hh = top + SEA_Y, f = new THREE.Group(); f.position.y = top; g.add(f);
+    const ter = new THREE.Mesh(cliffGeo(sd, hh, 1.0, 1.14, 9), [wetSandMat, sandMat, sandMat]); ter.position.y = -hh/2; ter.receiveShadow = true; f.add(ter);
+    const rock = new THREE.Mesh(cliffGeo(sd + 1, 0.95, 0.42, 0.66, 9, DARKROCK), [cliffMat, grassMat, grassMat]); rock.position.set(0, 0.42, -0.3); rock.castShadow = rock.receiveShadow = true; f.add(rock);
+    const tr = BUILD.palm(); tr.position.set(-0.12, 0.9, -0.38); tr.scale.setScalar(1.3); f.add(tr);
+    const mouth = caveMouth(0.26); mouth.position.set(0, 0.0, 0.34); mouth.rotation.x = -0.08; f.add(mouth);
+    for (const s of [-1, 1]){ const tc = flameTorch(); tc.position.set(s*0.42, 0, 0.36); f.add(tc); }
+    for (let k = 0; k < 7; k++){ const fp = new THREE.Mesh(blushGeo, mat('#C9AE7C')); fp.scale.set(0.03, 0.045, 1); fp.rotation.x = -Math.PI/2; fp.position.set((k % 2 ? 0.05 : -0.05), 0.006, 0.42 + k*0.09); f.add(fp); }
+    const sg = BUILD.signpost(); sg.position.set(0.52, 0, 0.65); sg.scale.setScalar(0.9); f.add(sg);
+    return [{ id:'ofs-cave', holder:f, center:new V3(0, 0.3, 0.3), pick:[f], r:1.8, el:26, out:true, labelY:1.1 }];
+  },
+  neu(g, sd){
+    const base = TOP - SLAB, hh = base + SEA_Y, f = new THREE.Group(); f.position.y = base; g.add(f);
+    const ter = new THREE.Mesh(cliffGeo(sd, hh, 1.0, 1.12, 11), [cliffMat, grassMat, grassMat]); ter.position.y = -hh/2; ter.castShadow = ter.receiveShadow = true; f.add(ter);
+    const mouth = caveMouth(0.36); mouth.position.set(0, -base - 0.03, 1.12); mouth.rotation.x = -0.1; f.add(mouth);
+    const foam = new THREE.Mesh(foamGeo, foamMat); foam.scale.set(0.42, 1, 0.25); foam.position.set(0, -base + 0.03, 1.3); f.add(foam);
+    const boat = new THREE.Group(); boat.position.set(0.55, -base + 0.02, 1.38); boat.rotation.y = 0.5; f.add(boat);
+    boat.add(part(hullGeo(0.36, 0.14, 0.06), mat('#B5653A')), box(0.04, 0.012, 0.12, '#8A5E38', 0, 0.05, 0));
+    for (const [x, z, palm] of [[-0.4, -0.2, true], [0.35, -0.35, false], [-0.1, 0.35, false]]){ const t = palm ? BUILD.palm() : BUILD.tree(); t.position.set(x, 0, z); t.scale.setScalar(palm ? 1.4 : 1.6); f.add(t); }
+    lifeAnims.push(t => { if (reduceMotion) return; boat.position.y = -base + 0.02 + Math.sin(t*1.5)*0.02; boat.rotation.z = Math.sin(t*1.2)*0.05; });
+    return [{ id:'neu-cave', holder:f, center:new V3(0, -base + 0.4, 1.1), pick:[f], r:1.9, el:20, out:true, labelY:0.9 }];
+  }
+};
+function secretIslet(sd){
+  const g = new THREE.Group();
+  g.add(cyl(0.95, 1.05, 0.3, 14, '#EED9A2', 0, -0.18, 0));
+  const rock = new THREE.Mesh(cliffGeo(200 + sd, 0.75, 0.42, 0.58, 8), [cliffMat, grassMat, grassMat]); rock.position.set(-0.28, 0.48, -0.22); rock.castShadow = true; g.add(rock);
+  for (const [x, y, z, s] of [[0.38, 0.12, -0.25, 1.5], [-0.3, 0.86, -0.25, 1.2]]){ const p = BUILD.palm(); p.position.set(x, y, z); p.scale.setScalar(s); g.add(p); }
+  const boat = part(hullGeo(0.5, 0.2, 0.08), mat('#8A5E38'), 0.38, 0.1, 0.38); boat.rotation.set(0.25, 2.2, 0.35); g.add(boat);
+  const chest = new THREE.Group(); chest.position.set(-0.22, 0.12, 0.42); chest.rotation.y = 0.4; g.add(chest);
+  chest.add(box(0.24, 0.13, 0.16, '#8A5A34'), box(0.25, 0.02, 0.165, '#D9A441', 0, 0.05, 0));
+  const gold = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.02, 0.12), new THREE.MeshStandardMaterial({ color:'#FFD45E', emissive:'#FFB020', emissiveIntensity:0.5, roughness:0.3 })); gold.position.y = 0.135; chest.add(gold); sea.glow.push(gold.material);
+  const lid = new THREE.Group(); lid.position.set(0, 0.13, -0.08); lid.rotation.x = -1.0; chest.add(lid); lid.add(box(0.24, 0.04, 0.16, '#7A4E2C', 0, 0, 0.08));
+  const f = new THREE.Mesh(foamGeo, foamMat); f.position.y = 0.022; g.add(f);
+  const sh = new THREE.Mesh(shalGeo, shallowMat); sh.scale.setScalar(1.9); g.add(sh);
+  return g;
+}
+function stoneArch(sd){
+  const g = new THREE.Group(), R1 = 1.25, R2 = 0.72, L = -1.1, s = new THREE.Shape();
+  s.moveTo(R1, L); s.lineTo(R1, 0); s.absarc(0, 0, R1, 0, Math.PI, false); s.lineTo(-R1, L); s.lineTo(-R2, L); s.lineTo(-R2, 0); s.absarc(0, 0, R2, Math.PI, 0, true); s.lineTo(R2, L); s.closePath();
+  const geo = bandColors(new THREE.ExtrudeGeometry(s, { depth:0.6, bevelEnabled:true, bevelThickness:0.06, bevelSize:0.06, bevelSegments:1, curveSegments:7 }).translate(0, 0, -0.3), CLIFF, sd);
+  const m = new THREE.Mesh(geo, cliffMat); m.castShadow = true; g.add(m);
+  for (let k = 0; k <= 8; k++){ const a = 0.2 + k/8*(Math.PI - 0.4), t = ball(0.15 + (k % 3)*0.03, k % 2 ? '#4E9E37' : '#5DAE4E', Math.cos(a)*(R1 + 0.02), Math.sin(a)*(R1 + 0.02), 0, 0); t.scale.set(1, 0.55, 2.2); t.rotation.z = a - Math.PI/2; g.add(t); }
+  const p = BUILD.palm(); p.position.set(Math.cos(1.9)*R1, Math.sin(1.9)*R1 + 0.04, 0); p.scale.setScalar(1.2); g.add(p);
+  for (const x of [-(R1 + R2)/2, (R1 + R2)/2]){ const f = new THREE.Mesh(foamGeo, foamMat); f.scale.set(0.42, 1, 0.5); f.position.set(x, 0.022, 0); g.add(f); }
+  const sh = new THREE.Mesh(shalGeo, shallowMat); sh.scale.set(2.2, 1, 1.3); sh.position.y = -0.005; g.add(sh);
+  return g;
+}
+const secrets = {};
+function registerSecret(spec, key, list = pickables){
+  const S = D.SECRETS.find(s => s.id === spec.id); if (!S) return;
+  const found = UI.isFound(spec.id), tag = document.createElement('div'); tag.className = 'fac-tag'; tag.textContent = found ? S.name : '？？？';
+  const lbl = new CSS2DObject(tag); lbl.position.copy(spec.center).add(new V3(0, spec.labelY ?? 0.9, 0)); spec.holder.add(lbl);
+  const sp = [0, 1, 2].map(i => { const s = new THREE.Sprite(new THREE.SpriteMaterial(addGlow({ map:sparkTex, color:'#FFF2B0' }))); s.position.copy(spec.center).add(new V3(Math.cos(i*2.1)*0.35, 0.15 + i*0.22, Math.sin(i*2.1)*0.35)); s.visible = !found; spec.holder.add(s); return s; });
+  for (const p of spec.pick) p.traverse(m => { if (m.isMesh){ m.userData.secret = spec.id; m.userData.fac = tag; list.push(m); } });
+  secrets[spec.id] = { ...spec, key, tag, sp, S, found, ph:Math.random()*6 };
+}
+function secretWorld(s){
+  s.holder.updateWorldMatrix(true, false); const c = s.holder.localToWorld(s.center.clone());
+  if (s.key) c.add(isles[s.key].target).sub(isles[s.key].group.position);
+  return c;
+}
+
 function registerFacility(f, name){
   f.scale.multiplyScalar(1.15);
   const tag = document.createElement('div'); tag.className = 'fac-tag'; tag.textContent = name;
@@ -2084,12 +2285,33 @@ D.KEYS.forEach((key, ki) => {
     t.spec = spec;
   });
   info.terr = terr;
+  const HIDE_SC = { inv:(x, z) => -z*0.5 + Math.abs(x)*1.1, cfp:(x, z) => Math.abs(x) - 0.25*Math.abs(z), ofs:(x, z) => z*0.8 + Math.abs(x)*0.4, neu:(x, z) => z + Math.abs(x)*0.3 }[key];
+  let hide = null;
+  if (HIDE_SC){
+    const occ2 = new Set(hexes.map(({ h }) => `${h.q},${h.r}`));
+    for (const { h } of hexes) for (const [dq, dr] of DIRS6){
+      const q = h.q + dq, r = h.r + dr; if (occ2.has(`${q},${r}`)) continue;
+      if (key === 'neu' && (Math.abs(q) + Math.abs(r) + Math.abs(q + r))/2 <= 1) continue;
+      const ap = axial(q, r), lx = ap.x - cx, lz = ap.z - cz;
+      if (toes.some(([x, z]) => Math.hypot(x - cx - lx, z - cz - lz) < 1.8)) continue;
+      if (knoll && Math.hypot(lx - knoll.lx, lz - knoll.lz) < 2.2) continue;
+      if (terr.some(t => Math.hypot(t.lx - lx, t.lz - lz) < 2.2)) continue;
+      const sc = HIDE_SC(lx, lz) + hash(q, r, ki, 61)*0.3; if (!hide || sc > hide.sc) hide = { q, r, lx, lz, sc };
+    }
+    if (hide){
+      const hg = new THREE.Group(), az = Math.atan2(hide.lx, hide.lz); hg.position.set(hide.lx, 0, hide.lz); hg.rotation.y = az; grp.add(hg);
+      for (const spec of HIDE[key](hg, seed)){ if (spec.out) spec.az = az; registerSecret(spec, key); }
+      hg.traverse(o => { if (o.userData.nightOnly) facNight.push(o); });
+      seed += 4; info.land.push([hide.lx, hide.lz, 1.13]);
+    }
+  }
   const occ = new Set(hexes.map(({ h }) => `${h.q},${h.r}`)), seen = new Set();
   for (const { h } of hexes) for (const [dq, dr] of DIRS6){
     const q = h.q + dq, r = h.r + dr, id = `${q},${r}`;
     if (occ.has(id) || seen.has(id)) continue; seen.add(id);
     if (knoll && q === knoll.q && r === knoll.r) continue;
     if (terr.some(t => t.q === q && t.r === r)) continue;
+    if (hide && q === hide.q && r === hide.r) continue;
     if (key === 'neu' && (Math.abs(q) + Math.abs(r) + Math.abs(q + r))/2 <= 1) continue;
     const ap = axial(q, r), lx = ap.x - cx, lz = ap.z - cz;
     if (toes.some(([x, z]) => Math.hypot(x - cx - lx, z - cz - lz) < 1.6)) continue;
@@ -2237,7 +2459,7 @@ const seaGroup = new THREE.Group(); scene.add(seaGroup);
 const routeMat = new THREE.MeshBasicMaterial({ color:'#FFFFFF' });
 const dashGeo = new THREE.BoxGeometry(0.62, 0.03, 0.2);
 const headGeo = (() => { const s = new THREE.Shape(); s.moveTo(0.6, 0); s.lineTo(-0.25, 0.42); s.lineTo(-0.25, -0.42); s.closePath(); const g = new THREE.ShapeGeometry(s); g.rotateX(-Math.PI/2); return g; })();
-let sea = { piers:[], boats:[], bobs:[], anim:[], glow:[], night:[], fishMats:[], dimMats:[] };
+let sea = { piers:[], boats:[], bobs:[], anim:[], glow:[], night:[], fishMats:[], dimMats:[], picks:[] };
 const gullCenter = new V3();
 const landCircles = () => D.KEYS.flatMap(k => isles[k].land.map(([x, z, r]) => [x + isles[k].target.x, z + isles[k].target.z, r, k]));
 function landPts(keys = D.KEYS){ const pts = []; for (const k of keys){ const t = isles[k].target; for (const [x, z, r] of isles[k].land) for (const [dx, dz] of [[r,0],[-r,0],[0,r],[0,-r]]) pts.push(new V3(x + t.x + dx, 0.3, z + t.z + dz)); } return pts; }
@@ -2411,7 +2633,8 @@ function applySeaTheme(){
 }
 function buildSea(){
   for (const p of sea.piers) if (p.parent) p.parent.remove(p);
-  seaGroup.clear(); sea = { piers:[], boats:[], bobs:[], anim:[], glow:[], night:[], fishMats:[], dimMats:[] };
+  seaGroup.traverse(o => { if (o.isCSS2DObject && o.element.parentNode) o.element.parentNode.removeChild(o.element); });
+  seaGroup.clear(); sea = { piers:[], boats:[], bobs:[], anim:[], glow:[], night:[], fishMats:[], dimMats:[], picks:[] };
   const circles = landCircles(), routes = [], PIER = 1.7;
   for (let i = 0; i < D.KEYS.length - 1; i++){
     const a = D.KEYS[i], b = D.KEYS[i + 1], A = isles[a].target, B = isles[b].target;
@@ -2465,6 +2688,22 @@ function buildSea(){
     });
     break;
   }
+  const seaSpot = (k, near, far, behind, needR = 2.3) => {
+    const T = isles[k].target; let best = null;
+    for (const g of grid){
+      if (g.dl < 2.6 || g.dr < needR || taken.some(([tx, tz, tr]) => Math.hypot(g.x - tx, g.z - tz) < tr + 1.5)) continue;
+      const dx = g.x - T.x, dz = g.z - T.z, d = Math.hypot(dx, dz); if (behind && dz > -1.5) continue; if (d < near || d > far) continue;
+      const sc = -Math.abs(d - (near + far)/2) - (behind ? Math.abs(dx)*0.12 : 0) + hash(g.x, g.z, 71, 1)*0.6; if (!best || sc > best.sc) best = { x:g.x, z:g.z, sc, az:Math.atan2(dx, dz) };
+    }
+    return best;
+  };
+  D.KEYS.forEach((k, i) => {
+    const sp = seaSpot(k, isles[k].d/2 + 2.2, isles[k].d/2 + 7.5, true); if (!sp) return;
+    const it = secretIslet(i); it.position.set(sp.x, 0, sp.z); it.rotation.y = hash(i, 3, 3, 3)*6.28; it.scale.setScalar(1.45); seaGroup.add(it); taken.push([sp.x, sp.z, 2.4]);
+    registerSecret({ id:`${k}-islet`, holder:it, center:new V3(0, 0.35, 0), pick:[it], r:2.6, el:34, az:sp.az, labelY:0.9 }, null, sea.picks);
+  });
+  { const sp = seaSpot('rdc', isles.rdc.w/2 + 2.6, isles.rdc.w/2 + 9, false, 3.4); if (sp){ const ar = stoneArch(3); ar.position.set(sp.x, 0, sp.z); ar.rotation.y = sp.az; ar.scale.setScalar(1.45); seaGroup.add(ar); taken.push([sp.x, sp.z, 2.6]);
+    registerSecret({ id:'rdc-arch', holder:ar, center:new V3(0, 0.9, 0), pick:[ar], r:2.6, el:22, az:sp.az, labelY:1.1 }, null, sea.picks); } }
   place(2, 4, 2.2, 3, 42).forEach(([x, z], i) => { const fs = BUILD.floatSolar(i ? 5 : 6, i ? 3 : 4); fs.scale.setScalar(1.6); fs.position.set(x, 0, z); fs.rotation.y = (hash(x, z, 2, 2) - 0.5)*0.6; fs.userData.kind = 'solar'; seaGroup.add(fs); const ph = i*1.7; sea.anim.push(t => { if (!reduceMotion) fs.position.y = Math.sin(t*1.1 + ph)*0.015; }); });
   place(3, 3.6, 2.4, 2.4, 23).forEach(([x, z], i) => addIslet(x, z, i, ['light', 'solar', 'trees'][i]));
   place(6, 3.4, 2.4, 2.2, 24).forEach(([x, z], i) => addSailboat(x, z, i));
@@ -2601,6 +2840,13 @@ bridge.focusHex = (id, instant) => {
   const el = Math.max(36, Math.min(60, curEl()));
   frame(pts, el, curAz(), instant, c);
 };
+bridge.focusSecret = (id, instant) => {
+  const s = secrets[id]; if (!s) return;
+  focus = { type:'secret', id }; selectTile(null); measure();
+  const c = secretWorld(s), pts = [c.clone().add(new V3(0, 1.2, 0))]; for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) pts.push(c.clone().add(new V3(dx*s.r, 0, dz*s.r)));
+  frame(pts, s.el, s.az ?? 0, instant, c);
+};
+bridge.secretFound = id => { const s = secrets[id]; if (!s) return; s.found = true; s.tag.textContent = s.S.name; s.sp.forEach(p => { p.visible = false; }); };
 bridge.clear = () => { focus = { type:'none' }; selectTile(null); if (measure()) frameAll(false); };
 bridge.setTags = on => labelsEl.classList.toggle('no-tags', !on);
 bridge.setLinks = on => { showLinks = on; };
@@ -2611,7 +2857,7 @@ const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
 function pickAt(x, y){
   const r = renderer.domElement.getBoundingClientRect(); ndc.set(((x - r.left)/r.width)*2 - 1, -((y - r.top)/r.height)*2 + 1);
   ray.setFromCamera(ndc, camera);
-  for (const h of ray.intersectObjects(pickables, false)){ const u = h.object.userData; if (u.mascot) return { mascot:true }; if (u.owner) return { owner:u.owner }; if (u.fac) return { fac:u.fac }; if (u.hex) return { hex:u.hex }; }
+  for (const h of ray.intersectObjects(sea.picks.length ? pickables.concat(sea.picks) : pickables, false)){ const u = h.object.userData; if (u.mascot) return { mascot:true }; if (u.owner) return { owner:u.owner }; if (u.secret) return { secret:u.secret, fac:u.fac }; if (u.fac) return { fac:u.fac }; if (u.hex) return { hex:u.hex }; }
   return null;
 }
 const cv = renderer.domElement; let down = null, hoverEvt = null, hoverId = null;
@@ -2619,7 +2865,7 @@ cv.addEventListener('pointerdown', e => { down = { x:e.clientX, y:e.clientY }; }
 cv.addEventListener('pointerup', e => {
   if (!down) return; const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null; if (moved > 6) return;
   const hit = pickAt(e.clientX, e.clientY); if (!hit) return;
-  if (hit.mascot) UI.mascotClicked(); else if (hit.owner) UI.showIsle(hit.owner); else if (hit.fac){ const el = hit.fac; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => { if (el !== hoverFac) el.classList.remove('show'); }, 2600); } else UI.showHex(hit.hex);
+  if (hit.mascot) UI.mascotClicked(); else if (hit.owner) UI.showIsle(hit.owner); else if (hit.secret) UI.showSecret(hit.secret); else if (hit.fac){ const el = hit.fac; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => { if (el !== hoverFac) el.classList.remove('show'); }, 2600); } else UI.showHex(hit.hex);
 });
 cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') hoverEvt = e; });
 let hoverFac = null;
@@ -2632,7 +2878,7 @@ function resize(){
   return flipped;
 }
 new ResizeObserver(() => { const flipped = resize(); if (bridge.ready && flipped) refocus(true); }).observe(stage);
-function refocus(instant){ if (focus.type === 'hex') bridge.focusHex(focus.id, instant); else if (focus.type === 'isle') bridge.focusIsle(focus.k, instant); else if (focus.type === 'home') bridge.focusHome(instant); }
+function refocus(instant){ if (focus.type === 'hex') bridge.focusHex(focus.id, instant); else if (focus.type === 'isle') bridge.focusIsle(focus.k, instant); else if (focus.type === 'secret') bridge.focusSecret(focus.id, instant); else if (focus.type === 'home') bridge.focusHome(instant); }
 
 const clock = new THREE.Clock();
 const ease = k => k < 0.5 ? 4*k*k*k : 1 - Math.pow(-2*k + 2, 3)/2;
@@ -2688,6 +2934,7 @@ function loop(){
     let dr = want - mascot.g.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); mascot.g.rotation.y += dr*Math.min(1, dt*5);
     mascot.b.rotation.z *= 0.9;
   }
+  for (const id in secrets){ const s = secrets[id]; if (s.found) continue; s.sp.forEach((p, i) => { const k = 0.5 + 0.5*Math.sin((reduceMotion ? 1 : t)*2.4 + i*2.1 + s.ph); p.material.opacity = 0.3 + 0.7*k; p.scale.setScalar(0.22 + 0.3*k); }); }
   for (const kp of keepers){ kp.getWorldPosition(kTmp); const dx = camera.position.x - kTmp.x, dz = camera.position.z - kTmp.z; let dr = Math.atan2(dx, dz) - kp.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); kp.rotation.y += dr*Math.min(1, dt*4); const el = Math.atan2(camera.position.y - kTmp.y, Math.hypot(dx, dz)); kp.userData.pivot.rotation.x = -Math.min(0.7, Math.max(0, (el - 0.25)*0.8)); }
 
   const camDist = camera.position.distanceTo(controls.target);
