@@ -1037,7 +1037,7 @@ const SECRETS = [
 ];
 window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS };
 
-const bridge = window.ISLE3D = { ready:false, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
+const bridge = window.ISLE3D = { ready:false, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, secretsReset(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
 const $ = s => document.querySelector(s);
 const panel = $('#panel'), body = $('#panelBody'), list = $('#list');
 const state = { view:'home', hex:null, isle:null, no3d:false, interacted:false };
@@ -1050,8 +1050,12 @@ const fmt = (n, d=0) => n.toLocaleString('zh-TW', { maximumFractionDigits:d, min
 function setModes(m){ document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m))); }
 const fileLabel = $('#fileLabel'), stampEl = $('#stamp');
 const secretById = Object.fromEntries(SECRETS.map(s => [s.id, s])), found = new Set();
-try { JSON.parse(localStorage.getItem('tanbao-secrets') || '[]').forEach(id => { if (secretById[id]) found.add(id); }); } catch (e) {}
-const saveFound = () => { try { localStorage.setItem('tanbao-secrets', JSON.stringify([...found])); } catch (e) {} };
+try { localStorage.removeItem('tanbao-secrets'); } catch (e) {}
+function resetSecrets(){
+  found.clear(); updateSecretCount(); bridge.secretsReset();
+  if (state.view === 'secret' || state.view === 'secrets') openPanel(secretsHTML(), '祕境筆記');
+}
+window.addEventListener('pageshow', e => { if (e.persisted) resetSecrets(); });
 const foundCount = () => SECRETS.filter(s => found.has(s.id)).length;
 function updateSecretCount(){ document.querySelectorAll('[data-secret-count]').forEach(el => { el.textContent = `${foundCount()}/${SECRETS.length}`; }); }
 function secretHTML(s, isNew){
@@ -1072,14 +1076,14 @@ function secretsHTML(active){
   return `
     <p class="eyebrow">祕境筆記</p>
     <h2>地圖上的祕境</h2>
-    <p class="lead">島嶼四周藏著海蝕洞、天然石拱門、隱藏瀑布、無人島、山頂觀景台、森林祕密小徑和沙灘上的神祕洞穴。留意閃閃發亮的地方，轉動地圖、靠近一點，點下去就會記進這本筆記。</p>
+    <p class="lead">島嶼四周藏著海蝕洞、天然石拱門、隱藏瀑布、無人島、山頂觀景台、森林祕密小徑和沙灘上的神祕洞穴。留意閃閃發亮的地方，轉動地圖、靠近一點，點下去就會記進這本筆記。離開碳寶島再回來，祕境會重新藏好，從頭開始找。</p>
     <p class="secret-progress">已發現 <b>${foundCount()}</b> / ${SECRETS.length} 個祕境</p>
     <ul class="secret-list">${items}</ul>`;
 }
 function showSecret(id){
   const s = secretById[id]; if (!s) return;
   interacted(); closeList();
-  const isNew = !found.has(id); found.add(id); saveFound(); updateSecretCount();
+  const isNew = !found.has(id); found.add(id); updateSecretCount();
   state.view = 'secret'; state.hex = null; state.isle = null; setModes('');
   openPanel(secretHTML(s, isNew), `祕境 ─ ${ISLES[s.isle].name}`, isNew ? '新發現' : '');
   bridge.secretFound(id); bridge.focusSecret(id);
@@ -3055,6 +3059,7 @@ bridge.focusSecret = (id, instant, near = true) => {
   const R = near ? s.r : s.r*2.6, c = secretWorld(s), pts = [c.clone().add(new V3(0, 1.2, 0))]; for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) pts.push(c.clone().add(new V3(dx*R, 0, dz*R)));
   frame(pts, near ? s.el : Math.min(60, s.el + 14), s.az ?? 0, instant, c);
 };
+bridge.secretsReset = () => { for (const id in secrets){ const s = secrets[id]; s.found = false; s.tag.textContent = '？？？'; s.sp.forEach(p => { p.visible = true; }); } };
 bridge.secretFound = id => { const s = secrets[id]; if (!s) return; s.found = true; s.tag.textContent = s.S.name; s.sp.forEach(p => { p.visible = false; }); };
 bridge.clear = () => { focus = { type:'none' }; selectTile(null); if (measure()) frameAll(false); };
 bridge.setTags = on => labelsEl.classList.toggle('no-tags', !on);
