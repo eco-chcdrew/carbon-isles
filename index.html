@@ -340,11 +340,11 @@ button.secret-item:hover{border-color:var(--line)}
       </nav>
     </header>
 
-    <aside id="panel" aria-label="偵探筆記">
+    <aside id="panel" aria-label="CASE FILE">
       <div class="file-head">
-        <span class="file-label" id="fileLabel">碳寶的偵探筆記</span>
+        <span class="file-label" id="fileLabel">CASE FILE ─ 案件簡報</span>
         <span class="stamp" id="stamp" hidden></span>
-        <button type="button" class="icon-btn" id="panelClose" aria-label="闔上筆記">✕</button>
+        <button type="button" class="icon-btn" id="panelClose" aria-label="闔上 CASE FILE">✕</button>
       </div>
       <div class="panel-body" id="panelBody" aria-live="polite"></div>
     </aside>
@@ -1110,7 +1110,7 @@ function hintSecret(id){
   const y = body.scrollTop; openPanel(secretsHTML(id), '祕境筆記'); body.scrollTop = y;
   bridge.focusSecret(id, false, false);
 }
-function openPanel(html, label = '碳寶的偵探筆記', stamp = ''){ body.innerHTML = html; fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
+function openPanel(html, label = 'CASE FILE', stamp = ''){ body.innerHTML = html; fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
 
 function homeHTML(){
   const cards = KEYS.map(k => { const I = ISLES[k]; return `
@@ -1190,7 +1190,7 @@ function hexHTML(h){
   if (h.note) s += `<aside class="note"><h3>${esc(h.noteTitle || '補充')}</h3><p>${esc(h.note)}</p></aside>`;
   const ls = LINKS.filter(L => L.a === h.id || L.b === h.id);
   if (ls.length) s += `<h3>紅線連到哪裡</h3><div class="linkrow">${ls.map(L => { const o = byId[L.a === h.id ? L.b : L.a]; return `<button type="button" class="linkbtn" data-hex="${o.id}"><i aria-hidden="true"></i><span><b>${ISLES[o.isle].name}・${esc(o.short)}</b><small>${esc(L.text)}</small></span></button>`; }).join('')}</div>`;
-  const prev = i > 0 ? `<button type="button" class="btn" data-hex="${order[i-1]}">‹ ${esc(byId[order[i-1]].short)}</button>` : `<button type="button" class="btn" data-go="isle:${h.isle}">‹ 回${I.name}</button>`;
+  const prev = i > 0 ? `<button type="button" class="btn" data-hex="${order[i-1]}">‹ ${esc(byId[order[i-1]].short)}</button>` : `<button type="button" class="btn" data-go="isle:${h.isle}">‹ ${I.name} CASE FILE</button>`;
   let next;
   if (i < order.length - 1) next = `<button type="button" class="btn primary" data-hex="${order[i+1]}">${esc(byId[order[i+1]].short)} ›</button>`;
   else { const nk = KEYS[KEYS.indexOf(h.isle) + 1]; next = nk ? `<button type="button" class="btn primary" data-hex="${ORDER[nk][0]}">下一座島：${ISLES[nk].name} ›</button>` : `<button type="button" class="btn primary" data-go="home">五座島都走完了，回全景 ›</button>`; }
@@ -1209,13 +1209,13 @@ function calcUpdate(src){
   out.innerHTML = `<b>${fmt(kg, kg < 100 ? 2 : 0)}</b> kg CO₂e　≈　<b>${fmt(kg/1000, 2)}</b> 公噸 CO₂e`;
 }
 
-function showHome(opts = {}){ state.view='home'; state.hex=null; state.isle=null; setModes('home'); openPanel(homeHTML(), '碳寶的偵探筆記'); bridge.focusHome(!!opts.instant); }
-function showIsle(k){ closeList(); state.view='isle'; state.hex=null; state.isle=k; setModes(k); openPanel(isleHTML(k), `${ISLES[k].name}・島主 ${ISLES[k].owner}`); bridge.focusIsle(k); }
+function showHome(opts = {}){ state.view='home'; state.hex=null; state.isle=null; setModes('home'); openPanel(homeHTML(), 'CASE FILE ─ 案件簡報'); bridge.focusHome(!!opts.instant); }
+function showIsle(k){ closeList(); state.view='isle'; state.hex=null; state.isle=k; setModes(k); openPanel(isleHTML(k), `CASE FILE ─ ${ISLES[k].name}`); bridge.focusIsle(k); }
 function showHex(id){
   const h = byId[id]; if (!h) return;
   closeList(); state.view='hex'; state.hex=id; state.isle=h.isle; setModes(h.isle);
   const o = ORDER[h.isle], n = o.indexOf(id);
-  openPanel(hexHTML(h), `${ISLES[h.isle].name}・第 ${n+1} 條線索`, n === o.length - 1 ? '破案！' : ''); if (h.calc) calcUpdate();
+  openPanel(hexHTML(h), `CASE FILE ─ ${ISLES[h.isle].name}・第 ${n+1} 條線索`, n === o.length - 1 ? '破案！' : ''); if (h.calc) calcUpdate();
   bridge.focusHex(id); interacted();
 }
 function closePanel(){ panel.hidden = true; state.view='none'; state.hex=null; setModes(''); bridge.clear(); }
