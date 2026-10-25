@@ -161,7 +161,10 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 button.secret-item:hover{border-color:var(--ink)}
 .secret-item b{font-family:var(--f-display);font-weight:700;font-size:15.5px}
 .secret-item small{font-size:12.5px;color:var(--muted)}
-.locked .secret-item{cursor:default;border-style:dashed;background:transparent}
+.locked .secret-item{border-style:dashed;background:transparent}
+.locked .secret-item:hover{border-color:var(--accent)}
+.secret-item .go{font-size:12px;font-weight:700;color:var(--accent)}
+.secret-go{margin:6px 2px 0;font-size:13px;line-height:1.5;color:var(--accent)}
 .locked .secret-item b{color:var(--muted);letter-spacing:.2em}
 .tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:2px}
 .cmp{width:100%;border-collapse:collapse;font-size:13.5px;line-height:1.5}
@@ -1062,10 +1065,10 @@ function secretHTML(s, isNew){
     <p class="secret-progress">已發現 <b>${n}</b> / ${SECRETS.length} 個祕境${all ? '，全部找到了！' : '。'}</p>
     <div class="btns"><button type="button" class="btn" data-go="secrets">祕境筆記</button><button type="button" class="btn primary" data-go="isle:${s.isle}">回到${ISLES[s.isle].name}</button></div>`;
 }
-function secretsHTML(){
+function secretsHTML(active){
   const items = SECRETS.map(s => found.has(s.id)
     ? `<li><button type="button" class="secret-item" data-secret="${s.id}"><b>${esc(s.name)}</b><small>${ISLES[s.isle].name}</small></button></li>`
-    : `<li class="locked"><span class="secret-item"><b>？？？</b><small>線索：${esc(s.hint)}</small></span></li>`).join('');
+    : `<li class="locked"><button type="button" class="secret-item" data-hint="${s.id}" aria-pressed="${active === s.id}"><b>？？？</b><small>線索：${esc(s.hint)}</small><span class="go">帶我去附近 ›</span></button>${active === s.id ? '<p class="secret-go">鏡頭已經帶到附近了。找找看閃閃發亮的地方，點下去就算發現。</p>' : ''}</li>`).join('');
   return `
     <p class="eyebrow">祕境筆記</p>
     <h2>地圖上的祕境</h2>
@@ -1082,6 +1085,12 @@ function showSecret(id){
   bridge.secretFound(id); bridge.focusSecret(id);
 }
 function showSecrets(){ interacted(); closeList(); state.view = 'secrets'; state.hex = null; setModes(''); openPanel(secretsHTML(), '祕境筆記'); }
+function hintSecret(id){
+  if (!secretById[id]) return; if (found.has(id)) return showSecret(id);
+  interacted(); closeList(); state.view = 'secrets'; state.hex = null; setModes('');
+  const y = body.scrollTop; openPanel(secretsHTML(id), '祕境筆記'); body.scrollTop = y;
+  bridge.focusSecret(id, false, false);
+}
 function openPanel(html, label = 'CASE FILE', stamp = ''){ body.innerHTML = html; fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
 
 function homeHTML(){
@@ -1223,7 +1232,8 @@ function openList(){
 function closeList(){ if (state.no3d || list.hidden) return; list.hidden = true; setModes(listPrevMode); }
 
 body.addEventListener('click', e => {
-  const t = e.target.closest('[data-go],[data-hex],[data-secret]'); if (!t) return;
+  const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-hint]'); if (!t) return;
+  if (t.dataset.hint) return hintSecret(t.dataset.hint);
   if (t.dataset.hex) return showHex(t.dataset.hex);
   if (t.dataset.secret) return showSecret(t.dataset.secret);
   const g = t.dataset.go;
@@ -2840,11 +2850,11 @@ bridge.focusHex = (id, instant) => {
   const el = Math.max(36, Math.min(60, curEl()));
   frame(pts, el, curAz(), instant, c);
 };
-bridge.focusSecret = (id, instant) => {
+bridge.focusSecret = (id, instant, near = true) => {
   const s = secrets[id]; if (!s) return;
-  focus = { type:'secret', id }; selectTile(null); measure();
-  const c = secretWorld(s), pts = [c.clone().add(new V3(0, 1.2, 0))]; for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) pts.push(c.clone().add(new V3(dx*s.r, 0, dz*s.r)));
-  frame(pts, s.el, s.az ?? 0, instant, c);
+  focus = { type:'secret', id, near }; selectTile(null); measure();
+  const R = near ? s.r : s.r*2.6, c = secretWorld(s), pts = [c.clone().add(new V3(0, 1.2, 0))]; for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) pts.push(c.clone().add(new V3(dx*R, 0, dz*R)));
+  frame(pts, near ? s.el : Math.min(60, s.el + 14), s.az ?? 0, instant, c);
 };
 bridge.secretFound = id => { const s = secrets[id]; if (!s) return; s.found = true; s.tag.textContent = s.S.name; s.sp.forEach(p => { p.visible = false; }); };
 bridge.clear = () => { focus = { type:'none' }; selectTile(null); if (measure()) frameAll(false); };
@@ -2878,7 +2888,7 @@ function resize(){
   return flipped;
 }
 new ResizeObserver(() => { const flipped = resize(); if (bridge.ready && flipped) refocus(true); }).observe(stage);
-function refocus(instant){ if (focus.type === 'hex') bridge.focusHex(focus.id, instant); else if (focus.type === 'isle') bridge.focusIsle(focus.k, instant); else if (focus.type === 'secret') bridge.focusSecret(focus.id, instant); else if (focus.type === 'home') bridge.focusHome(instant); }
+function refocus(instant){ if (focus.type === 'hex') bridge.focusHex(focus.id, instant); else if (focus.type === 'isle') bridge.focusIsle(focus.k, instant); else if (focus.type === 'secret') bridge.focusSecret(focus.id, instant, focus.near); else if (focus.type === 'home') bridge.focusHome(instant); }
 
 const clock = new THREE.Clock();
 const ease = k => k < 0.5 ? 4*k*k*k : 1 - Math.pow(-2*k + 2, 3)/2;
