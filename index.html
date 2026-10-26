@@ -577,6 +577,349 @@ details.tw > summary,details.adv > summary{font-weight:800;font-size:15px}
 @media (max-width: 520px){
   .labels.far .district{display:none}
 }
+/* ===== 闖關 ===== */
+@keyframes gShake{0%,100%{translate:0 0}20%{translate:-9px 2px}40%{translate:8px -2px}60%{translate:-6px 1px}80%{translate:4px 0}}
+@keyframes gNope{0%,100%{translate:0}25%{translate:-6px}75%{translate:6px}}
+@keyframes gFlash{0%{opacity:1}100%{opacity:0}}
+@keyframes gFloat{0%{opacity:0;translate:0 6px}15%{opacity:1;translate:0 0}100%{opacity:0;translate:0 -26px}}
+@keyframes gHot{0%,100%{scale:1}50%{scale:1.08}}
+@keyframes gCount{0%{scale:.3;opacity:0}45%{scale:1.15;opacity:1}100%{scale:1}}
+@keyframes gBossIn{0%{scale:.6;rotate:-4deg;opacity:0}60%{scale:1.06;rotate:1deg;opacity:1}100%{scale:1;rotate:0deg}}
+@keyframes gStar{0%{scale:0;rotate:-40deg;opacity:0}70%{scale:1.25;rotate:8deg;opacity:1}100%{scale:1;rotate:0deg;opacity:1}}
+@keyframes gGlow{from{opacity:.12}to{opacity:.32}}
+@keyframes gSpark{0%{opacity:0;translate:0 4px}40%{opacity:1}100%{opacity:0;translate:0 -10px}}
+@keyframes gBob{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes gToast{0%{opacity:0;translate:-50% -10px}100%{opacity:1;translate:-50% 0}}
+@keyframes gInk{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0 0 0)}}
+@keyframes gCrack{0%{scale:1}40%{scale:1.6;background:#fff}100%{scale:1}}
+@keyframes gPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes gFade{from{opacity:0}to{opacity:1}}
+
+.ingame .modes,.ingame .tools,.ingame .hint{display:none}
+#panel.game{bottom:var(--bot);width:min(460px, 44vw)}
+#panel.game .grip{pointer-events:none}
+#panel.g-shake{animation:gShake .45s}
+.g-flash{position:absolute;inset:0;z-index:9;pointer-events:none;background:rgb(229 72 59 / .3);animation:gFlash .5s ease-out forwards}
+
+.gi{display:inline-grid;place-items:center;flex:none;width:20px;height:20px;font-style:normal;line-height:0}
+.gi svg{width:100%;height:100%}
+.g-hud{position:sticky;top:-14px;z-index:4;margin:-14px -20px 10px;padding:10px 20px 8px;background:var(--paper);border-bottom:1px solid var(--soft)}
+.g-row{display:flex;align-items:center;gap:8px}
+.g-row2{margin-top:7px;justify-content:space-between}
+.g-clock{display:inline-flex;align-items:center;gap:5px;min-width:74px;padding:5px 12px 5px 9px;border-radius:999px;background:var(--card);box-shadow:0 3px 0 var(--soft);font-weight:900;font-size:21px;line-height:1.1;font-variant-numeric:tabular-nums;transition:background .2s,color .2s}
+.g-clock .gi{width:21px;height:21px;color:var(--accent)}
+.g-clock[data-lv="warn"]{background:#F2B21C;color:#3A2600;box-shadow:0 3px 0 #C98A0B}
+.g-clock[data-lv="warn"] .gi{color:#3A2600}
+.g-clock[data-lv="hot"]{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-lip);animation:gHot .5s ease-in-out infinite}
+.g-clock[data-lv="hot"] .gi{color:#fff}
+.g-bar{flex:1;min-width:30px;height:12px;border-radius:999px;background:var(--paper-2);overflow:hidden}
+.g-bar i{display:block;height:100%;border-radius:999px;background:var(--accent);transform-origin:0 50%}
+.g-bar[data-lv="warn"] i{background:#F2B21C}
+.g-bar[data-lv="hot"] i{background:var(--red)}
+.g-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 11px 4px 7px;border-radius:999px;background:var(--card);box-shadow:0 3px 0 var(--soft);font-weight:900;font-size:16px;line-height:1.2;white-space:nowrap}
+.g-chip small{font-size:11.5px;font-weight:800;color:var(--muted)}
+.g-chip .gi{color:var(--isle)}
+.g-ico{appearance:none;flex:none;display:grid;place-items:center;width:38px;height:38px;padding:0;border:0;border-radius:50%;background:var(--card);color:var(--ink);box-shadow:0 3px 0 var(--soft);cursor:pointer}
+.g-ico svg{width:20px;height:20px}
+.g-ico.sm{width:32px;height:32px}
+.g-ico.sm svg{width:17px;height:17px}
+.g-ico:active{translate:0 2px;box-shadow:0 1px 0 var(--soft)}
+.g-items{display:flex;flex-wrap:wrap;gap:6px}
+.g-item{appearance:none;display:inline-flex;align-items:center;gap:3px;padding:3px 10px 3px 6px;border:0;border-radius:999px;background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--isle), 0 3px 0 color-mix(in srgb, var(--isle) 45%, transparent);font-weight:900;font-size:14px;cursor:pointer}
+.g-item .gi{width:19px;height:19px;color:var(--isle)}
+.g-item:disabled{opacity:.42;cursor:default;box-shadow:inset 0 0 0 2px var(--soft)}
+.g-item.passive:disabled{opacity:.8}
+.g-item:not(:disabled):active{translate:0 2px}
+.g-fx{position:absolute;right:58px;top:6px;z-index:5;pointer-events:none;font-weight:900;font-size:16px;white-space:nowrap;animation:gFloat 1.15s ease-out forwards}
+.g-fx.up{color:var(--accent)}
+.g-fx.down{color:var(--red)}
+
+.g-stage{position:relative}
+.g-eyebrow{margin:4px 0 0;font-size:12.5px;font-weight:900;letter-spacing:.06em;color:var(--isle, var(--accent))}
+.panel-body h2.g-h{font-family:var(--f-display);font-weight:900;font-size:21px;line-height:1.4;margin:2px 0 6px}
+.g-tip{margin:0 0 10px;font-size:14px;line-height:1.6;color:var(--muted)}
+.go-big{font-size:16px !important;padding:11px 22px 12px !important}
+
+.docs{display:grid;gap:10px}
+.doc{background:var(--card);border-radius:16px;box-shadow:0 3px 0 var(--soft);overflow:hidden}
+.doc header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 8px;padding:8px 12px 7px;background:color-mix(in srgb, var(--isle) 13%, var(--card));border-bottom:2px dashed color-mix(in srgb, var(--isle) 30%, transparent)}
+.doc header b{font-size:14.5px;font-weight:900}
+.doc header small{font-size:11.5px;font-weight:700;color:var(--muted)}
+.doc ol{list-style:none;margin:0;padding:2px 0}
+.doc li + li .doc-row{border-top:1px dashed var(--soft)}
+.doc-row{appearance:none;position:relative;display:block;width:100%;text-align:left;border:0;background:transparent;color:var(--ink);padding:9px 12px 9px 34px;font-size:14.5px;line-height:1.55;font-weight:600;cursor:pointer}
+.doc-row::before{content:"";position:absolute;left:12px;top:13px;box-sizing:border-box;width:14px;height:14px;border:2px solid var(--line);border-radius:50%;font-size:10px;line-height:10px;text-align:center;font-weight:900}
+.doc-row:hover:not([aria-disabled="true"]){background:var(--wash)}
+.doc-row[aria-disabled="true"]{cursor:default}
+.dr-t{display:block;position:relative}
+.doc-row.hit{background:color-mix(in srgb, var(--red) 7%, var(--card))}
+.doc-row.hit::before{content:"!";background:var(--red);border-color:var(--red);color:#fff}
+.doc-row.hit .dr-t{color:var(--red);font-weight:800}
+.doc-row.hit .dr-t::after{content:"";position:absolute;inset:-4px -7px;border:2.5px solid var(--red);border-radius:52% 46% 55% 44% / 60% 52% 48% 42%;rotate:-1.2deg;animation:gInk .35s ease-out}
+.dr-k{display:inline-block;margin:8px 0 0;padding:1px 10px 2px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:900}
+.dr-why{display:block;margin-top:5px;font-size:13.5px;line-height:1.65;font-weight:600}
+.doc-row.clean{color:var(--muted)}
+.doc-row.clean::before{content:"✓";border-color:var(--soft);color:var(--muted)}
+.dr-ok{display:block;font-size:12px;font-weight:800;color:var(--muted)}
+.g-nope{animation:gNope .3s 2}
+.g-unlocks{display:grid;gap:6px;margin:10px 0 0}
+.g-unlocks:empty{display:none}
+.g-unlock{display:flex;align-items:center;gap:8px;margin:0;padding:7px 12px;border-radius:14px;background:color-mix(in srgb, var(--isle) 11%, var(--card));animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+.g-unlock .gi{color:var(--isle)}
+.g-unlock small{display:block;font-size:11px;font-weight:800;color:var(--muted);line-height:1.3}
+.g-unlock b{font-size:14px;font-weight:800}
+.g-got{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:12px 14px;border-radius:18px;background:var(--note);animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+.g-got .gi{width:30px;height:30px;color:var(--red)}
+.g-got b{display:block;font-size:17px;font-weight:900;margin:2px 0}
+.g-got p{margin:0;font-size:14px;line-height:1.6}
+.g-got .g-eyebrow{margin:0;color:var(--red)}
+
+.bmeter{margin:0 0 10px;padding:10px 12px;border-radius:16px;background:var(--card);box-shadow:0 3px 0 var(--soft)}
+.bm-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-weight:800;font-size:14px}
+.bm-top b{font-size:18px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bm-top small{font-size:13px;font-weight:700;color:var(--muted)}
+.bm-bar{position:relative;height:14px;margin-top:6px;border-radius:999px;background:var(--paper-2)}
+.bm-bar i{display:block;height:100%;border-radius:999px;background:var(--isle);transition:width .3s ease}
+.bm-bar em{position:absolute;left:80%;top:-5px;bottom:-5px;border-left:3px dashed var(--ink)}
+.bmeter.ok .bm-bar i{background:var(--accent)}
+.bm-note{margin:5px 0 0;font-size:12px;font-weight:700;color:var(--muted)}
+.bopts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.bopt{appearance:none;position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;padding:9px 10px 10px;border:0;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--soft), 0 3px 0 var(--soft);cursor:pointer}
+.bopt:active:not(:disabled){translate:0 2px}
+.bopt.on{background:color-mix(in srgb, var(--accent) 10%, var(--card));box-shadow:inset 0 0 0 2.5px var(--accent), 0 3px 0 var(--accent-lip)}
+.bopt.on::after{content:"✓";position:absolute;top:7px;right:8px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:900}
+.bopt:disabled{cursor:default;opacity:.5}
+.bopt.on:disabled{opacity:1}
+.bopt.ret{opacity:1;background:color-mix(in srgb, var(--red) 7%, var(--card));box-shadow:inset 0 0 0 2px var(--red)}
+.bopt.ret .bname{text-decoration:line-through;text-decoration-color:var(--red)}
+.bcat{align-self:flex-start;padding:1px 8px 2px;border-radius:999px;background:color-mix(in srgb, var(--isle) 15%, var(--card));color:var(--ink);font-size:11px;font-weight:900;line-height:1.5;margin-right:22px}
+.bname{font-size:14px;font-weight:800;line-height:1.45}
+.bnums{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 6px;margin-top:auto;padding-top:2px;font-size:13px;font-weight:900}
+.bcost{display:inline-flex;align-items:center;gap:3px}
+.bcost .gi{width:16px;height:16px}
+.beff{color:var(--isle)}
+.bret{font-size:12px;line-height:1.5;font-weight:700;color:var(--red)}
+.bfoot{position:sticky;bottom:-26px;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px -20px 0;padding:10px 20px 12px;background:linear-gradient(to bottom, color-mix(in srgb, var(--paper) 0%, transparent), var(--paper) 30%)}
+.bcoins{display:inline-flex;align-items:center;gap:5px;font-weight:800;font-size:14px}
+.bcoins b{font-size:19px;font-weight:900}
+.g-checking{margin:12px 0 0;text-align:center;font-weight:900;color:var(--muted);animation:gPulse .7s ease-in-out infinite}
+.g-result{margin:12px 0 0;padding:12px 14px;border-radius:18px}
+.g-result.ok{background:color-mix(in srgb, var(--accent) 11%, var(--card));box-shadow:inset 0 0 0 2px var(--accent)}
+.g-result.bad{background:color-mix(in srgb, var(--red) 8%, var(--card));box-shadow:inset 0 0 0 2px var(--red)}
+.g-result.bad .g-eyebrow,.g-result .bad-t{color:var(--red)}
+.g-result p{margin:4px 0 0;font-size:14px;font-weight:600}
+.g-result ul{margin:6px 0 0;padding-left:18px}
+.g-result li{font-size:13.5px;line-height:1.6;margin:4px 0}
+
+.g-layer{position:absolute;inset:0;z-index:7;display:grid;place-items:center;padding:16px;background:var(--scrim);border-radius:inherit;overflow:auto;animation:gFade .15s}
+.g-pause{z-index:8}
+.g-layer[data-kind="hit"]{background:rgb(255 255 255 / .08)}
+.g-card{width:min(380px, 100%);max-height:100%;overflow:auto;padding:16px 18px 18px;border-radius:22px;background:var(--paper);box-shadow:var(--pop-lg);animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
+.g-card h3{margin:6px 0 6px;font-size:20px;font-weight:900;line-height:1.4}
+.g-card p{margin:4px 0;font-size:14.5px;line-height:1.65}
+.btns.col{flex-direction:column}
+.btns.col .btn{width:100%}
+.ev-kind{display:inline-flex;align-items:center;gap:5px;margin:0 !important;padding:4px 13px 4px 9px;border-radius:999px;background:repeating-linear-gradient(-45deg, #E5483B 0 10px, #C2382D 10px 20px);color:#fff;font-weight:900;font-size:13px !important}
+.ev-kind .gi{width:17px;height:17px}
+.ev.good .ev-kind{background:var(--accent);color:var(--accent-ink)}
+.ev-q{font-weight:800}
+.ev-opts{display:grid;gap:8px;margin-top:8px}
+.ev-time{display:flex;align-items:center;gap:4px;font-size:12px !important;font-weight:800;color:var(--muted)}
+.ev-time .gi{width:15px;height:15px}
+.g-count{min-width:160px;padding:14px 30px 18px;border-radius:30px;text-align:center;color:#fff;background:rgb(20 28 38 / .82);box-shadow:0 10px 30px rgb(0 0 0 / .3)}
+.g-count b{display:block;font-size:104px;font-weight:900;line-height:1;text-shadow:0 6px 0 rgb(0 0 0 / .25);animation:gCount .6s cubic-bezier(.3,1.6,.5,1)}
+.g-count b.go{font-size:62px}
+.g-count small{display:block;margin-top:10px;font-weight:800;font-size:16px;text-shadow:0 2px 6px rgb(0 0 0 / .4)}
+.g-splash{appearance:none;cursor:pointer;width:min(400px, 100%);padding:22px 18px 20px;border:0;border-radius:26px;text-align:center;color:#fff;background:radial-gradient(circle at 50% 28%, #7A47B8, #2A1145 75%);box-shadow:0 6px 0 #1B0A2E, 0 20px 50px rgb(0 0 0 / .5);animation:gBossIn .5s cubic-bezier(.3,1.5,.5,1)}
+.g-splash small{display:block;font-size:12px;font-weight:900;letter-spacing:.24em;opacity:.8}
+.g-splash b{display:block;margin-top:4px;font-size:36px;font-weight:900;line-height:1.25;color:#FFD45E;text-shadow:0 3px 0 #1B0A2E}
+.g-splash span{display:block;margin-top:2px;font-size:18px;font-weight:900}
+.g-splash em{display:block;margin-top:8px;font-style:normal;font-size:14px;line-height:1.6;opacity:.92}
+.g-splash i{display:inline-block;margin-top:12px;padding:4px 14px;border-radius:999px;background:#FFD45E;color:#3A2600;font-style:normal;font-weight:900;font-size:14px}
+.g-hit{text-align:center;pointer-events:none}
+.g-hit b{display:block;font-size:58px;font-weight:900;line-height:1.1;color:#FFD45E;-webkit-text-stroke:2px #3A2600;paint-order:stroke fill;animation:gCount .5s cubic-bezier(.3,1.6,.5,1)}
+.g-hit span{display:inline-block;margin-top:6px;padding:3px 12px;border-radius:999px;background:#2A1145;color:#fff;font-weight:800;font-size:14px}
+
+.boss-head{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding:10px 12px;border-radius:18px;color:#fff;background:linear-gradient(135deg, #3B1A63, #6B3FA0);box-shadow:0 3px 0 #22103A}
+.bh-ic{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:rgb(255 255 255 / .14);color:#FFD45E}
+.bh-ic svg{width:24px;height:24px}
+.bh-name{flex:1;min-width:0}
+.bh-name small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;opacity:.8}
+.bh-name b{display:block;font-size:16px;font-weight:900;line-height:1.3}
+.bh-hp{display:flex;gap:4px}
+.bh-hp i{width:16px;height:12px;border-radius:4px;background:rgb(255 255 255 / .18)}
+.bh-hp i.on{background:#B57BFF;box-shadow:0 0 8px #B57BFF}
+.bh-hp i.break{animation:gCrack .5s}
+.hearts{display:inline-flex;gap:2px}
+.hearts i{display:inline-grid;width:21px;height:21px;color:var(--soft)}
+.hearts i.on{color:var(--red)}
+.hearts svg{width:100%;height:100%}
+.r-msg{margin:0 0 10px;padding:8px 12px;border-radius:14px;background:color-mix(in srgb, var(--red) 10%, var(--card));font-size:13.5px;line-height:1.6;font-weight:700;animation:gNope .3s 2}
+.r-sort{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.r-sort li{padding:8px 10px 9px;border-radius:14px;background:var(--card);box-shadow:0 2px 0 var(--soft)}
+.r-sort li.lock{background:color-mix(in srgb, var(--accent) 10%, var(--card))}
+.r-sort li.wrong{box-shadow:inset 0 0 0 2px var(--red), 0 2px 0 var(--soft);animation:gNope .3s 2}
+.rs-t{display:block;margin-bottom:6px;font-size:14px;font-weight:800;line-height:1.45}
+.seg{display:grid;gap:4px}
+.seg-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.seg-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seg button{appearance:none;border:0;border-radius:999px;background:var(--paper-2);color:var(--muted);font-weight:800;font-size:13px;line-height:1.3;padding:6px 4px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--isle);color:var(--ic-ink);box-shadow:0 2px 0 color-mix(in srgb, var(--isle) 60%, #000)}
+.seg button:disabled{cursor:default}
+.r-hint{margin:0 0 6px;font-size:13px;font-weight:800;color:var(--muted)}
+.r-seq{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:5px}
+.r-seq li{display:flex;align-items:center;gap:8px;min-height:36px;padding:5px 10px;border-radius:12px;background:var(--card);box-shadow:0 2px 0 var(--soft);font-weight:800;font-size:14px}
+.r-seq li.empty{background:transparent;box-shadow:none;border:2px dashed var(--soft)}
+.r-seq li.wrong{box-shadow:inset 0 0 0 2px var(--red)}
+.r-seq em{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:var(--isle);color:var(--ic-ink);font-style:normal;font-size:12px;font-weight:900}
+.r-seq li.empty em{background:var(--paper-2);color:var(--muted)}
+.r-pool{display:flex;flex-wrap:wrap;gap:7px}
+.chip-b{appearance:none;border:0;border-radius:999px;background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--isle), 0 3px 0 color-mix(in srgb, var(--isle) 40%, transparent);padding:7px 14px;font-weight:800;font-size:14px;line-height:1.35;cursor:pointer;text-align:left}
+.chip-b:active{translate:0 2px}
+.r-pick{display:grid;gap:7px}
+.pk{appearance:none;display:flex;align-items:center;gap:9px;text-align:left;border:0;border-radius:14px;padding:9px 12px;background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--soft), 0 3px 0 var(--soft);font-weight:700;font-size:14px;line-height:1.45;cursor:pointer}
+.pk i{display:grid;place-items:center;flex:none;width:22px;height:22px;box-sizing:border-box;border:2px solid var(--line);border-radius:7px;font-style:normal;font-weight:900;font-size:13px;color:#fff}
+.pk.on{box-shadow:inset 0 0 0 2px var(--accent), 0 3px 0 var(--accent-lip)}
+.pk.on i{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.pk.extra{box-shadow:inset 0 0 0 2px var(--red), 0 3px 0 var(--soft);animation:gNope .3s 2}
+.pk small{margin-left:auto;color:var(--red);font-weight:900;font-size:12.5px;white-space:nowrap}
+.r-f{margin:0 0 10px;padding:12px 10px;border-radius:16px;background:var(--card);box-shadow:0 3px 0 var(--soft);text-align:center;font-weight:900;font-size:21px;line-height:1.4;font-variant-numeric:tabular-nums}
+.quiz-opt.wrong{opacity:.5;text-decoration:line-through}
+.btn.atk{background:var(--red);color:#fff;box-shadow:0 4px 0 var(--red-lip);font-size:17px;padding:10px 28px 11px}
+.btn.atk:hover{background:var(--red);filter:brightness(1.07)}
+.btn.atk:active{box-shadow:0 1px 0 var(--red-lip)}
+.btn:disabled{opacity:.45;cursor:default;filter:none !important;translate:none !important}
+.g-intel{margin-top:14px;padding:8px 12px;border-radius:16px;background:var(--card);box-shadow:0 2px 0 var(--soft)}
+.g-intel summary{cursor:pointer;font-weight:800;font-size:14px;color:var(--isle)}
+.g-intel ul{margin:6px 0 2px;padding-left:18px}
+.g-intel li{margin:6px 0;font-size:13.5px;line-height:1.6}
+.g-intel li b{display:block;font-weight:900}
+
+.res-stars{display:flex;justify-content:center;align-items:flex-end;gap:12px;margin:12px 0 6px}
+.res-stars .rs{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--soft)}
+.res-stars .rs svg{width:52px;height:52px}
+.res-stars .rs:nth-child(2) svg{width:66px;height:66px}
+.res-stars .rs small{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+.res-stars .rs.on{color:#F2B21C}
+.res-stars .rs.on svg{animation:gStar .55s cubic-bezier(.3,1.6,.5,1) var(--d) both;filter:drop-shadow(0 3px 0 #C98A0B)}
+.res-stats{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:8px 0 0}
+.res-stats span{display:inline-flex;align-items:center;gap:4px;padding:4px 12px 4px 8px;border-radius:999px;background:var(--card);box-shadow:0 2px 0 var(--soft);font-size:13.5px;font-weight:700}
+.res-stats .gi{width:17px;height:17px;color:var(--muted)}
+.res-stats b{font-weight:900}
+.res-badge{display:flex;align-items:center;gap:14px;margin:14px 0 0;padding:12px 14px;border-radius:20px;background:var(--card);box-shadow:0 3px 0 var(--soft)}
+.medal{display:block;width:62px;height:auto;flex:none}
+.res-badge .medal{animation:gBossIn .6s cubic-bezier(.3,1.5,.5,1)}
+.res-badge small{display:block;font-size:13px;font-weight:800;color:var(--accent)}
+.res-badge b{display:block;font-size:20px;font-weight:900;line-height:1.35}
+.res-badge span{display:block;font-size:13px;font-weight:700;color:var(--muted)}
+.res-items{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 0;font-size:14px;font-weight:800}
+.res-hint{margin:10px 0 0;font-size:13px}
+.g-chipx{display:inline-flex;align-items:center;gap:4px;padding:3px 10px 3px 6px;border-radius:999px;background:var(--card);box-shadow:inset 0 0 0 2px var(--soft);font-size:13px;font-weight:800;white-space:nowrap}
+.g-chipx .gi{width:18px;height:18px;color:var(--isle, var(--accent))}
+.res-chest{display:flex;align-items:center;gap:12px;margin:14px 0 0;padding:12px 14px;border-radius:20px;color:#3A2600;background:linear-gradient(135deg, #FFF3C4, #FFDF73);box-shadow:0 3px 0 #D9A441}
+.res-chest small{display:block;font-size:12px;font-weight:800;opacity:.75}
+.res-chest b{display:block;font-size:18px;font-weight:900;line-height:1.35}
+.res-chest p{margin:4px 0 0;font-size:14px;line-height:1.65;font-weight:600}
+.res-chest .btn{margin-top:6px}
+.chest{display:block;flex:none;width:92px;height:auto;overflow:visible}
+.chest:not(.open){animation:gBob 1.3s ease-in-out infinite}
+.chest .ch-glow{opacity:.18;animation:gGlow 1.4s ease-in-out infinite alternate}
+.chest .ch-lid{transform-box:view-box;transform-origin:20px 50px;transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
+.chest.open .ch-lid{transform:translate(-3px,-9px) rotate(-26deg)}
+.chest .ch-spark{opacity:0}
+.chest.open .ch-spark{animation:gSpark 1.3s ease-out infinite}
+.medals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:12px 0;text-align:center}
+.medals .medal{width:100%;max-width:58px;margin:0 auto}
+.medals small{display:block;margin-top:2px;font-size:11.5px;font-weight:800}
+.secret-story{margin:18px 0 0;padding:16px 16px 14px;border-radius:20px;color:#F3EAFF;background:linear-gradient(160deg, #2A1145, #4B2577)}
+.secret-story .g-eyebrow{color:#FFD45E}
+.secret-story .muted{color:#C9B8E6}
+.secret-story p{margin:8px 0 0;font-size:15px;line-height:1.85}
+.secret-story .ss-note{font-weight:800;color:#FFD45E}
+.secret-story .ss-skin{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px}
+.secret-story .ss-skin .gi{color:#FFD45E}
+.secret-story .route-sw button{background:rgb(255 255 255 / .12);color:#F3EAFF}
+.secret-story .route-sw button[aria-pressed="true"]{background:#FFD45E;color:#3A2600;box-shadow:0 3px 0 #C98A0B}
+.fin-hint{margin:14px 0 0;font-size:13.5px}
+.ach{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.ach li{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-radius:16px;background:var(--card);box-shadow:0 2px 0 var(--soft)}
+.ach li .gi{margin-top:2px;color:var(--muted)}
+.ach li.got{box-shadow:inset 0 0 0 2px #F2B21C, 0 2px 0 #D9A441}
+.ach li.got .gi{color:#F2B21C}
+.ach b{display:block;font-size:14px;font-weight:900;line-height:1.4}
+.ach small{display:block;font-size:12px;line-height:1.5;color:var(--muted)}
+.ach li:not(.got) b{color:var(--muted)}
+
+.rules{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
+.rules li{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:16px;background:var(--card);box-shadow:0 2px 0 var(--soft)}
+.rules .gi{width:26px;height:26px;margin-top:1px;color:var(--isle, var(--accent))}
+.rules b{display:block;font-size:14.5px;font-weight:900;line-height:1.45}
+.rules small{display:block;font-size:12.5px;line-height:1.55;color:var(--muted)}
+.brief-rec{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 0;font-size:14px;font-weight:800}
+.brief-inv,.book-inv{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 0}
+.brief-inv > span:first-child,.book-inv > span:first-child{font-size:13px;font-weight:900;color:var(--muted);margin-right:2px}
+.brief-note{margin:6px 0 0;font-size:12.5px;line-height:1.6;color:var(--muted)}
+.brief-set .route-sw{margin-top:8px}
+.stars-in{display:inline-flex;gap:1px;vertical-align:-3px}
+.stars-in i{display:inline-grid;width:17px;height:17px;color:var(--soft)}
+.stars-in i.on{color:#F2B21C}
+.stars-in svg{width:100%;height:100%}
+.m-stars{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:8px 0 0;font-size:13px;font-weight:700;color:var(--muted)}
+.m-lock{margin:6px 0 0;font-size:13.5px;font-weight:700;color:var(--red)}
+.mission .res-chest{margin-top:12px}
+.book-isles .suspect{padding-right:12px}
+.book-isles .medal{position:absolute;top:8px;right:10px;width:34px}
+.book-isles .sn{padding-right:40px}
+.book-isles .gold{color:#C98A0B;font-weight:900}
+.book-prog .gi{width:18px;height:18px;vertical-align:-3px}
+.secret-gift{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 0;padding:9px 12px;border-radius:16px;background:var(--note);font-size:14px;font-weight:700}
+.secret-gift .gi{color:var(--accent)}
+.g-toast{position:fixed;left:50%;top:calc(max(10px, env(safe-area-inset-top, 0px)) + 62px);z-index:30;translate:-50% 0;max-width:min(360px, calc(100vw - 24px));padding:8px 16px;border-radius:18px;background:var(--ink);color:var(--paper);box-shadow:var(--pop-lg);pointer-events:none}
+.g-toast.in{animation:gToast .3s cubic-bezier(.3,1.6,.5,1)}
+.g-toast p{display:flex;align-items:center;gap:8px;margin:3px 0}
+.g-toast .gi{color:#FFD45E}
+.g-toast small{display:block;font-size:11px;font-weight:800;opacity:.75;line-height:1.3}
+.g-toast b{font-size:14px;font-weight:900}
+.hud b[data-star-count]{min-width:2.6em}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .res-chest{color:#FFF3C4;background:linear-gradient(135deg, #4A3A12, #6B5214);box-shadow:0 3px 0 #2E2408}
+  :root:not([data-theme="light"]) .g-toast{background:#F2F6F1;color:#1B2230}
+}
+:root[data-theme="dark"] .res-chest{color:#FFF3C4;background:linear-gradient(135deg, #4A3A12, #6B5214);box-shadow:0 3px 0 #2E2408}
+:root[data-theme="dark"] .g-toast{background:#F2F6F1;color:#1B2230}
+@media (max-width: 720px){
+  #panel.game{top:auto;width:auto;height:min(66vh, 640px);max-height:none;bottom:var(--bot)}
+  .g-hud{top:-12px;margin:-12px -16px 10px;padding:8px 16px 7px}
+  .g-clock{font-size:19px;min-width:66px;padding:4px 10px 4px 8px}
+  .g-chip{font-size:15px;padding:3px 9px 3px 6px}
+  .g-chip small{display:none}
+  .g-ico{width:34px;height:34px}
+  .panel-body h2.g-h{font-size:18px}
+  .bfoot{bottom:-20px;margin:10px -16px 0;padding:10px 16px 12px}
+  .bopts{gap:6px}
+  .bopt{padding:8px 9px 9px}
+  .bname{font-size:13.5px}
+  .res-stars .rs svg{width:44px;height:44px}
+  .res-stars .rs:nth-child(2) svg{width:56px;height:56px}
+  .g-toast{top:calc(max(8px, env(safe-area-inset-top, 0px)) + 52px)}
+  .g-count b{font-size:88px}
+}
+@media (max-width: 520px){
+  .topbar{display:flex;gap:6px}
+  .hud{margin-left:auto;gap:7px;padding:6px 9px 6px 7px}
+  .hud svg{width:17px;height:17px}
+  .hud > span{gap:3px}
+  .hud b{font-size:13.5px}
+  .brand{padding-right:10px;flex:none}
+  .brand svg{width:30px;height:30px}
+  .brand h1{font-size:15.5px;white-space:nowrap;letter-spacing:.04em}
+  .daynight{flex:none}
+  .daynight button{padding:7px 7px}
+}
+@media (max-width: 374px){
+  .brand{padding-right:4px}
+  .brand h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important;animation:none !important;scroll-behavior:auto !important}
 }
@@ -603,7 +946,8 @@ details.tw > summary,details.adv > summary{font-weight:800;font-size:15px}
         </div>
       </div>
       <button type="button" class="hud" id="hud" aria-label="打開任務簿">
-        <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E5483B"/><circle cx="10.6" cy="10.6" r="4.6" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M14 14l4 4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg><em>逮捕</em><b data-case-count>0/5</b></span>
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#E5483B"/><path d="M12 4.9 18 8.3v6.9L12 18.6 6 15.2V8.3z" fill="#fff"/><path d="m12 8.4 1.1 2.2 2.4.3-1.8 1.7.5 2.4-2.2-1.2-2.2 1.2.5-2.4-1.8-1.7 2.4-.3z" fill="#E5483B"/></svg><em>徽章</em><b data-case-count>0/5</b></span>
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#F08A24"/><path d="m12 5.3 2 4 4.4.6-3.2 3.1.8 4.4-4-2.1-4 2.1.8-4.4-3.2-3.1 4.4-.6z" fill="#fff"/></svg><em>星星</em><b data-star-count>0/15</b></span>
         <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#F2B21C"/><path d="M12 4.6 13.9 10.1 19.4 12 13.9 13.9 12 19.4 10.1 13.9 4.6 12 10.1 10.1Z" fill="#fff"/></svg><em>祕境</em><b data-secret-count>0/11</b></span>
       </button>
       <div class="daynight" role="group" aria-label="日間／夜間模式">
@@ -1429,13 +1773,236 @@ const SCOPE3 = {
   down:[['C9', '出貨給客戶的運輸'], ['C10', '產品被下游加工'], ['C11', '產品被使用'], ['C12', '產品被丟掉'], ['C13', '租給別人的資產'], ['C14', '加盟店'], ['C15', '投資和融資']]
 };
 const LIFE = [['原料', 2.5, '種棉花、紡紗前處理'], ['製造', 1.2, '紡紗、織布、染整、縫製'], ['配送', 0.3, '海運、陸運、倉儲'], ['使用', 1.8, '洗衣、烘乾、熨燙'], ['廢棄', 0.2, '焚化、掩埋或回收']];
-const QUIZ = {
-  inv:{ q:'工廠的冷氣一年補了 12 公斤冷媒。盤查時該怎麼處理？', opts:['量很少，可以不用算', '算進範疇一的逸散排放：補了幾公斤 × 冷媒的 GWP', '算進範疇二，因為冷氣是用電的'], a:1, hint:'inv-s1', why:'冷媒是從自己工廠的設備漏出來、直接排進大氣的。想想看，這算哪一個範疇？', taunt:'哼，我什麼都不會說！' },
-  cfp:{ q:'一件 T 恤「從搖籃到墳墓」的碳足跡，要算哪些階段？', opts:['原料、製造、配送、使用、廢棄，五段都算', '只算工廠裡的製造', '只算原料和製造，賣出去以後就不關工廠的事'], a:0, hint:'cfp-unit', why:'「墳墓」指的是產品的最後一站。衣服賣出去以後，還會被穿、被洗、被丟掉。', taunt:'喀嚓！你答得出來嗎？' },
-  rdc:{ q:'一家公司說「我們 2050 年淨零」。怎麼看出它是不是認真的？', opts:['看口號喊得夠不夠大聲', '先買額度把排放全部抵掉就好', '看它有沒有 2030 年前的中期目標，而且每年追蹤進度'], a:2, hint:'rdc-2030', why:'口號和額度都不會讓排放真的變少。認真的公司，會把 2050 切成看得到的里程碑。', taunt:'呼……問簡單一點啦……' },
-  ofs:{ q:'同一張減量額度，要怎麼防止被兩家公司重複使用？', opts:['兩家公司各付一半錢，就可以一起用', '用的時候在登錄平台註銷，序號作廢，只能用一次', '把證書影印一份給另一家公司'], a:1, hint:'ofs-retire', why:'每一份額度都有序號。用掉的那一刻要做什麼，別人才不能再用？', taunt:'哥，他要考我們！' },
-  neu:{ q:'下面哪一家公司，才可以說自己「碳中和」？', opts:['什麼都沒減，直接買便宜額度把排放全部抵掉', '把工廠漆成綠色、門口種一排樹', '先盤查、先減量，剩下的用高品質額度抵銷並註銷，經過查證、寫清楚期間'], a:2, hint:'neu-claim', why:'碳中和的順序是：先算、先減，剩下真的減不掉的才抵，最後還要有人查證。', taunt:'呵呵，最後一題，你猜得到嗎？' }
+const LEVELS = {
+  inv:{ time:90, case:'漏漏的盤查草稿', docsTitle:'碳寶製衣・2025 年盤查草稿',
+    docsTip:'漏漏偷偷改過這份草稿。點出錯誤數據、遺漏的排放源或不合理的主張；點錯一條扣 5 秒。',
+    docs:[
+      { h:'排放源清單', rows:[
+        ['鍋爐燒天然氣：範疇一'],
+        ['公務車加油：範疇一'],
+        ['冷氣一年補了 12 公斤冷媒：量很少，不列入', '遺漏排放源', '冷媒從設備漏出來，是範疇一的逸散排放。補了幾公斤，乘上冷媒的 GWP 就算得出來，量少也要列。', 'inv-s1'],
+        ['外購電力：範疇二'] ] },
+      { h:'計算表', rows:[
+        ['電費單：全年用電 810,000 度'],
+        ['外購電力：81,000 度 × 0.467 ＝ 約 38 公噸', '錯誤數據', '電費單明明是 81 萬度，計算表卻抄成 8.1 萬度，排放少算了九成。每個數字都要對得回原始單據：810,000 × 0.467 ≈ 378 公噸。', 'inv-data'],
+        ['天然氣：帳單用量 × 排放係數 ＝ 約 80 公噸'] ] },
+      { h:'報告結論', rows:[
+        ['組織邊界：營運控制法，辦公室和工廠都納入'],
+        ['範疇三是別人排的，連評估都不用做', '不合理主張', '範疇三的 15 類都要檢視，再用重大性評估挑出大的（像買棉布、貨運）；要排除的也得寫出理由。', 'inv-material'],
+        ['基準年：2025 年'] ] }
+    ],
+    budget:{ title:'把盤查數據找回來', goal:'盤查涵蓋', unit:'公噸', need:900, verb:'涵蓋', sign:'',
+      intro:'漏漏把單據藏起來了。花金幣把數據找回來：至少要涵蓋 900 公噸（全部 1,000 公噸的九成），而且範疇一、二一項都不能漏。',
+      opts:[
+        { id:'elec', cat:'範疇二', name:'全年電費單', cost:10, val:380 },
+        { id:'gas', cat:'範疇一', name:'天然氣帳單', cost:10, val:80 },
+        { id:'ref', cat:'範疇一', name:'冷媒補充紀錄', cost:5, val:25 },
+        { id:'car', cat:'範疇一', name:'公務車加油紀錄', cost:5, val:15 },
+        { id:'c1', cat:'範疇三 C1', name:'布料供應商問卷', cost:30, val:300 },
+        { id:'c4', cat:'範疇三 C4・C9', name:'貨運里程紀錄', cost:20, val:120 },
+        { id:'c7', cat:'範疇三 C7', name:'員工通勤問卷', cost:15, val:60 },
+        { id:'app', cat:'軟體', name:'「一鍵算碳」軟體，不用單據', cost:35, val:1000, bad:'軟體只是計算工具。沒有輸入活動數據，它什麼都算不出來。' },
+        { id:'guess', cat:'顧問', name:'請顧問估個大概', cost:15, val:500, bad:'沒有單據可以追溯的數字，查證時一定過不了關。' } ],
+      must:['elec', 'gas', 'ref', 'car'], mustWhy:'範疇一、二是自己的排放，一項都不能漏。', clue:'inv-data' },
+    events:[
+      { kind:'停電', title:'工廠突然停電！', text:'緊急發電機燒了 500 公升柴油，撐了一整晚。', q:'這些柴油的排放，算在哪裡？', opts:[['範疇一：自己的設備燒的燃料', 1], ['範疇二：因為拿來發電', 0], ['停電是意外，不用算', 0]], why:'發電機是自己的設備，燒的是自己的油，屬於範疇一的固定燃燒。', clue:'inv-s1' },
+      { kind:'訂單暴增', title:'訂單暴增！', text:'工廠臨時租了一間倉庫放貨，由自己的員工管理。', q:'倉庫的用電要怎麼算？', opts:[['照營運控制法，算進範疇一、二', 1], ['租來的不是自己的，不用算', 0], ['算進範疇三的 C15 投資', 0]], why:'用營運控制法時，自己營運的租用場地，排放算進範疇一、二。', clue:'inv-boundary' },
+      { kind:'供應商資料缺漏', title:'供應商資料缺漏！', text:'布料供應商說，今年的數據來不及給。', q:'範疇三 C1 該怎麼辦？', opts:[['先用資料庫係數估算並註明，之後再補', 1], ['直接填 0', 0], ['把 C1 整類刪掉', 0]], why:'拿不到原始數據時，可以先用二級數據估算、寫清楚來源，之後再請供應商補上。', clue:'inv-data' } ],
+    boss:{ name:'碳魔王・漏漏', roar:'漏漏把藏起來的排放全吸進肚子，膨脹成碳魔王了！',
+      hit:['噗～你也漏掉了吧！', '煙霧反擊！', '嘿嘿，少算一點嘛！'], hurt:['嗚，被算出來了！', '我的煙變少了……', '不要再查了啦！'],
+      rounds:[
+        { type:'sort', title:'分類攻擊', q:'把每個排放源放進對的範疇！', bins:['範疇一', '範疇二', '範疇三'], items:[['鍋爐燒天然氣', 0], ['冷氣補冷媒', 0], ['外購電力', 1], ['跟隔壁工廠買蒸汽', 1], ['買棉布', 2], ['員工通勤', 2]], clue:'inv-s1' },
+        { type:'calc', title:'計算攻擊', q:'冷氣補了 12 公斤冷媒，這種冷媒的 GWP 大約是 2,000。漏掉的排放大約多少？', f:'12 公斤 × 2,000 ＝ ？', opts:['24 公斤 CO₂e', '2.4 公噸 CO₂e', '24 公噸 CO₂e'], a:2, clue:'inv-factor' },
+        { type:'pick', title:'查證攻擊', q:'一份查證得過的盤查報告，哪些一定要有？全部選出來！', items:[['組織邊界', 1], ['每個排放源的活動數據和單據', 1], ['排放係數的來源', 1], ['排除了哪些、為什麼', 1], ['只列大的排放源', 0], ['總數四捨五入成漂亮的整數', 0]], clue:'inv-report' } ] },
+    reward:'glass',
+    chest:'冷媒的威力有多大？常見的冷氣冷媒 R-410A，GWP 大約 2,000。漏掉 1 公斤，就像排了約 2 公噸的 CO₂。' },
+
+  cfp:{ time:80, case:'剪剪的碳足跡報告', docsTitle:'碳寶製衣・一件 T 恤的碳足跡',
+    docsTip:'剪剪拿剪刀改過這份報告。點出錯誤數據、被剪掉的部分或不合理的主張；點錯一條扣 5 秒。',
+    docs:[
+      { h:'吊牌草稿', rows:[
+        ['功能單位：一件棉 T 恤'],
+        ['依據：紡織品的 PCR'],
+        ['碳足跡：1.2 公斤 CO₂e（搖籃到墳墓）', '錯誤數據', '1.2 公斤只是「製造」那一段。寫了搖籃到墳墓，就要從原料一路算到廢棄，五段加起來是 6.0 公斤。', 'cfp-unit'] ] },
+      { h:'生命週期計算表', rows:[
+        ['原料：種棉花、紡紗前處理 2.5 公斤'],
+        ['製造：紡紗、織布、染整、縫製 1.2 公斤'],
+        ['配送：海運、陸運、倉儲 0.3 公斤'],
+        ['使用：洗衣服是消費者的事，刪掉', '不合理主張', '搖籃到墳墓一定包含使用階段。衣服洗、烘、燙的用電常常是大宗，碳寶製衣的例子就有 1.8 公斤。', 'cfp-use'],
+        ['廢棄：焚化或掩埋 0.2 公斤'] ] },
+      { h:'數據來源', rows:[
+        ['製造：自己工廠的電表（一級數據）'],
+        ['染整外包廠：沒給數據，直接填 0', '遺漏排放源', '拿不到原始數據，可以先用資料庫係數（二級數據）估算並註明，不能直接填 0。', 'cfp-data'] ] }
+    ],
+    budget:{ title:'讓一件 T 恤更低碳', goal:'一件少排', unit:'公斤', need:1.5, verb:'少排', sign:'−', dec:1,
+      intro:'現在一件 T 恤是 6.0 公斤。花金幣讓它至少少排 1.5 公斤（降到 4.5 公斤以下）。提示：先打熱點！',
+      opts:[
+        { id:'cotton', cat:'原料', name:'改用有機棉或再生棉', cost:30, val:0.8 },
+        { id:'heat', cat:'製造', name:'染整換熱泵、回收廢熱', cost:25, val:0.4 },
+        { id:'wash', cat:'使用', name:'吊牌建議冷水洗、自然晾乾', cost:10, val:0.9 },
+        { id:'ev', cat:'配送', name:'送貨車換成電動車', cost:20, val:0.1 },
+        { id:'loop', cat:'廢棄', name:'舊衣回收再利用', cost:15, val:0.1 },
+        { id:'eco', cat:'行銷', name:'吊牌加印「環保 T 恤」', cost:15, val:1.0, bad:'印上「環保」兩個字，排放一公克都沒少，這是漂綠。' },
+        { id:'gift', cat:'包裝', name:'改用印綠葉的精美禮盒', cost:20, val:0.5, bad:'禮盒反而多用了材料，印綠葉也不會讓排放變少。' } ],
+      clue:'cfp-hotspot' },
+    events:[
+      { kind:'訂單暴增', title:'訂單暴增！', text:'一批 T 恤來不及海運，臨時改成空運。', q:'碳足跡要怎麼處理？', opts:[['照實算進配送階段', 1], ['空運只是臨時的，不算', 0], ['算進製造階段', 0]], why:'空運的排放比海運高很多，照實算進配送階段，數字才可信。', clue:'cfp-dist' },
+      { kind:'停電', title:'染整廠停電！', text:'染整廠改用柴油發電機趕工。', q:'發電機的排放要放進哪一段？', opts:[['製造階段', 1], ['使用階段', 0], ['停電是意外，不用算', 0]], why:'染整是製造的一部分，趕工燒的柴油也算進製造階段。', clue:'cfp-make' },
+      { kind:'供應商資料缺漏', title:'供應商資料缺漏！', text:'棉花農場沒有提供種植的數據。', q:'原料階段怎麼辦？', opts:[['先用資料庫的棉花係數補上，註明來源', 1], ['原料階段填 0', 0], ['原料不算，只算出廠以後', 0]], why:'拿不到一級數據，就用二級數據補上並註明，不能讓原料階段變成 0。', clue:'cfp-data' } ],
+    boss:{ name:'碳魔王・剪剪', roar:'剪剪把剪下來的排放全吞下肚，變成巨大的碳魔王！',
+      hit:['喀嚓！剪你一刀！', '喀嚓喀嚓，剪錯了吧！', '邊界剪掉啦！'], hurt:['我的鉗子！', '吊牌黏回去了……', '嗚，五段都被算出來了！'],
+      rounds:[
+        { type:'order', title:'生命週期接力', q:'把一件 T 恤的一生照順序排回去！', items:['原料取得', '製造', '配送銷售', '使用', '廢棄處理'], clue:'cfp-raw' },
+        { type:'calc', title:'加總攻擊', q:'剪剪說這件 T 恤只有 1.2 公斤。從搖籃到墳墓，五段加起來是多少？', f:'2.5 ＋ 1.2 ＋ 0.3 ＋ 1.8 ＋ 0.2 ＝ ？', opts:['1.2 公斤', '4.2 公斤', '6.0 公斤'], a:2, clue:'cfp-unit' },
+        { type:'pick', title:'熱點攻擊', q:'哪兩段排最多？選出熱點，從那裡下手！', items:[['原料 2.5 公斤', 1], ['製造 1.2 公斤', 0], ['配送 0.3 公斤', 0], ['使用 1.8 公斤', 1], ['廢棄 0.2 公斤', 0]], clue:'cfp-hotspot' } ] },
+    reward:'lens',
+    chest:'在碳寶製衣的例子裡，洗、烘、燙占了一件 T 恤三成的排放。改用冷水洗、自然晾乾，是每個人在家就做得到的減碳。' },
+
+  rdc:{ time:80, case:'拖拖的減碳計畫', docsTitle:'碳寶製衣・減碳計畫',
+    docsTip:'拖拖寫的減碳計畫，哪裡怪怪的？點出錯誤數據或不合理的主張；點錯一條扣 5 秒。',
+    docs:[
+      { h:'目標', rows:[
+        ['基準年：2025 年，排放 1,000 公噸'],
+        ['2030 年：比基準年減 40%，降到 600 公噸'],
+        ['2026～2029 年：明天再減，每年減量都寫 0', '不合理主張', '2030 年要減 40%，中間每一年都要有進度、逐年追蹤。一直寫「明天再減」，2030 根本到不了。', 'rdc-2030'] ] },
+      { h:'減量清單', rows:[
+        ['屋頂裝太陽能：每年發 23.5 萬度，約減 110 公噸'],
+        ['全面換 LED：每年省 17 萬度，約減 800 公噸', '錯誤數據', '17 萬度 × 0.467 公斤 ≈ 80 公噸，不是 800。多寫一個 0，減量就灌水十倍。', 'rdc-eff'],
+        ['冷氣定期檢漏，少補冷媒'],
+        ['請布料供應商一起改用綠電'] ] },
+      { h:'成果報告', rows:[
+        ['買 400 公噸碳權，算進減量成果', '不合理主張', '碳權是抵換，不是減量。碳權要另外揭露，不能拿來扣排放、達成減量目標。', 'rdc-hier'],
+        ['每年用盤查結果追蹤進度'] ] }
+    ],
+    budget:{ title:'2030 減量攻防', goal:'減量', unit:'公噸', need:400, verb:'減', sign:'−',
+      intro:'2025 年排了 1,000 公噸，2030 年要降到 600 公噸，也就是至少減 400 公噸。先換節能設備、改善製程，還是投資再生能源？',
+      opts:[
+        { id:'led', cat:'節能設備', name:'全面換 LED、高效馬達', cost:20, val:80 },
+        { id:'pump', cat:'改善製程', name:'鍋爐換成熱泵', cost:25, val:60 },
+        { id:'pv', cat:'再生能源', name:'屋頂裝太陽能', cost:30, val:110 },
+        { id:'green', cat:'再生能源', name:'購買綠電（含憑證）', cost:35, val:150 },
+        { id:'leak', cat:'冷媒管理', name:'冷氣定期檢漏', cost:5, val:20 },
+        { id:'supply', cat:'供應鏈', name:'請布料供應商改用綠電', cost:20, val:130 },
+        { id:'credit', cat:'碳權', name:'買便宜碳權，帳面抵掉', cost:15, val:300, bad:'碳權是抵換，不是減量，不能算進減量目標。' },
+        { id:'tree', cat:'形象', name:'在工廠門口種一排樹', cost:10, val:50, bad:'一排樹一年只吸得了幾百公斤，說能減 50 公噸是灌水。' } ],
+      clue:'rdc-hier' },
+    events:[
+      { kind:'訂單暴增', title:'訂單暴增 20%！', text:'產量變多，今年的總排放也跟著上升。', q:'減量目標怎麼辦？', opts:[['總量目標不變，加碼減量，也追蹤每件的排放', 1], ['把基準年改成今年，數字比較好看', 0], ['減量目標先暫停一年', 0]], why:'產量成長時總量可能增加，所以總量和每件的排放都要追蹤；基準年不能為了好看隨便改。', clue:'rdc-base' },
+      { kind:'停電', title:'用電尖峰停電！', text:'夏天用電尖峰，工廠停電了兩次。', q:'下一步怎麼做？', opts:[['屋頂太陽能加裝儲能，又穩又減碳', 1], ['多買幾台柴油發電機', 0], ['先不管，明天再說', 0]], why:'再生能源搭配儲能可以調節用電，停電時撐一下，也能減碳。', clue:'rdc-re' },
+      { kind:'碳權額度不足', title:'碳權額度不足！', text:'拖拖想買碳權湊減量成果，結果市場上買不到。', q:'怎麼辦？', opts:[['碳權本來就不能算減量，回頭做節能和綠電', 1], ['等明年再買', 0], ['把盤查數字改小一點', 0]], why:'減量目標要靠真的減，碳權只能另外揭露，不能拿來扣排放。', clue:'rdc-hier' } ],
+    boss:{ name:'碳魔王・拖拖', roar:'拖拖把每一年的「明天再減」堆成一座排放山，變成碳魔王！',
+      hit:['呼……慢動作反擊……', '明天再減～反擊！', '嘿嘿，再拖一年！'], hurt:['好啦好啦，今天就減……', '2030 到了？！', '嗚，被逼著動起來了！'],
+      rounds:[
+        { type:'order', title:'順序攻擊', q:'減碳的優先順序是什麼？從最先做的排到最後！', items:['避免：不必要的就不做', '減少：提高能源效率', '替代：再生能源、電氣化', '抵換：最後才用'], clue:'rdc-hier' },
+        { type:'calc', title:'進度攻擊', q:'基準年排 1,000 公噸，2030 年要減 40%。從 2025 到 2030 共 5 年，平均每年要減多少？', f:'1,000 × 40% ÷ 5 ＝ ？', opts:['40 公噸', '80 公噸', '400 公噸'], a:1, clue:'rdc-2030' },
+        { type:'pick', title:'淨零攻擊', q:'一份可信的淨零計畫，要有哪些？全部選出來！', items:[['2030 年的中期目標', 1], ['每年盤查、追蹤進度', 1], ['範疇三也要一起減', 1], ['最後剩下的排放用碳移除中和', 1], ['先買碳權把排放抵光', 0], ['2049 年再開始減', 0]], clue:'rdc-netzero' } ] },
+    reward:'shield',
+    chest:'LED 燈比傳統燈泡省電得多：同樣的亮度，用電大約少七成五以上。' },
+
+  ofs:{ time:70, case:'雙雙的額度採購單', docsTitle:'碳寶製衣・額度採購單',
+    docsTip:'雙雙兄弟送來一疊額度證書。點出重複計算、不合格的額度或算錯的數字；點錯一條扣 5 秒。',
+    docs:[
+      { h:'證書 A・沼氣回收', rows:[
+        ['專案：養豬場沼氣回收發電'],
+        ['查證：已通過第三方查證'],
+        ['序號 TW-0427：B 公司用過了，再賣給碳寶製衣', '重複計算', '額度用掉時要在平台註銷，同一個序號只能用一次。B 公司用過還拿來賣，就是重複計算。', 'ofs-retire'] ] },
+      { h:'證書 B・森林保護', rows:[
+        ['保護一片本來就是國家公園的森林', '沒有額外性', '國家公園本來就不能砍，沒有這筆錢也會保留。減量不是因為專案才發生，沒有額外性。', 'ofs-quality'],
+        ['方法學：照公告的方法學計算'] ] },
+      { h:'抵換計算', rows:[
+        ['剩下要抵的排放：600 公噸'],
+        ['買進額度：200 ＋ 200 ＋ 150 ＝ 600 公噸', '錯誤數據', '200 ＋ 200 ＋ 150 是 550 公噸，不是 600，還差 50 公噸沒抵到。', 'ofs-what'],
+        ['用途：自願抵換，宣告碳中和'] ] }
+    ],
+    budget:{ title:'採購 600 公噸額度', goal:'合格額度', unit:'公噸', need:600, verb:'買到', sign:'＋',
+      intro:'2030 年還剩 600 公噸減不掉。花金幣買到至少 600 公噸「合格」的額度。太便宜的，要小心！',
+      opts:[
+        { id:'forest', cat:'碳移除', name:'森林復育專案，已查證', cost:30, val:200 },
+        { id:'biogas', cat:'減量型', name:'沼氣回收發電，已查證', cost:25, val:200 },
+        { id:'tw', cat:'台灣額度', name:'環境部核發的自願減量額度', cost:35, val:200 },
+        { id:'char', cat:'碳移除', name:'生物炭封存，已查證', cost:30, val:100 },
+        { id:'park', cat:'森林保護', name:'國家公園森林，本來就不會砍', cost:10, val:300, bad:'國家公園本來就不能砍，沒有這筆錢也會保留，沒有額外性。' },
+        { id:'dup', cat:'二手額度', name:'雙雙轉賣的 TW-0427', cost:8, val:200, bad:'這批額度已經被 B 公司註銷用掉，再用就是重複計算。' },
+        { id:'self', cat:'自估額度', name:'自己估的減量，沒經過查證', cost:12, val:300, bad:'沒有第三方查證，數字可不可信沒人知道，不能拿來抵換。' } ],
+      clue:'ofs-quality' },
+    events:[
+      { kind:'碳權額度不足', title:'碳權額度不足！', text:'賣家說，沼氣額度只剩 150 公噸了。', q:'還差的部分怎麼辦？', opts:[['另外找合格的額度補足；不夠就不能宣告碳中和', 1], ['把同一張證書多印一份', 0], ['先宣告，差的明年再補', 0]], why:'額度至少要跟要抵的排放一樣多，而且每一份都要合格、只能用一次。', clue:'neu-offset' },
+      { kind:'供應商資料缺漏', title:'供應商資料缺漏！', text:'賣額度的造林專案，監測紀錄少了一整年。', q:'那一年的額度怎麼辦？', opts:[['沒有監測數據就無法查證，不能核發', 1], ['照前一年的數字複製一份', 0], ['樹還在，照估計值核發', 0]], why:'額度要有監測數據、通過查證，才能核發。', clue:'ofs-mrv' },
+      { kind:'停電', title:'平台停電當機！', text:'註冊平台停電維修，今天沒辦法註銷額度。', q:'怎麼辦？', opts:[['等平台恢復、完成註銷，拿到證明才算', 1], ['沒關係，先當作已經註銷', 0], ['趁機把額度轉賣出去', 0]], why:'沒有完成註銷，這份額度就還能被別人用，不能算抵換。', clue:'ofs-retire' } ],
+    boss:{ name:'碳魔王・雙雙', roar:'雙雙兄弟合體，變成兩顆頭的碳魔王！',
+      hit:['哥，雙倍反擊！', '一張變兩張，攻擊也兩次！', '嘿嘿，序號借我用一下！'], hurt:['序號被查到了！', '哥，額度被註銷了！', '嗚，一份只能用一次……'],
+      rounds:[
+        { type:'sort', title:'品質攻擊', q:'這些額度合不合格？一張一張分清楚！', bins:['合格', '不合格'], items:[['已通過第三方查證，序號查得到', 0], ['國家公園的森林，本來就不會砍', 1], ['同一個序號賣給兩家公司', 1], ['種下的樹兩年後就被砍掉', 1], ['沼氣回收，照公告方法學計算', 0], ['工廠搬到隔壁縣，排放沒變少', 1]], clue:'ofs-quality' },
+        { type:'order', title:'額度的一生', q:'一份額度從出生到用掉，順序是？', items:['確證計畫書', '執行減量、持續監測', '第三方查證', '核發額度、給序號', '註銷'], clue:'ofs-mrv' },
+        { type:'calc', title:'平衡攻擊', q:'剩下 600 公噸要抵，已經註銷 450 公噸。還要再註銷多少，天平才會平？', f:'600 − 450 ＝ ？', opts:['0 公噸', '150 公噸', '1,050 公噸'], a:1, clue:'neu-offset' } ] },
+    reward:'glass',
+    chest:'1 公噸 CO₂ 有多大？在常溫常壓下大約 550 立方公尺，差不多可以裝滿一個邊長 8 公尺多的大方塊。' },
+
+  neu:{ time:80, case:'怪盜變變的宣告稿', docsTitle:'碳寶製衣・碳中和宣告稿',
+    docsTip:'怪盜變變寫好了宣告稿，就等著蓋章。點出不合理的宣告或漏掉的步驟；點錯一條扣 5 秒。',
+    docs:[
+      { h:'宣告稿', rows:[
+        ['宣告標的：碳寶製衣的營運'],
+        ['期間：永遠', '不合理主張', '碳中和一定有期間，例如「2030 年 1 月 1 日到 12 月 31 日」。一期做完，下一期要重來。', 'neu-subject'],
+        ['標語：100% 碳中和，對地球零傷害', '不合理主張', '「零傷害」「零碳」這種說法太誇大。要寫清楚對象、期間、減了多少、抵換多少。', 'neu-claim'] ] },
+      { h:'管理計畫', rows:[
+        ['2030 年排放：600 公噸'],
+        ['減量措施：無，直接買額度比較快', '漏掉步驟', '碳中和不能只靠買額度，要先照計畫減量，抵換只處理減不掉的部分。', 'neu-reduce'],
+        ['已註銷 600 公噸額度，附註銷證明'] ] },
+      { h:'查證', rows:[
+        ['委託第三方查驗機構查證'],
+        ['指引要求的 8 項資訊都有揭露'] ] }
+    ],
+    budget:{ title:'下一期碳中和預算', goal:'淨排放歸零', unit:'公噸', need:600, verb:'抵銷', sign:'−',
+      intro:'2031 年預估排放 600 公噸。花金幣讓淨排放歸零：先減量，剩下的再用合格額度抵換。這一期一定要有減量。',
+      opts:[
+        { id:'heatrec', cat:'減量', name:'空壓機廢熱回收', cost:20, val:60 },
+        { id:'evcar', cat:'減量', name:'公務車換電動車', cost:15, val:20 },
+        { id:'supply2', cat:'減量', name:'供應商綠電第二階段', cost:25, val:120 },
+        { id:'cr1', cat:'抵換', name:'合格額度 200 公噸（一）', cost:25, val:200 },
+        { id:'cr2', cat:'抵換', name:'合格額度 200 公噸（二）', cost:25, val:200 },
+        { id:'cr3', cat:'抵換', name:'合格額度 200 公噸（三）', cost:25, val:200 },
+        { id:'cheap', cat:'抵換', name:'超便宜額度，沒經過查證', cost:10, val:600, bad:'沒經過查證的額度不能用，拿來宣告就變成漂綠。' },
+        { id:'sticker', cat:'行銷', name:'印「100% 碳中和」綠貼紙', cost:15, val:600, bad:'貼紙不會讓排放少一公克，這正是變變的招數。' } ],
+      needCat:'減量', needCatWhy:'碳中和要先減量，不能全部靠買額度。', clue:'neu-reduce' },
+    events:[
+      { kind:'碳權額度不足', title:'碳權額度不足！', text:'宣告前一天才發現：註銷的額度只有 450 公噸，排放卻有 600 公噸。', q:'怎麼辦？', opts:[['補足合格額度並註銷；補不了就不能說碳中和', 1], ['照樣宣告 100% 碳中和', 0], ['把排放量改成 450 公噸', 0]], why:'額度不夠，淨排放就不是 0。可以照實說「已抵換 450 公噸」，但不能說碳中和。', clue:'neu-offset' },
+      { kind:'訂單暴增', title:'訂單暴增！', text:'年底訂單暴增，2030 年實際排放變成 650 公噸，比預估多 50 公噸。', q:'要用哪個數字算？', opts:[['用期末的實際排放 650 公噸', 1], ['照原本預估的 600 公噸', 0], ['多出來的算到明年', 0]], why:'期間結束後要用實際排放來算殘餘排放，多出來的也要抵換。', clue:'neu-residual' },
+      { kind:'資料缺漏', title:'資料缺漏！', text:'查驗機構說：管理計畫少了「碳權來源」這一項。', q:'怎麼辦？', opts:[['補上核發機構、專案類型和地點', 1], ['只放好看的資訊就好', 0], ['先宣告，之後再說', 0]], why:'環境部的指引要求 8 項資訊完整揭露，碳權來源是其中一項。', clue:'neu-plan' } ],
+    boss:{ name:'碳魔王・怪盜變變', roar:'變變撕掉偽裝——原來他就是碳魔王本尊！',
+      hit:['呵呵，看起來對就好啦！', '綠油漆攻擊！', '貼紙一貼，碳中和！'], hurt:['我的偽裝……', '油漆掉了！', '數字太誠實了……', '不、不可能……'],
+      rounds:[
+        { type:'order', title:'流程攻擊', q:'一期碳中和要怎麼走？照順序排好！', items:['盤查，算出排放', '先減量', '買合格額度並註銷', '第三方查證', '寫清楚，再宣告'], clue:'neu-what' },
+        { type:'sort', title:'宣告攻擊', q:'哪些話可以說？哪些是漂綠？', bins:['可以說', '不能說'], items:[['2030 年度營運已達成碳中和，附查證聲明', 0], ['減了 400 公噸，再抵換 600 公噸', 0], ['零碳 T 恤，對地球零傷害', 1], ['買了額度，就等於沒有排放', 1], ['所有產品永遠碳中和', 1]], clue:'neu-claim' },
+        { type:'calc', title:'結算攻擊', q:'2030 年實際排放 650 公噸，已經註銷 600 公噸。淨排放是多少？', f:'650 − 600 ＝ ？', opts:['0 公噸，可以宣告', '50 公噸，還不能宣告', '650 公噸，不能宣告'], a:1, clue:'neu-residual' },
+        { type:'pick', title:'終極攻擊', q:'碳中和宣告一定要寫清楚哪些？全部選出來！', items:[['宣告標的：哪個組織或產品', 1], ['期間：哪一段時間', 1], ['減了多少、抵換多少', 1], ['額度來源和註銷證明', 1], ['一個綠色的大標章', 0], ['只寫「100% 碳中和」', 0]], clue:'neu-claim' } ] },
+    reward:null,
+    chest:'碳中和是有期間的：今年做到了，明年還要重新盤查、減量、抵換一次，而且用的額度最好一年比一年少。' }
 };
+const ITEMS = {
+  lens:{ name:'放大鏡', note:'文件關直接圈出一個破綻' },
+  glass:{ name:'沙漏', note:'時間加 15 秒' },
+  shield:{ name:'防護罩', note:'自動擋下一次碳魔王反擊' }
+};
+const BADGES = { inv:'盤查徽章', cfp:'足跡徽章', rdc:'減量徽章', ofs:'抵換徽章', neu:'中和徽章' };
+const ACH = [
+  { id:'badges', name:'五枚碳寶徽章', note:'打倒五座島的碳魔王', open:true },
+  { id:'stars', name:'名偵探', note:'15 顆星全部拿到', open:true },
+  { id:'fast', name:'分秒必爭', note:'剩 40 秒以上打倒碳魔王' },
+  { id:'thrifty', name:'精打細算', note:'預算攻防剩 20 枚金幣以上，而且一枚都沒花錯' },
+  { id:'calm', name:'臨危不亂', note:'五座島的突發危機都答對過' },
+  { id:'wall', name:'鐵壁偵探', note:'一場 Boss 戰都沒被碳魔王反擊到' },
+  { id:'secrets', name:'祕境獵人', note:'找到全部 11 個祕境' },
+  { id:'chest', name:'黃金寶箱', note:'單關零失誤，打開黃金寶箱' },
+  { id:'perfect', name:'零失誤之王', note:'五座島都零失誤破案，解鎖隱藏劇情和黃金碳寶造型' }
+];
+const HIDDEN_STORY = [
+  '五個嫌犯都到案以後，變變把面具摘了下來。面具底下沒有臉，只有一團黑黑的煙。',
+  '煙開口說：「我才是真正的碳魔王。每次有人說『少算一點沒關係』，我就長大一點；每次有人說『明天再減』，我就胖一圈。」',
+  '碳寶沒有拿網子，而是把盤查表、減量計畫和註銷證明，一張一張攤開。每攤開一張，煙就淡一點。',
+  '「原來你最怕的，是誠實的數字。」',
+  '最後一張，是寫給明年的承諾：比今年再少排一點。煙散了，潟湖上只剩下藍天。'
+];
 const GLOSSARY = {
   '溫室氣體':'會把熱留在地球的氣體，例如二氧化碳、甲烷、冷媒。',
   'CO₂e':'二氧化碳當量：把各種溫室氣體都換算成「相當於多少 CO₂」，才能加在一起。',
@@ -1487,9 +2054,9 @@ const GLOSSARY = {
   '內部碳定價':'公司自己替每公噸碳排訂一個價格，做決定時把它算進成本。',
   '綠電':'再生能源發的電，例如太陽能、風力。'
 };
-window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS, SUSPECTS, BASIC };
+window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS, SUSPECTS, BASIC, LEVELS };
 
-const bridge = window.ISLE3D = { ready:false, setRoute(){}, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, secretsReset(){}, focusCase(){}, caseSync(){}, caseReset(){}, taunt(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
+const bridge = window.ISLE3D = { ready:false, setRoute(){}, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, secretsReset(){}, focusCase(){}, caseSync(){}, caseReset(){}, taunt(){}, gameMode(){}, bossMode(){}, bossHit(){}, bossAttack(){}, chest(){}, setSkin(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
 const $ = s => document.querySelector(s);
 const panel = $('#panel'), body = $('#panelBody'), list = $('#list');
 const state = { view:'home', hex:null, isle:null, no3d:false, interacted:false };
@@ -1525,7 +2092,7 @@ window.addEventListener('pageshow', e => { if (e.persisted){ resetSecrets(); res
 const foundCount = () => SECRETS.filter(s => found.has(s.id)).length;
 function updateSecretCount(){ const v = `${foundCount()}/${SECRETS.length}`; let up = false; document.querySelectorAll('[data-secret-count]').forEach(el => { if (el.textContent !== v){ up = true; el.textContent = v; } }); if (up) bumpHud(); }
 function bumpHud(){ const h = document.getElementById('hud'); if (!h) return; h.classList.remove('bump'); void h.offsetWidth; h.classList.add('bump'); }
-function secretHTML(s, isNew){
+function secretHTML(s, isNew, gift){
   const n = foundCount(), all = n === SECRETS.length;
   return `
     <nav class="crumb" aria-label="位置"><button type="button" data-go="secrets">任務簿</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
@@ -1533,21 +2100,107 @@ function secretHTML(s, isNew){
     <h2>${esc(s.name)}</h2>
     <p class="isle-meta">${ISLES[s.isle].name}</p>
     <p class="lead" style="margin-top:10px">${esc(s.note)}</p>
+    ${gift ? `<p class="secret-gift">嗅嗅在祕境裡叼回一個道具：${ic(gift)}<b>${ITEMS[gift].name}</b><span>（${ITEMS[gift].note}）</span></p>` : ''}
     <p class="secret-progress">已發現 <b>${n}</b> / ${SECRETS.length} 個祕境${all ? '，全部找到了！' : '。'}</p>
     <div class="btns">${backToTour(s.isle, true) || `<button type="button" class="btn primary" data-go="isle:${s.isle}">回到${ISLES[s.isle].name}</button>`}<button type="button" class="btn" data-go="secrets">任務簿</button></div>`;
 }
 function showSecret(id){
-  const s = secretById[id]; if (!s) return;
-  interacted(); closeList();
+  const s = secretById[id]; if (!s || gBusy()) return;
+  leaveGame(); interacted(); closeList();
   const isNew = !found.has(id); found.add(id); updateSecretCount();
+  let gift = null;
+  if (isNew && !GP.gifts.has(id)){ GP.gifts.add(id); gift = ['lens', 'glass', 'shield'][SECRETS.indexOf(s) % 3]; give(gift); }
   state.view = 'secret'; state.hex = null; state.isle = null; setModes('');
-  openPanel(secretHTML(s, isNew), `祕境・${ISLES[s.isle].name}`, isNew ? '新發現！' : '');
+  openPanel(secretHTML(s, isNew, gift), `祕境・${ISLES[s.isle].name}`, isNew ? '新發現！' : '');
+  if (isNew) checkAch();
   bridge.secretFound(id); bridge.focusSecret(id);
 }
 const suspectById = Object.fromEntries(SUSPECTS.map(s => [s.id, s])), evFound = new Set(), caught = new Set();
 const CREW = SUSPECTS.filter(s => !s.boss).map(s => s.id), crewDone = () => CREW.every(id => caught.has(id));
-function resetCase(){ evFound.clear(); caught.clear(); visited.clear(); firstTry.clear(); for (const k in tries) delete tries[k]; state.lastHex = null; updateCaseCount(); bridge.caseReset(); if (!list.hidden) buildList($('#listSearch').value); }
-function updateCaseCount(){ const v = `${caught.size}/${SUSPECTS.length}`; let up = false; document.querySelectorAll('[data-case-count]').forEach(el => { if (el.textContent !== v){ up = true; el.textContent = v; } }); if (up) bumpHud(); }
+const visited = new Set();
+const isleSecrets = k => SECRETS.filter(x => x.isle === k);
+const GP = { rec:{}, items:{ lens:1, glass:1, shield:1 }, chests:{}, ach:new Set(), calm:new Set(), clues:new Set(), gifts:new Set(), skin:false, skinGot:false };
+let G = null, relax = false;
+try { relax = localStorage.getItem('tanbao-relax') === '1'; } catch (e) {}
+const levelTime = k => Math.round(LEVELS[k].time*(relax ? 1.5 : 1));
+const bossBonus = k => Math.round(LEVELS[k].boss.rounds.length*10*(relax ? 1.5 : 1));
+const bossRetryTime = k => Math.round(LEVELS[k].boss.rounds.length*15*(relax ? 1.5 : 1));
+const totalStars = () => KEYS.reduce((n, k) => n + (GP.rec[k] ? GP.rec[k].stars : 0), 0);
+const flawsOf = L => L.docs.reduce((n, d) => n + d.rows.filter(r => r[1]).length, 0);
+const give = (id, n = 1) => { GP.items[id] = (GP.items[id] || 0) + n; };
+const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const vibrate = p => { try { if (navigator.vibrate && !matchMedia('(prefers-reduced-motion: reduce)').matches) navigator.vibrate(p); } catch (e) {} };
+const gBusy = () => !!(G && G.running);
+function leaveGame(){ if (G && !G.running) endGame(); }
+
+const IC = {
+  clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13.2" r="8.3" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 8.8v4.6l3 2M9.4 2.9h5.2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  coin:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#F2B21C"/><circle cx="12" cy="12" r="7.2" fill="none" stroke="#C98A0B" stroke-width="1.6"/><path d="M14.9 9.3a4 4 0 1 0 0 5.4" fill="none" stroke="#7A4E0A" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  heart:'<svg viewBox="0 0 24 24"><path d="M12 20.6 4.3 13A4.9 4.9 0 0 1 12 6.8 4.9 4.9 0 0 1 19.7 13Z" fill="currentColor"/></svg>',
+  lens:'<svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.2" fill="#CFEFF5" stroke="currentColor" stroke-width="2.4"/><path d="M14.6 14.6 20 20" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
+  glass:'<svg viewBox="0 0 24 24"><path d="M6.5 3h11M6.5 21h11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M8 3.5c0 5 7.6 4.6 7.6 8.5S8 15.5 8 20.5M16 3.5c0 5-7.6 4.6-7.6 8.5S16 15.5 16 20.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.3 19.6c.9-2.3 4.5-2.3 5.4 0z" fill="#F2B21C"/></svg>',
+  shield:'<svg viewBox="0 0 24 24"><path d="M12 2.6 19.6 5.9v5.7c0 4.6-3.2 8.4-7.6 9.8-4.4-1.4-7.6-5.2-7.6-9.8V5.9z" fill="currentColor"/><path d="m8.6 12 2.4 2.4 4.6-4.8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  star:'<svg viewBox="0 0 24 24"><path d="m12 2.4 2.9 6 6.6.9-4.8 4.5 1.2 6.6L12 17.2l-5.9 3.2 1.2-6.6-4.8-4.5 6.6-.9z" fill="currentColor"/></svg>',
+  pause:'<svg viewBox="0 0 24 24"><rect x="6.2" y="5" width="4.2" height="14" rx="1.5" fill="currentColor"/><rect x="13.6" y="5" width="4.2" height="14" rx="1.5" fill="currentColor"/></svg>',
+  sound:'<svg viewBox="0 0 24 24"><path d="M3.8 9.4h3.6L12 5.4v13.2l-4.6-4H3.8z" fill="currentColor"/><path d="M15.4 9a4.2 4.2 0 0 1 0 6M18 6.4a7.8 7.8 0 0 1 0 11.2" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>',
+  mute:'<svg viewBox="0 0 24 24"><path d="M3.8 9.4h3.6L12 5.4v13.2l-4.6-4H3.8z" fill="currentColor"/><path d="m15.6 9.4 5.2 5.2m0-5.2-5.2 5.2" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>',
+  warn:'<svg viewBox="0 0 24 24"><path d="M10.3 3.6a2 2 0 0 1 3.4 0l8 13.8a2 2 0 0 1-1.7 3H4a2 2 0 0 1-1.7-3z" fill="currentColor"/><path d="M12 9v4.8" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="17" r="1.4" fill="#fff"/></svg>',
+  unlock:'<svg viewBox="0 0 24 24"><rect x="4.5" y="10.4" width="15" height="10.6" rx="2.6" fill="currentColor"/><path d="M8 10.4V7.6a4 4 0 0 1 7.7-1.6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="15.5" r="1.6" fill="#fff"/></svg>',
+  boss:'<svg viewBox="0 0 24 24"><path d="M5.2 3.4 8 8.6M18.8 3.4 16 8.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="14" r="7.6" fill="currentColor"/><path d="m8.3 12.6 2.4 1.2m5-1.2-2.4 1.2M9.4 17.4h5.2" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/></svg>',
+  doc:'<svg viewBox="0 0 24 24"><path d="M6 2.8h8.2l4.6 4.6V20a1.3 1.3 0 0 1-1.3 1.3H6A1.3 1.3 0 0 1 4.7 20V4.1A1.3 1.3 0 0 1 6 2.8z" fill="currentColor"/><path d="M8 11h8M8 14.6h8M8 18.2h5" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>',
+  medal:'<svg viewBox="0 0 24 24"><path d="M8 13.5 5.6 22l3.6-1.8 2 2.3 1.4-6.3M16 13.5l2.4 8.5-3.6-1.8-2 2.3-1.4-6.3" fill="#E5483B"/><path d="M12 1.8 19 5.8v7.6L12 17.4 5 13.4V5.8z" fill="#2F5D8A" stroke="#F2B21C" stroke-width="1.8" stroke-linejoin="round"/><path d="m12 6.4 1.1 2.3 2.5.3-1.9 1.7.5 2.5-2.2-1.2-2.2 1.2.5-2.5-1.9-1.7 2.5-.3z" fill="#FFD45E"/></svg>'
+};
+const ic = (n, cls = '') => `<i class="gi${cls ? ' ' + cls : ''}" aria-hidden="true">${IC[n]}</i>`;
+const starsInline = n => `<span class="stars-in" aria-label="${n} 顆星">${[0, 1, 2].map(i => `<i class="${i < n ? 'on' : ''}" aria-hidden="true">${IC.star}</i>`).join('')}</span>`;
+const badgeSVG = (k, got = true) => `<svg class="medal" viewBox="0 0 80 94" aria-hidden="true"><path d="M27 58 19 91l13-6.5 8 8.5 6-30z" fill="${got ? '#E5483B' : 'var(--soft)'}"/><path d="M53 58l8 33-13-6.5-8 8.5-6-30z" fill="${got ? '#C2413A' : 'var(--soft)'}"/><path d="M40 4 70 21v34L40 72 10 55V21z" fill="${got ? `var(--${k})` : 'var(--paper-2)'}" stroke="${got ? '#F2B21C' : 'var(--line)'}" stroke-width="5" stroke-linejoin="round"/><text x="40" y="48" text-anchor="middle" font-size="28" font-weight="900" fill="${got ? 'var(--ic-ink)' : 'var(--muted)'}">${LETTER[k]}</text></svg>`;
+const chestSVG = open => `<svg class="chest${open ? ' open' : ''}" viewBox="0 0 120 104" aria-hidden="true"><circle class="ch-glow" cx="60" cy="56" r="46" fill="#FFD45E"/><g class="ch-spark" fill="#FFF3B0"><circle cx="30" cy="22" r="3.2"/><circle cx="92" cy="18" r="2.6"/><circle cx="60" cy="8" r="3.6"/><circle cx="102" cy="44" r="2.2"/><circle cx="16" cy="48" r="2.4"/></g><rect x="18" y="50" width="84" height="44" rx="7" fill="#C8860F" stroke="#7A4E0A" stroke-width="3.4"/><rect x="18" y="62" width="84" height="5" fill="#A86A0A"/><rect x="54" y="50" width="12" height="44" fill="#FFD45E"/><rect x="50" y="59" width="20" height="16" rx="3.5" fill="#FFE07A" stroke="#7A4E0A" stroke-width="2.6"/><g class="ch-lid"><path d="M18 50V40c0-14 18-23 42-23s42 9 42 23v10z" fill="#E09A18" stroke="#7A4E0A" stroke-width="3.4" stroke-linejoin="round"/><rect x="54" y="18.5" width="12" height="31.5" fill="#FFD45E"/></g></svg>`;
+const linkBtn = id => { const h = byId[id]; return h ? `<button type="button" class="linkbtn" data-hex="${id}"><i aria-hidden="true"></i><span><b>${ISLES[h.isle].name}・${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button>` : ''; };
+
+const SFX = (() => {
+  let ac = null, out = null, on = true;
+  try { on = localStorage.getItem('tanbao-sound') !== 'off'; } catch (e) {}
+  const init = () => {
+    if (!on) return null;
+    try {
+      if (!ac){ const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; ac = new C(); out = ac.createGain(); out.gain.value = 0.55; const comp = ac.createDynamicsCompressor(); out.connect(comp); comp.connect(ac.destination); }
+      if (ac.state === 'suspended') ac.resume();
+    } catch (e) { return null; }
+    return ac;
+  };
+  const tone = (f, at, dur, o = {}) => {
+    const a = init(); if (!a) return;
+    const { type = 'sine', vol = 0.18, to = 0 } = o, t0 = a.currentTime + at, osc = a.createOscillator(), g = a.createGain();
+    osc.type = type; osc.frequency.setValueAtTime(f, t0); if (to) osc.frequency.exponentialRampToValueAtTime(to, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g); g.connect(out); osc.start(t0); osc.stop(t0 + dur + 0.03);
+  };
+  const noise = (at, dur, vol = 0.15, freq = 1200) => {
+    const a = init(); if (!a) return;
+    const n = Math.floor(a.sampleRate*dur), buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random()*2 - 1)*(1 - i/n);
+    const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+    f.type = 'bandpass'; f.frequency.value = freq; g.gain.value = vol; s.buffer = buf; s.connect(f); f.connect(g); g.connect(out); s.start(a.currentTime + at);
+  };
+  return {
+    get on(){ return on; },
+    set(v){ on = !!v; try { localStorage.setItem('tanbao-sound', on ? 'on' : 'off'); } catch (e) {} if (on) init(); },
+    unlock(){ init(); },
+    tick(u){ tone(780 + u*760, 0, 0.045, { type:'square', vol:0.035 + u*0.06 }); },
+    thump(){ tone(120, 0, 0.2, { vol:0.32, to:50 }); },
+    ok(){ [660, 880, 1320].forEach((f, i) => tone(f, i*0.07, 0.17, { type:'triangle', vol:0.16 })); },
+    bad(){ tone(190, 0, 0.3, { type:'sawtooth', vol:0.11, to:110 }); },
+    coin(){ tone(988, 0, 0.07, { type:'square', vol:0.06 }); tone(1319, 0.06, 0.16, { type:'square', vol:0.06 }); },
+    alarm(){ for (let i = 0; i < 4; i++){ tone(880, i*0.24, 0.12, { type:'square', vol:0.07 }); tone(620, i*0.24 + 0.12, 0.12, { type:'square', vol:0.07 }); } },
+    count(n){ tone(n ? 520 : 1040, 0, n ? 0.14 : 0.34, { type:'triangle', vol:0.2 }); },
+    boss(){ tone(70, 0, 1.3, { type:'sawtooth', vol:0.16, to:42 }); tone(104, 0.05, 1.2, { type:'sawtooth', vol:0.09, to:66 }); noise(0, 0.9, 0.12, 320); },
+    hit(){ noise(0, 0.18, 0.3, 2600); tone(320, 0, 0.22, { type:'square', vol:0.11, to:120 }); },
+    hurt(){ tone(230, 0, 0.42, { type:'sawtooth', vol:0.15, to:70 }); noise(0, 0.32, 0.2, 480); },
+    win(){ [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, i*0.11, 0.32, { type:'triangle', vol:0.15 })); },
+    lose(){ [392, 330, 262, 196].forEach((f, i) => tone(f, i*0.19, 0.32, { type:'triangle', vol:0.14 })); },
+    chest(){ [784, 988, 1175, 1568, 1976, 2349].forEach((f, i) => tone(f, i*0.07, 0.42, { vol:0.11 })); }
+  };
+})();
+
 const said = (s, line) => `<p class="witness" style="--isle:var(--${s.id})"><b>${ISLES[s.id].owner}：</b>「${esc(line)}」</p>`;
 const callingCard = () => `
   <aside class="note ccard">
@@ -1566,211 +2219,695 @@ const callingCard = () => `
     <p>我等著你。</p>
     <p class="sign">—— 怪盜變變</p>
   </aside>`;
-function evidenceHTML(s, isNew){
-  const ready = !s.boss || crewDone();
-  return `
-    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">任務簿</button><span aria-hidden="true">›</span><span>${esc(s.ev)}</span></nav>
-    <p class="eyebrow">${isNew ? '找到證物！' : '證物'}</p>
-    <h2>${esc(s.ev)}</h2>
-    <p class="isle-meta">${ISLES[s.id].name}</p>
-    <p class="lead" style="margin-top:10px">${esc(s.evNote)}</p>
-    <aside class="note"><h3>嫌犯是……</h3><p>${esc(s.name)}，${esc(s.title)}。${esc(s.hide)}${ready ? '' : '先把四個手下抓齊，他就躲不住了。'}</p></aside>
-    <div class="btns">${ready ? `<button type="button" class="btn primary" data-look="lair:${s.id}">去抓他 ›</button>` : ''}${backToTour(s.id, !ready)}<button type="button" class="btn" data-go="case">任務簿</button></div>
-    ${ready ? noteP('lair:' + s.id, s) : ''}`;
+const RULES = k => [
+  ['clock', k ? `限時破案｜倒數 ${levelTime(k)} 秒` : '限時破案｜每關倒數 70～90 秒', '要快速找資料、判斷線索；時間越少，音效越急促。'],
+  ['doc', '線索真假辨識', k ? `文件裡藏了 ${flawsOf(LEVELS[k])} 個破綻，每找對一個就解鎖一條線索；點錯扣 5 秒。` : '抓出錯誤數據、遺漏的排放源和不合理的碳排主張，每找對一個就解鎖一條線索。'],
+  ['coin', '預算攻防｜你只有 100 枚金幣', '先換節能設備、改善製程，還是投資再生能源？花錯錢，可能達不到目標。'],
+  ['warn', '突發危機', '停電、訂單暴增、供應商資料缺漏、碳權額度不足……闖關途中隨時會冒出來。'],
+  ['boss', '碳魔王來襲', k ? `剩下的時間再加 ${bossBonus(k)} 秒帶進 Boss 戰。答錯或漏掉關鍵條件，碳魔王就會反擊。` : '每座島最後都有一場 Boss 戰，要把這關學到的真正用出來。答錯或漏掉關鍵條件，碳魔王就會反擊。'],
+  ['star', '隱藏成就｜蒐集五枚碳寶徽章', '破案、剩 20 秒以上、零失誤各得一顆星；零失誤還會出現黃金寶箱，全程零失誤更有隱藏劇情和特殊造型。']
+];
+const rulesHTML = k => `<ul class="rules">${RULES(k).map(([i, t, d]) => `<li>${ic(i)}<span><b>${t}</b><small>${d}</small></span></li>`).join('')}</ul>`;
+
+function resetGame(){
+  if (G) endGame();
+  for (const k in GP.rec) delete GP.rec[k];
+  for (const k in GP.chests) delete GP.chests[k];
+  GP.items = { lens:1, glass:1, shield:1 }; GP.ach.clear(); GP.calm.clear(); GP.clues.clear(); GP.gifts.clear(); GP.skinGot = false;
+  if (GP.skin){ GP.skin = false; bridge.setSkin(false); }
+  KEYS.forEach(k => bridge.chest(k, 'none'));
 }
-function caughtHTML(s, isNew){
-  const all = caught.size === SUSPECTS.length, bossLeft = crewDone() && !all;
-  const boss = SUSPECTS.find(x => x.boss);
-  const links = Object.keys(s.clue).map(id => { const h = byId[id]; return `<button type="button" class="linkbtn" data-hex="${id}"><i aria-hidden="true"></i><span><b>${ISLES[h.isle].name}・${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button>`; }).join('');
-  const next = all ? `<button type="button" class="btn primary" data-case="end">看結案報告 ›</button>`
-    : bossLeft ? `<button type="button" class="btn primary" data-go="isle:${boss.id}">手下全抓到了，換怪盜變變 ›</button>` : '';
+function resetCase(){ resetGame(); evFound.clear(); caught.clear(); visited.clear(); state.lastHex = null; updateCaseCount(); bridge.caseReset(); if (!list.hidden) buildList($('#listSearch').value); }
+function updateCaseCount(){
+  const vals = { '[data-case-count]':`${caught.size}/${SUSPECTS.length}`, '[data-star-count]':`${totalStars()}/${KEYS.length*3}` };
+  let up = false;
+  for (const sel in vals) document.querySelectorAll(sel).forEach(el => { if (el.textContent !== vals[sel]){ up = true; el.textContent = vals[sel]; } });
+  if (up) bumpHud();
+}
+
+const toastEl = document.createElement('div'); toastEl.className = 'g-toast'; toastEl.hidden = true; toastEl.setAttribute('role', 'status'); document.getElementById('app').appendChild(toastEl);
+let toastT = 0;
+function toast(html, ms = 2600){ toastEl.innerHTML = html; toastEl.hidden = false; toastEl.classList.remove('in'); void toastEl.offsetWidth; toastEl.classList.add('in'); clearTimeout(toastT); toastT = setTimeout(() => { toastEl.hidden = true; }, ms); }
+const ACH_BY = Object.fromEntries(ACH.map(a => [a.id, a]));
+function checkAch(f = {}){
+  const fresh = [], add = id => { if (!GP.ach.has(id)){ GP.ach.add(id); fresh.push(id); } };
+  if (caught.size === KEYS.length) add('badges');
+  if (totalStars() === KEYS.length*3) add('stars');
+  if (f.fast) add('fast');
+  if (f.thrifty) add('thrifty');
+  if (f.wall) add('wall');
+  if (GP.calm.size === KEYS.length) add('calm');
+  if (foundCount() === SECRETS.length) add('secrets');
+  if (Object.values(GP.chests).includes('open')) add('chest');
+  if (KEYS.every(k => GP.rec[k] && GP.rec[k].zero)){ add('perfect'); if (!GP.skinGot){ GP.skinGot = true; GP.skin = true; bridge.setSkin(true); } }
+  if (fresh.length) toast(fresh.map(id => `<p>${ic('star')}<span><small>${ACH_BY[id].open ? '成就達成' : '隱藏成就解鎖'}</small><b>${esc(ACH_BY[id].name)}</b></span></p>`).join(''), 3400);
+  return fresh;
+}
+function achHTML(){
+  return `<ul class="ach">${ACH.map(a => { const got = GP.ach.has(a.id), show = got || a.open; return `<li class="${got ? 'got' : ''}">${ic(got ? 'star' : 'unlock')}<span><b>${show ? esc(a.name) : '？？？'}</b><small>${show ? esc(a.note) : '隱藏成就：達成條件才會揭曉'}</small></span></li>`; }).join('')}</ul>`;
+}
+
+/* ---- 共用面板元件 ---- */
+const layer = document.createElement('div'); layer.className = 'g-layer'; layer.hidden = true; panel.appendChild(layer);
+const pauseEl = document.createElement('div'); pauseEl.className = 'g-layer g-pause'; pauseEl.hidden = true; panel.appendChild(pauseEl);
+function showLayer(html, kind){ layer.innerHTML = html; layer.dataset.kind = kind || ''; layer.hidden = false; }
+function hideLayer(){ layer.hidden = true; layer.innerHTML = ''; layer.dataset.kind = ''; }
+const layerOn = () => !layer.hidden;
+function floatFx(text, cls = ''){
+  const hud = body.querySelector('.g-hud') || body; const s = document.createElement('span'); s.className = 'g-fx ' + cls; s.textContent = text; hud.appendChild(s); setTimeout(() => s.remove(), 1200);
+}
+function shake(){ panel.classList.remove('g-shake'); void panel.offsetWidth; panel.classList.add('g-shake'); const f = document.createElement('div'); f.className = 'g-flash'; panel.appendChild(f); setTimeout(() => f.remove(), 520); }
+
+/* ---- 出任務 ---- */
+function briefHTML(k){
+  const L = LEVELS[k], s = suspectById[k], rec = GP.rec[k], locked = k === 'neu' && !crewDone();
+  const left = CREW.filter(id => !caught.has(id));
+  return `
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">任務簿</button><span aria-hidden="true">›</span><span>案卷 ${LETTER[k]}</span></nav>
+    <p class="eyebrow">案卷 ${LETTER[k]}・${ISLES[k].name}</p>
+    <h2>限時破案：${esc(L.case)}</h2>
+    ${said(s, caught.has(k) ? s.thanks : s.witness)}
+    ${rec ? `<p class="brief-rec">${starsInline(rec.stars)}<span>最佳紀錄：剩 ${rec.left} 秒${rec.zero ? '・零失誤' : ''}</span></p>` : ''}
+    ${locked ? `<aside class="note"><h3>還不能出任務</h3><p>怪盜變變躲在最後面。先打倒其他四座島的碳魔王（已打倒 ${4 - left.length} / 4），他才會現身。</p></aside>
+    <div class="btns">${left.map(id => `<button type="button" class="btn primary" data-go="brief:${id}">去${ISLES[id].name} ›</button>`).join('')}</div>` : ''}
+    ${rulesHTML(k)}
+    <div class="brief-inv"><span>道具</span>${Object.keys(ITEMS).map(id => `<span class="g-chipx" title="${esc(ITEMS[id].note)}">${ic(id)}${ITEMS[id].name} ×${GP.items[id] || 0}</span>`).join('')}</div>
+    <p class="brief-note">放大鏡：${ITEMS.lens.note}。沙漏：${ITEMS.glass.note}。防護罩：${ITEMS.shield.note}。找到祕境也會得到道具。</p>
+    <div class="brief-set">
+      <div class="route-sw" role="group" aria-label="計時"><button type="button" data-g="relax:0" aria-pressed="${!relax}">標準 ${L.time} 秒</button><button type="button" data-g="relax:1" aria-pressed="${relax}">寬鬆 ${Math.round(L.time*1.5)} 秒</button></div>
+      <div class="route-sw" role="group" aria-label="音效"><button type="button" data-g="snd:1" aria-pressed="${SFX.on}">音效開</button><button type="button" data-g="snd:0" aria-pressed="${!SFX.on}">音效關</button></div>
+    </div>
+    ${locked ? '' : `<div class="btns"><button type="button" class="btn primary go-big" data-g="start:${k}">${rec ? '再挑戰' : '開始倒數'}！</button><button type="button" class="btn" data-go="isle:${k}">先讀線索</button></div>`}`;
+}
+function showBrief(k){
+  if (gBusy() || !LEVELS[k]) return; leaveGame(); interacted(); closeList();
+  state.view = 'brief'; state.isle = k; state.hex = null; setModes(k);
+  openPanel(briefHTML(k), `CASE FILE ─ 出任務・${ISLES[k].name}`);
+  bridge.focusCase(k, 'lair', false, false);
+}
+
+function startLevel(k){
+  if (!LEVELS[k] || (k === 'neu' && !crewDone())) return showBrief(k);
+  if (G) endGame();
+  interacted(); closeList(); hideTerm();
+  const L = LEVELS[k], T = levelTime(k);
+  G = { k, L, phase:'count', T, t:T, Tbar:T, el:0, running:false, paused:false, hold:false, cd:0,
+    miss:0, found:new Set(), clean:new Set(), nFlaws:flawsOf(L), docsDone:false,
+    picks:new Set(), returned:new Set(), audited:false, auditing:false, badPicked:false, coinsAtPass:100, lastAudit:null,
+    ev:{ e:L.events[Math.floor(Math.random()*L.events.length)], at:T*(0.22 + Math.random()*0.33), state:'wait', ok:null, order:null },
+    hearts:3, hp:L.boss.rounds.length, round:0, rs:null, attacked:0, clues:new Set(), res:null, beatAt:0, beatN:0, lastSec:-1 };
+  G.ev.order = shuffle(G.ev.e.opts.map((_, i) => i));
+  state.view = 'game'; state.hex = null; setModes('');
+  document.getElementById('app').classList.add('ingame'); panel.classList.add('game');
+  SFX.unlock();
+  renderGame();
+  bridge.gameMode(k, true); bridge.focusCase(k, 'lair', false, true);
+  let n = 3;
+  const step = () => {
+    if (!G || G.k !== k) return;
+    if (n > 0){ showLayer(`<div class="g-count" aria-live="assertive"><b>${n}</b><small>${esc(L.case)}</small></div>`, 'count'); SFX.count(n); n--; G.cd = setTimeout(step, 720); }
+    else { showLayer('<div class="g-count" aria-live="assertive"><b class="go">開始！</b></div>', 'count'); SFX.count(0); G.cd = setTimeout(() => { if (!G) return; hideLayer(); G.phase = 'docs'; G.running = true; renderGame(); loopStart(); }, 520); }
+  };
+  step();
+}
+function endGame(){
+  if (!G) return;
+  clearTimeout(G.cd); stopLoop();
+  const k = G.k; if (G.phase !== 'win') bridge.bossMode(k, false); bridge.gameMode(k, false);
+  G = null; hideLayer(); pauseEl.hidden = true;
+  document.getElementById('app').classList.remove('ingame'); panel.classList.remove('game', 'g-shake');
+}
+function renderGame(){
+  if (!G) return;
+  const k = G.k, ph = G.phase;
+  const inner = ph === 'budget' ? budgetHTML() : ph === 'boss' ? bossHTML() : ph === 'win' ? winHTML() : ph === 'lose' ? loseHTML() : docsHTML();
+  const hud = ['count', 'docs', 'budget', 'boss'].includes(ph);
+  const stamp = { count:'預備', docs:'倒數中', budget:'倒數中', boss:'BOSS', win:'破案！', lose:'失敗' }[ph] || '';
+  const label = ph === 'boss' ? 'BOSS 對決' : ph === 'win' ? '破案報告' : '限時破案';
+  openPanel(`<div class="g${ph === 'boss' ? ' g-boss' : ''}" style="--isle:var(--${k})">${hud ? hudHTML() : ''}<div class="g-stage">${inner}</div></div>`, `CASE FILE ─ ${label}・${ISLES[k].name}`, stamp);
+  G.lastSec = -1; tickUI();
+}
+
+/* ---- 計時 ---- */
+let rafId = 0, lastT = 0;
+function loopStart(){ cancelAnimationFrame(rafId); lastT = performance.now(); rafId = requestAnimationFrame(loop); }
+function stopLoop(){ cancelAnimationFrame(rafId); rafId = 0; }
+function loop(now){
+  if (!G || !G.running){ rafId = 0; return; }
+  const dt = Math.min(0.25, Math.max(0, (now - lastT)/1000)); lastT = now;
+  if (!G.paused && !G.hold && !document.hidden){
+    G.t = Math.max(0, G.t - dt); G.el += dt;
+    beat();
+    if (G.ev.state === 'wait' && G.el >= G.ev.at && (G.phase === 'docs' || G.phase === 'budget') && !layerOn() && !G.auditing) openEvent();
+    if (G.t <= 0){ tickUI(); return timeUp(); }
+  }
+  tickUI();
+  rafId = requestAnimationFrame(loop);
+}
+function beat(){
+  if (G.el < G.beatAt) return;
+  const r = G.t, iv = r > 30 ? 1 : r > 15 ? 0.5 : r > 7 ? 0.32 : 0.2;
+  G.beatAt = G.el + iv; G.beatN++;
+  SFX.tick(r > 30 ? 0 : r > 15 ? 0.35 : r > 7 ? 0.7 : 1);
+  if (r <= 15 && G.beatN % 2 === 0) SFX.thump();
+}
+function tickUI(){
+  if (!G) return;
+  const sec = document.getElementById('gSec'), bar = document.getElementById('gBar'), s = Math.ceil(G.t);
+  if (sec && s !== G.lastSec){
+    G.lastSec = s; sec.textContent = s;
+    const lv = G.t <= 10 ? 'hot' : (G.t <= 20 || G.t/G.Tbar <= 0.3) ? 'warn' : 'ok', clk = sec.closest('.g-clock');
+    if (clk && clk.dataset.lv !== lv){ clk.dataset.lv = lv; if (bar) bar.parentElement.dataset.lv = lv; }
+  }
+  if (bar) bar.style.transform = `scaleX(${Math.max(0, Math.min(1, G.t/G.Tbar)).toFixed(4)})`;
+}
+function addTime(d){
+  if (!G) return; G.t = Math.max(0, G.t + d); if (G.t > G.Tbar) G.Tbar = G.t;
+  floatFx(`${d > 0 ? '＋' : '−'}${Math.abs(d)} 秒`, d > 0 ? 'up' : 'down'); G.lastSec = -1; tickUI();
+}
+function pauseGame(){
+  if (!G || !G.running || G.paused) return;
+  G.paused = true;
+  pauseEl.innerHTML = `<div class="g-card"><p class="g-eyebrow">暫停</p><h3>先喘口氣</h3><p>時間停住了，準備好再回來。</p><div class="btns col"><button type="button" class="btn primary" data-g="resume">繼續破案 ›</button><button type="button" class="btn" data-g="restart">這關重來</button><button type="button" class="btn" data-g="quit">放棄任務</button></div></div>`;
+  pauseEl.hidden = false;
+}
+function resumeGame(){ if (!G) return; G.paused = false; pauseEl.hidden = true; lastT = performance.now(); }
+document.addEventListener('visibilitychange', () => { if (document.hidden && gBusy()) pauseGame(); });
+function timeUp(){ hideLayer(); pauseEl.hidden = true; lose(G.phase === 'boss' ? 'boss-time' : 'time'); }
+
+/* ---- HUD ---- */
+function itemChips(){
+  const ph = G.phase, usable = { lens:ph === 'docs' && !G.docsDone, glass:['docs', 'budget', 'boss'].includes(ph) };
+  return Object.keys(ITEMS).map(id => { const n = GP.items[id] || 0, passive = id === 'shield', can = !passive && usable[id] && n > 0; return `<button type="button" class="g-item${passive ? ' passive' : ''}" data-g="item:${id}"${can ? '' : ' disabled'} aria-label="${ITEMS[id].name} ${n} 個：${esc(ITEMS[id].note)}" title="${ITEMS[id].name}：${esc(ITEMS[id].note)}">${ic(id)}<b>${n}</b></button>`; }).join('');
+}
+const coinsLeft = () => 100 - G.L.budget.opts.filter(o => G.picks.has(o.id)).reduce((n, o) => n + o.cost, 0);
+const heartsHTML = () => `<span class="hearts" aria-label="剩 ${G.hearts} 顆心">${[0, 1, 2].map(i => `<i class="${i < G.hearts ? 'on' : ''}" aria-hidden="true">${IC.heart}</i>`).join('')}</span>`;
+function statHTML(){
+  const ph = G.phase;
+  if (ph === 'budget') return `<span class="g-chip coin">${ic('coin')}<b>${coinsLeft()}</b><small>金幣</small></span>`;
+  if (ph === 'boss') return `<span class="g-chip">${heartsHTML()}</span>`;
+  return `<span class="g-chip">${ic('doc')}<b>${G.found.size}/${G.nFlaws}</b><small>破綻</small></span>`;
+}
+function hudHTML(){
+  return `<div class="g-hud" aria-live="off">
+    <div class="g-row">
+      <span class="g-clock" data-lv="ok" role="timer" aria-label="剩餘秒數">${ic('clock')}<b id="gSec">${Math.ceil(G.t)}</b></span>
+      <span class="g-bar" data-lv="ok" aria-hidden="true"><i id="gBar"></i></span>
+      <span id="gStat">${statHTML()}</span>
+      <button type="button" class="g-ico" data-g="pause" aria-label="暫停">${IC.pause}</button>
+    </div>
+    <div class="g-row g-row2"><span class="g-items" id="gItems">${itemChips()}</span><button type="button" class="g-ico sm" data-g="sound" aria-pressed="${SFX.on}" aria-label="音效">${SFX.on ? IC.sound : IC.mute}</button></div>
+  </div>`;
+}
+function updHud(){ if (!G) return; const st = document.getElementById('gStat'), it = document.getElementById('gItems'); if (st) st.innerHTML = statHTML(); if (it) it.innerHTML = itemChips(); }
+
+/* ---- 第一關：線索真假辨識 ---- */
+function rowHTML(i, j){
+  const r = G.L.docs[i].rows[j], key = i + ':' + j, hit = G.found.has(key), clean = G.clean.has(key), off = hit || clean || G.docsDone;
+  return `<button type="button" class="doc-row${hit ? ' hit' : ''}${clean ? ' clean' : ''}" data-g="row:${key}"${off ? ' aria-disabled="true"' : ''}><span class="dr-t">${esc(r[0])}</span>${hit ? `<span class="dr-k">${esc(r[1])}</span><span class="dr-why">${esc(r[2])}</span>` : clean ? '<span class="dr-ok">這條沒問題・−5 秒</span>' : ''}</button>`;
+}
+const unlockHTML = id => { const h = byId[id]; return h ? `<p class="g-unlock">${ic('unlock')}<span><small>解鎖線索</small><b>${ISLES[h.isle].name}・${esc(h.short)}</b></span></p>` : ''; };
+function docsHTML(){
+  const L = G.L;
+  return `
+    <p class="g-eyebrow">STAGE 1・線索真假辨識</p>
+    <h2 class="g-h">找出 ${G.nFlaws} 個破綻</h2>
+    <p class="g-tip">${esc(L.docsTip)}</p>
+    <div class="docs">${L.docs.map((d, i) => `<section class="doc"><header><b>${esc(d.h)}</b><small>${esc(L.docsTitle)}</small></header><ol>${d.rows.map((r, j) => `<li>${rowHTML(i, j)}</li>`).join('')}</ol></section>`).join('')}</div>
+    <div class="g-unlocks" id="gUnlock">${[...G.clues].map(unlockHTML).join('')}</div>
+    <div id="gDocsDone">${G.docsDone ? docsDoneHTML() : ''}</div>`;
+}
+function docsDoneHTML(){
+  const s = suspectById[G.k];
+  return `<aside class="g-got">${ic('lens')}<div><p class="g-eyebrow">破綻全找到了！證物到手</p><b>${esc(s.ev)}</b><p>${esc(s.evNote)}</p></div></aside>
+    <div class="btns"><button type="button" class="btn primary go-big" data-g="to:budget">下一關：預算攻防 ›</button></div>`;
+}
+function unlockClue(id){
+  if (!G || !id || !byId[id] || G.clues.has(id)) return;
+  G.clues.add(id); GP.clues.add(id);
+  const box = document.getElementById('gUnlock'); if (box) box.insertAdjacentHTML('beforeend', unlockHTML(id));
+  const h = byId[id]; toast(`<p>${ic('unlock')}<span><small>解鎖新線索</small><b>${ISLES[h.isle].name}・${esc(h.short)}</b></span></p>`, 2000);
+}
+function tapRow(key, byLens){
+  if (!G || G.phase !== 'docs' || G.docsDone || G.paused) return;
+  const [i, j] = key.split(':').map(Number), r = G.L.docs[i] && G.L.docs[i].rows[j]; if (!r || G.found.has(key) || G.clean.has(key)) return;
+  const li = body.querySelector(`[data-g="row:${key}"]`);
+  if (r[1]){
+    G.found.add(key); SFX.ok();
+    if (li) li.outerHTML = rowHTML(i, j);
+    unlockClue(r[3]);
+    if (byLens) floatFx('放大鏡！', 'up');
+    if (G.found.size >= G.nFlaws){
+      G.docsDone = true; evFound.add(G.k); bridge.caseSync(G.k, { found:true, caught:false }); bridge.taunt(G.k, '被、被發現了？！');
+      body.querySelectorAll('.doc-row').forEach(b => b.setAttribute('aria-disabled', 'true'));
+      const d = document.getElementById('gDocsDone'); if (d){ d.innerHTML = docsDoneHTML(); d.scrollIntoView({ block:'nearest', behavior:'smooth' }); }
+    }
+  } else {
+    G.clean.add(key); G.miss++; SFX.bad(); vibrate(90);
+    if (li){ li.outerHTML = rowHTML(i, j); const nb = body.querySelector(`[data-g="row:${key}"]`); if (nb) nb.classList.add('g-nope'); }
+    addTime(-5);
+  }
+  updHud();
+}
+
+/* ---- 第二關：預算攻防 ---- */
+const fmtV = (B, v) => fmt(v, B.dec || 0);
+const effLabel = (B, v) => `${B.sign || B.verb + ' '}${fmtV(B, v)} ${B.unit}`;
+function boptHTML(o){
+  const B = G.L.budget, on = G.picks.has(o.id), ret = G.returned.has(o.id), dis = G.audited || ret || (!on && o.cost > coinsLeft());
+  return `<button type="button" class="bopt${on ? ' on' : ''}${ret ? ' ret' : ''}" data-g="bopt:${o.id}" aria-pressed="${on}"${dis ? ' disabled' : ''}>
+    <span class="bcat">${esc(o.cat)}</span><b class="bname">${esc(o.name)}</b>
+    <span class="bnums"><span class="bcost">${ic('coin')}${o.cost}</span><span class="beff">${effLabel(B, o.val)}</span></span>
+    ${ret ? `<span class="bret">退貨：${esc(o.bad)}</span>` : ''}</button>`;
+}
+function meterB(){
+  const B = G.L.budget, real = G.audited, sum = B.opts.filter(o => G.picks.has(o.id) && !(real && o.bad)).reduce((n, o) => n + o.val, 0), ok = sum >= B.need - 1e-9;
+  return `<div class="bmeter${ok ? ' ok' : ''}"><div class="bm-top"><span>${esc(B.goal)}</span><b>${real ? '' : '預估 '}${fmtV(B, sum)}<small> / ${fmtV(B, B.need)} ${B.unit}</small></b></div><div class="bm-bar"><i style="width:${Math.min(100, sum/(B.need*1.25)*100).toFixed(1)}%"></i><em aria-hidden="true"></em></div><p class="bm-note">${real ? '查帳完成' : '虛線是目標。帳面上的數字，不一定都算數！'}</p></div>`;
+}
+function bfootHTML(){ return `<span class="bcoins">${ic('coin')}剩 <b>${coinsLeft()}</b> 枚</span><button type="button" class="btn primary" data-g="audit"${G.picks.size && !G.audited && !G.auditing ? '' : ' disabled'}>確認花費 ›</button>`; }
+function budgetHTML(){
+  const B = G.L.budget;
+  return `
+    <p class="g-eyebrow">STAGE 2・預算攻防</p>
+    <h2 class="g-h">${esc(B.title)}</h2>
+    <p class="g-tip">${esc(B.intro)}</p>
+    <div id="bMeter">${meterB()}</div>
+    <div class="bopts" role="group" aria-label="要花金幣的項目">${B.opts.map(boptHTML).join('')}</div>
+    <div class="bfoot" id="bFoot"${G.audited ? ' hidden' : ''}>${bfootHTML()}</div>
+    <div id="bAudit">${auditHTML()}</div>`;
+}
+function budgetRefresh(){
+  const B = G.L.budget, box = body.querySelector('.bopts');
+  if (box) box.innerHTML = B.opts.map(boptHTML).join('');
+  const m = document.getElementById('bMeter'), f = document.getElementById('bFoot'), a = document.getElementById('bAudit');
+  if (m) m.innerHTML = meterB(); if (f){ f.innerHTML = bfootHTML(); f.hidden = G.audited; } if (a) a.innerHTML = auditHTML();
+  updHud();
+}
+function togglePick(id){
+  if (!G || G.phase !== 'budget' || G.audited || G.auditing || G.paused) return;
+  const o = G.L.budget.opts.find(x => x.id === id); if (!o || G.returned.has(id)) return;
+  if (G.picks.has(id)) G.picks.delete(id); else if (o.cost <= coinsLeft()){ G.picks.add(id); SFX.coin(); } else return;
+  budgetRefresh();
+}
+function audit(){
+  if (!G || G.phase !== 'budget' || G.audited || G.auditing || !G.picks.size) return;
+  G.auditing = true;
+  const a = document.getElementById('bAudit'); if (a) a.innerHTML = '<p class="g-checking">碳寶查帳中……</p>';
+  const f = document.getElementById('bFoot'); if (f) f.querySelector('button').disabled = true;
+  G.cd = setTimeout(() => {
+    if (!G || G.phase !== 'budget') return;
+    G.auditing = false;
+    const B = G.L.budget, picks = B.opts.filter(o => G.picks.has(o.id)), bad = picks.filter(o => o.bad), good = picks.filter(o => !o.bad);
+    const sum = good.reduce((n, o) => n + o.val, 0), missing = (B.must || []).filter(id => !G.picks.has(id)), catOk = !B.needCat || good.some(o => o.cat === B.needCat);
+    const pass = sum >= B.need - 1e-9 && !missing.length && catOk;
+    bad.forEach(o => { G.picks.delete(o.id); G.returned.add(o.id); });
+    if (bad.length) G.badPicked = true;
+    G.lastAudit = { pass, sum, bad, missing, catOk };
+    if (pass){ G.audited = true; G.coinsAtPass = coinsLeft(); if (bad.length) G.miss++; SFX.ok(); unlockClue(B.clue); bridge.taunt(G.k, '錢、錢都花在刀口上了？'); }
+    else { G.miss++; SFX.bad(); vibrate(90); addTime(-5); }
+    budgetRefresh();
+    const r = document.getElementById('bAudit'); if (r) r.scrollIntoView({ block:'nearest', behavior:'smooth' });
+  }, 700);
+}
+function auditHTML(){
+  const B = G.L.budget, r = G.lastAudit; if (!r) return '';
+  const badList = r.bad.map(o => `<li><b>${esc(o.name)}</b>：${esc(o.bad)}</li>`).join('');
+  if (r.pass) return `<aside class="g-result ok"><p class="g-eyebrow">預算達標！</p><p>${esc(B.goal)}：<b>${fmtV(B, r.sum)}</b> / ${fmtV(B, B.need)} ${B.unit}，還剩 ${G.coinsAtPass} 枚金幣。</p>${badList ? `<p class="bad-t">不過這幾樣花錯了（已退貨，不算零失誤）：</p><ul>${badList}</ul>` : ''}<div class="btns"><button type="button" class="btn primary go-big" data-g="to:boss">下一關：碳魔王來襲 ›</button></div></aside>`;
+  const why = [badList];
+  if (r.missing.length) why.push(`<li>${esc(B.mustWhy)}還缺：${r.missing.map(id => esc(B.opts.find(o => o.id === id).name)).join('、')}。</li>`);
+  if (!r.catOk) why.push(`<li>${esc(B.needCatWhy)}</li>`);
+  if (r.sum < B.need - 1e-9) why.push(`<li>真正算數的只有 ${fmtV(B, r.sum)} ${B.unit}，還差 ${fmtV(B, B.need - r.sum)} ${B.unit}。</li>`);
+  return `<aside class="g-result bad"><p class="g-eyebrow">沒達標！−5 秒</p><ul>${why.join('')}</ul><p class="muted">不合格的已經退貨、金幣退回來了。重新挑一次！</p></aside>`;
+}
+
+/* ---- 突發危機 ---- */
+function openEvent(){
+  const E = G.ev.e; G.ev.state = 'open'; SFX.alarm(); vibrate([80, 60, 80]);
+  showLayer(`<div class="g-card ev" role="alertdialog" aria-labelledby="gEvT">
+    <p class="ev-kind">${ic('warn')}突發危機・${esc(E.kind)}</p>
+    <h3 id="gEvT">${esc(E.title)}</h3><p>${esc(E.text)}</p><p class="ev-q">${esc(E.q)}</p>
+    <div class="ev-opts">${G.ev.order.map((i, n) => `<button type="button" class="quiz-opt" data-g="ev:${i}"><span>${'ABC'[n]}</span>${esc(E.opts[i][0])}</button>`).join('')}</div>
+    <p class="ev-time">${ic('clock')}時間還在跑！答對 ＋8 秒，答錯 −10 秒</p></div>`, 'event');
+}
+function answerEvent(i){
+  if (!G || G.ev.state !== 'open' || G.paused) return;
+  const E = G.ev.e, ok = !!(E.opts[i] && E.opts[i][1]), right = E.opts.find(o => o[1]);
+  G.ev.state = 'done'; G.ev.ok = ok;
+  if (ok){ SFX.ok(); GP.calm.add(G.k); } else { SFX.bad(); G.miss++; vibrate(120); }
+  showLayer(`<div class="g-card ev ${ok ? 'good' : 'bad'}">
+    <p class="ev-kind">${ic(ok ? 'star' : 'warn')}${ok ? '危機化解！＋8 秒' : '應變失誤！−10 秒'}</p>
+    <h3>${ok ? '處理得漂亮！' : '不是這樣處理的'}</h3>
+    ${ok ? '' : `<p><b>正確做法：</b>${esc(right[0])}</p>`}<p>${esc(E.why)}</p>
+    <div class="btns"><button type="button" class="btn primary" data-g="ev-close">繼續破案 ›</button></div></div>`, 'event');
+  addTime(ok ? 8 : -10);
+  if (ok) unlockClue(E.clue);
+}
+
+/* ---- 第三關：Boss 對決 ---- */
+function initRound(){
+  const R = G.L.boss.rounds[G.round];
+  if (R.type === 'sort') return { sel:R.items.map(() => -1), lock:new Set(), wrong:new Set(), order:shuffle(R.items.map((_, i) => i)), msg:'' };
+  if (R.type === 'order') return { seq:[], pool:shuffle(R.items.map((_, i) => i)), bad:-1, msg:'' };
+  if (R.type === 'pick') return { on:new Set(), extra:new Set(), order:shuffle(R.items.map((_, i) => i)), msg:'' };
+  return { order:shuffle(R.opts.map((_, i) => i)), wrong:new Set(), msg:'' };
+}
+function toBoss(){
+  if (!G || G.phase !== 'budget' || !G.audited || layerOn()) return;
+  if (G.ev.state === 'wait'){ G.ev.thenBoss = true; return openEvent(); }
+  const B = G.L.boss;
+  G.phase = 'boss'; G.hp = B.rounds.length; G.round = 0; G.hearts = 3; G.rs = initRound();
+  G.t += bossBonus(G.k); G.Tbar = G.t; G.hold = true;
+  bridge.bossMode(G.k, true); bridge.taunt(G.k, '碳魔王來了！'); SFX.boss(); vibrate([60, 40, 140]);
+  renderGame();
+  showLayer(`<button type="button" class="g-splash" data-g="splash"><small>BOSS 對決</small><b>碳魔王來襲！</b><span>${esc(B.name)}</span><em>${esc(B.roar)}</em><i>剩下的時間 ＋${bossBonus(G.k)} 秒</i></button>`, 'splash');
+  G.cd = setTimeout(endSplash, 2400);
+}
+function endSplash(){ if (!G || layer.dataset.kind !== 'splash') return; clearTimeout(G.cd); hideLayer(); G.hold = false; lastT = performance.now(); }
+function roundHTML(){
+  const R = G.L.boss.rounds[G.round], rs = G.rs, msg = rs.msg ? `<p class="r-msg" role="alert">${rs.msg}</p>` : '';
+  if (R.type === 'sort') return `${msg}<ul class="r-sort">${rs.order.map(i => { const [t] = R.items[i], v = rs.sel[i], st = rs.lock.has(i) ? 'lock' : rs.wrong.has(i) ? 'wrong' : ''; return `<li class="${st}"><span class="rs-t">${rs.lock.has(i) ? '✓ ' : ''}${esc(t)}</span><span class="seg seg-${R.bins.length}" role="group" aria-label="${esc(t)}">${R.bins.map((b, bi) => `<button type="button" data-g="sort:${i}:${bi}" aria-pressed="${v === bi}"${rs.lock.has(i) ? ' disabled' : ''}>${esc(b)}</button>`).join('')}</span></li>`; }).join('')}</ul>
+    <div class="btns"><button type="button" class="btn primary atk" data-g="attack"${rs.sel.every(v => v >= 0) ? '' : ' disabled'}>出招！</button></div>`;
+  if (R.type === 'order') return `${msg}<p class="r-hint">${rs.seq.length < R.items.length ? `點選下一個（第 ${rs.seq.length + 1} 個）：` : '排好了，出招吧！'}</p><div class="r-pool">${rs.pool.filter(i => !rs.seq.includes(i)).map(i => `<button type="button" class="chip-b" data-g="ord:${i}">${esc(R.items[i])}</button>`).join('')}</div>
+    <ol class="r-seq">${R.items.map((_, n) => { const i = rs.seq[n]; return `<li class="${i === undefined ? 'empty' : ''}${rs.bad === n ? ' wrong' : ''}"><em>${n + 1}</em><span>${i === undefined ? '' : esc(R.items[i])}</span></li>`; }).join('')}</ol>
+    <div class="btns"><button type="button" class="btn" data-g="ord-undo"${rs.seq.length ? '' : ' disabled'}>‹ 退一步</button><button type="button" class="btn primary atk" data-g="attack"${rs.seq.length === R.items.length ? '' : ' disabled'}>出招！</button></div>`;
+  if (R.type === 'pick') return `${msg}<div class="r-pick">${rs.order.map(i => { const on = rs.on.has(i), ex = rs.extra.has(i); return `<button type="button" class="pk${on ? ' on' : ''}${ex ? ' extra' : ''}" data-g="pk:${i}" aria-pressed="${on}"><i aria-hidden="true">${on ? '✓' : ''}</i>${esc(R.items[i][0])}${ex ? '<small>不對！</small>' : ''}</button>`; }).join('')}</div>
+    <div class="btns"><button type="button" class="btn primary atk" data-g="attack"${rs.on.size ? '' : ' disabled'}>出招！</button></div>`;
+  return `${msg}${R.f ? `<p class="r-f">${esc(R.f)}</p>` : ''}<div class="quiz r-calc">${rs.order.map((i, n) => `<button type="button" class="quiz-opt${rs.wrong.has(i) ? ' wrong' : ''}" data-g="calc:${i}"${rs.wrong.has(i) ? ' disabled' : ''}><span>${'ABCD'[n]}</span>${esc(R.opts[i])}</button>`).join('')}</div>`;
+}
+function bossHTML(){
+  const B = G.L.boss, R = B.rounds[G.round];
+  return `
+    <div class="boss-head"><span class="bh-ic">${IC.boss}</span><span class="bh-name"><small>BOSS・碳魔王來襲</small><b>${esc(B.name)}</b></span>
+      <span class="bh-hp" aria-label="碳魔王體力 ${G.hp} / ${B.rounds.length}">${B.rounds.map((_, i) => `<i class="${i < G.hp ? 'on' : ''}"></i>`).join('')}</span></div>
+    <p class="g-eyebrow">第 ${G.round + 1} / ${B.rounds.length} 回合・${esc(R.title)}</p>
+    <h2 class="g-h">${esc(R.q)}</h2>
+    <div id="gRound">${roundHTML()}</div>
+    ${G.clues.size ? `<details class="g-intel"><summary>翻線索卡（${G.clues.size} 張）</summary><ul>${[...G.clues].map(id => { const h = byId[id]; return `<li><b>${esc(h.short)}</b>${esc(GIST[id] || h.lead)}</li>`; }).join('')}</ul></details>` : ''}`;
+}
+function roundRefresh(){ const el = document.getElementById('gRound'); if (el) el.innerHTML = roundHTML(); updHud(); }
+function attack(){
+  if (!G || G.phase !== 'boss' || G.hold || G.paused) return;
+  const R = G.L.boss.rounds[G.round], rs = G.rs;
+  if (R.type === 'sort'){
+    if (!rs.sel.every(v => v >= 0)) return;
+    rs.wrong.clear(); R.items.forEach(([, c], i) => { if (rs.sel[i] === c) rs.lock.add(i); else { rs.wrong.add(i); rs.sel[i] = -1; } });
+    return rs.wrong.size ? counter(`有 ${rs.wrong.size} 個放錯了，重新分一次！`) : bossHit();
+  }
+  if (R.type === 'order'){
+    if (rs.seq.length !== R.items.length) return;
+    const n = rs.seq.findIndex((v, i) => v !== i);
+    if (n < 0) return bossHit();
+    rs.bad = n; rs.seq = rs.seq.slice(0, n);
+    return counter(`從第 ${n + 1} 個開始排錯了！前面排對的留著。`);
+  }
+  if (R.type === 'pick'){
+    if (!rs.on.size) return;
+    const miss = R.items.filter(([, c], i) => c && !rs.on.has(i)).length; rs.extra = new Set([...rs.on].filter(i => !R.items[i][1]));
+    if (!miss && !rs.extra.size) return bossHit();
+    rs.extra.forEach(i => rs.on.delete(i));
+    return counter([miss ? `漏掉了 ${miss} 個關鍵條件` : '', rs.extra.size ? `選了 ${rs.extra.size} 個不該選的` : ''].filter(Boolean).join('，') + '！');
+  }
+}
+function calcPick(i){
+  if (!G || G.phase !== 'boss' || G.hold || G.paused) return;
+  const R = G.L.boss.rounds[G.round]; if (R.type !== 'calc' || G.rs.wrong.has(i)) return;
+  if (i === R.a) return bossHit();
+  G.rs.wrong.add(i); counter('算錯了！再算一次。');
+}
+function bossHit(){
+  const B = G.L.boss, k = G.k, R = B.rounds[G.round];
+  G.hp--; SFX.hit(); vibrate(40);
+  bridge.bossHit(k); bridge.taunt(k, B.hurt[Math.min(B.hurt.length - 1, G.round)]);
+  unlockClue(R.clue);
+  const head = body.querySelector('.bh-hp'); if (head) head.innerHTML = B.rounds.map((_, i) => `<i class="${i < G.hp ? 'on' : ''}${i === G.hp ? ' break' : ''}"></i>`).join('');
+  showLayer(`<div class="g-hit"><b>命中！</b><span>${esc(B.name)}體力 ${G.hp} / ${B.rounds.length}</span></div>`, 'hit');
+  G.hold = true;
+  if (G.hp <= 0){ G.running = false; G.cd = setTimeout(bossWin, 1000); return; }
+  G.cd = setTimeout(() => { if (!G) return; hideLayer(); G.round++; G.rs = initRound(); G.hold = false; renderGame(); }, 850);
+}
+function counter(msg){
+  const B = G.L.boss, k = G.k;
+  G.miss++; G.attacked++;
+  const line = B.hit[(G.attacked - 1) % B.hit.length];
+  bridge.bossAttack(k); bridge.taunt(k, line);
+  if ((GP.items.shield || 0) > 0){
+    GP.items.shield--; SFX.hit(); floatFx('防護罩擋下了！', 'up');
+    G.rs.msg = `碳魔王反擊：「${esc(line)}」——防護罩擋下了這一擊！${esc(msg)}`;
+  } else {
+    G.hearts--; SFX.hurt(); vibrate([110, 50, 110]); shake(); floatFx('−1 顆心', 'down');
+    G.rs.msg = `碳魔王反擊：「${esc(line)}」你失去 1 顆心。${esc(msg)}`;
+  }
+  roundRefresh();
+  if (G.hearts <= 0){ G.running = false; G.hold = true; G.cd = setTimeout(() => lose('boss'), 900); }
+}
+function bossWin(){
+  if (!G) return;
+  const k = G.k, L = G.L, first = !caught.has(k);
+  hideLayer(); stopLoop();
+  G.phase = 'win'; G.running = false;
+  const s2 = G.t >= 20, s3 = G.miss === 0, stars = 1 + (s2 ? 1 : 0) + (s3 ? 1 : 0), left = Math.ceil(G.t);
+  const rec = GP.rec[k] || { stars:0, zero:false, left:0 };
+  GP.rec[k] = { stars:Math.max(rec.stars, stars), zero:rec.zero || s3, left:Math.max(rec.left, left) };
+  caught.add(k); evFound.add(k); updateCaseCount();
+  bridge.bossMode(k, false); bridge.caseSync(k, { found:true, caught:true });
+  bridge.taunt(k, suspectById[k].boss ? '我、我只是想看起來環保嘛……' : '嗚……被抓到了');
+  const items = [];
+  if (first && L.reward){ give(L.reward); items.push(L.reward); }
+  let chest = false;
+  if (s3 && !GP.chests[k]){ GP.chests[k] = 'ready'; chest = true; bridge.chest(k, 'ready'); }
+  G.res = { stars, s2, s3, left, first, items, chest, ach:[] };
+  SFX.win();
+  G.res.ach = checkAch({ fast:G.t >= 40, thrifty:G.coinsAtPass >= 20 && !G.badPicked, wall:G.attacked === 0 });
+  renderGame();
+}
+function lose(why){
+  if (!G) return;
+  stopLoop(); hideLayer(); pauseEl.hidden = true;
+  G.phase = 'lose'; G.loseWhy = why; G.running = false; G.miss++;
+  SFX.lose(); bridge.bossMode(G.k, false);
+  bridge.taunt(G.k, why === 'time' ? '時間到啦，掰掰～' : '哈哈哈，下次再來！');
+  renderGame();
+}
+function retryBoss(){
+  if (!G || G.phase !== 'lose' || G.loseWhy === 'time') return;
+  const B = G.L.boss;
+  G.phase = 'boss'; G.t = bossRetryTime(G.k); G.Tbar = G.t; G.hearts = 3; G.hp = B.rounds.length; G.round = 0; G.rs = initRound();
+  G.running = true; G.hold = false; G.paused = false;
+  bridge.bossMode(G.k, true); bridge.taunt(G.k, '又來了？放馬過來！'); SFX.boss();
+  renderGame(); loopStart();
+}
+function winHTML(){
+  const k = G.k, s = suspectById[k], r = G.res, B = G.L.boss;
+  const next = KEYS.find(x => !caught.has(x) && (x !== 'neu' || crewDone()));
+  const starRow = [['破案', true], ['剩 20 秒以上', r.s2], ['零失誤', r.s3]].map(([t, on], i) => `<span class="rs${on ? ' on' : ''}" style="--d:${(i*0.22).toFixed(2)}s">${IC.star}<small>${t}</small></span>`).join('');
+  return `
+    <p class="eyebrow">破案！</p>
+    <h2>${esc(B.name)}被打倒了</h2>
+    <div class="res-stars" role="img" aria-label="得到 ${r.stars} 顆星">${starRow}</div>
+    <div class="res-stats"><span>${ic('clock')}剩 <b>${r.left}</b> 秒</span><span>${ic('warn')}失誤 <b>${G.miss}</b> 次</span><span>${ic('coin')}剩 <b>${G.coinsAtPass}</b> 枚</span></div>
+    <div class="res-badge">${badgeSVG(k)}<div><small>${r.first ? '獲得碳寶徽章！' : '碳寶徽章'}</small><b>${BADGES[k]}</b><span>已收集 ${caught.size} / ${KEYS.length} 枚</span></div></div>
+    ${r.items.length ? `<p class="res-items">獲得道具：${r.items.map(id => `<span class="g-chipx">${ic(id)}${ITEMS[id].name} ×1</span>`).join('')}</p>` : ''}
+    ${GP.chests[k] ? chestHTML(k) : r.s3 ? '' : '<p class="muted res-hint">零失誤破案，這裡會出現黃金寶箱。</p>'}
+    <h3>${esc(s.name)}的手法</h3><p>${esc(s.trick)}</p>
+    <h3>碳寶怎麼拆穿</h3><p>${esc(s.truth)}</p>
+    ${said(s, s.thanks)}
+    ${G.clues.size ? `<h3>這關解鎖的線索</h3><div class="linkrow">${[...G.clues].map(linkBtn).join('')}</div>` : ''}
+    <div class="btns">${caught.size === SUSPECTS.length ? '<button type="button" class="btn primary" data-case="end">看結案報告 ›</button>' : next ? `<button type="button" class="btn primary" data-go="brief:${next}">下一關：${ISLES[next].name} ›</button>` : ''}${r.stars < 3 ? '<button type="button" class="btn" data-g="restart">再挑戰拿滿星</button>' : ''}<button type="button" class="btn" data-go="case">任務簿</button></div>`;
+}
+function loseHTML(){
+  const k = G.k, s = suspectById[k], L = G.L, boss = G.loseWhy !== 'time';
+  let ids;
+  if (boss) ids = [L.boss.rounds[Math.min(G.round, L.boss.rounds.length - 1)].clue];
+  else if (!G.docsDone) ids = L.docs.flatMap((d, i) => d.rows.map((r, j) => r[1] && !G.found.has(i + ':' + j) ? r[3] : null)).filter(Boolean);
+  else ids = [L.budget.clue];
+  ids = [...new Set(ids)];
+  return `
+    <p class="eyebrow">${boss ? '碳魔王逃走了' : '時間到！'}</p>
+    <h2>${boss ? (G.loseWhy === 'boss-time' ? `時間到，${esc(L.boss.name)}溜走了` : `${esc(L.boss.name)}反擊成功了`) : `${esc(s.name)}帶著${esc(L.case)}溜走了`}</h2>
+    <p class="lead">${boss ? '只差最後一步！文件和預算都過關了，可以直接再戰碳魔王。' : '別灰心！每次重來，突發危機都不一樣。先讀讀下面的線索，再挑戰一次。'}</p>
+    ${ids.length ? `<h3>${boss ? '碳魔王的弱點，藏在這條線索' : '破綻的答案，藏在這些線索'}</h3><div class="linkrow">${ids.map(linkBtn).join('')}</div>` : ''}
+    <div class="btns">${boss ? `<button type="button" class="btn primary go-big" data-g="retry-boss">再戰碳魔王（${bossRetryTime(k)} 秒）›</button><button type="button" class="btn" data-g="restart">整關重來</button>` : `<button type="button" class="btn primary go-big" data-g="restart">再挑戰（倒數 ${levelTime(k)} 秒）›</button>`}<button type="button" class="btn" data-go="isle:${k}">先讀線索</button></div>`;
+}
+function chestHTML(k){
+  const st = GP.chests[k]; if (!st) return '';
+  return `<div class="res-chest${st === 'open' ? ' opened' : ''}" data-chest="${k}">${chestSVG(st === 'open')}<div>${st === 'open'
+    ? `<small>黃金寶箱・${ISLES[k].name}</small><b>碳知識</b><p>${esc(LEVELS[k].chest)}</p>`
+    : `<small>零失誤獎勵</small><b>黃金寶箱出現了！</b><button type="button" class="btn primary" data-g="chest:${k}">打開寶箱 ›</button>`}</div></div>`;
+}
+function openChest(k){
+  if (GP.chests[k] !== 'ready') return;
+  GP.chests[k] = 'open'; Object.keys(ITEMS).forEach(id => give(id)); SFX.unlock(); SFX.chest(); bridge.chest(k, 'open');
+  const gift = `<p class="res-items">寶箱裡還有：${Object.keys(ITEMS).map(id => `<span class="g-chipx">${ic(id)}${ITEMS[id].name} ×1</span>`).join('')}</p>`;
+  const el = panel.hidden ? null : body.querySelector(`.res-chest[data-chest="${k}"]`);
+  if (!list.hidden){ buildList($('#listSearch').value); toast(`<p>${ic('star')}<span><small>黃金寶箱・${ISLES[k].name}</small><b>打開了！道具各 +1</b></span></p>`); }
+  else if (el) el.outerHTML = chestHTML(k) + gift;
+  checkAch();
+  return !!el;
+}
+
+function gCmd(cmd, el){
+  const [a, b, c] = cmd.split(':');
+  if (a === 'start') return startLevel(b);
+  if (a === 'relax'){ relax = b === '1'; try { localStorage.setItem('tanbao-relax', relax ? '1' : '0'); } catch (e) {} if (state.view === 'brief' && state.isle) openPanel(briefHTML(state.isle), `CASE FILE ─ 出任務・${ISLES[state.isle].name}`); return; }
+  if (a === 'snd'){ SFX.set(b === '1'); if (b === '1') SFX.coin(); el.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === el))); return; }
+  if (a === 'chest') return openChest(b);
+  if (a === 'skin'){ GP.skin = b === '1'; bridge.setSkin(GP.skin); if (!list.hidden) buildList($('#listSearch').value); el.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === el))); return; }
+  if (!G) return;
+  if (a === 'sound'){ SFX.set(!SFX.on); el.innerHTML = SFX.on ? IC.sound : IC.mute; el.setAttribute('aria-pressed', String(SFX.on)); return; }
+  if (a === 'pause') return pauseGame();
+  if (a === 'resume') return resumeGame();
+  if (a === 'restart') return startLevel(G.k);
+  if (a === 'quit'){ const k = G.k; endGame(); return showIsle(k); }
+  if (a === 'retry-boss') return retryBoss();
+  if (G.paused) return;
+  if (a === 'item'){
+    if ((GP.items[b] || 0) < 1 || !G.running || G.hold) return;
+    if (b === 'lens'){ if (G.phase !== 'docs' || G.docsDone) return; const keys = []; G.L.docs.forEach((d, i) => d.rows.forEach((r, j) => { if (r[1] && !G.found.has(i + ':' + j)) keys.push(i + ':' + j); })); if (!keys.length) return; GP.items.lens--; return tapRow(keys[Math.floor(Math.random()*keys.length)], true); }
+    if (b === 'glass'){ GP.items.glass--; SFX.coin(); addTime(15); return updHud(); }
+    return;
+  }
+  if (a === 'row') return tapRow(b + ':' + c);
+  if (a === 'to'){ if (b === 'budget' && G.phase === 'docs' && G.docsDone){ G.phase = 'budget'; renderGame(); } else if (b === 'boss') toBoss(); return; }
+  if (a === 'bopt') return togglePick(b);
+  if (a === 'audit') return audit();
+  if (a === 'ev') return answerEvent(+b);
+  if (a === 'ev-close'){ hideLayer(); if (G.ev.thenBoss){ G.ev.thenBoss = false; toBoss(); } return; }
+  if (a === 'splash') return endSplash();
+  if (G.phase !== 'boss' || G.hold) return;
+  const rs = G.rs;
+  if (a === 'sort'){ const i = +b, v = +c; if (rs.lock.has(i)) return; rs.sel[i] = rs.sel[i] === v ? -1 : v; rs.wrong.delete(i); return roundRefresh(); }
+  if (a === 'ord'){ const i = +b; if (!rs.seq.includes(i)){ rs.seq.push(i); rs.bad = -1; } return roundRefresh(); }
+  if (a === 'ord-undo'){ rs.seq.pop(); rs.bad = -1; return roundRefresh(); }
+  if (a === 'pk'){ const i = +b; if (rs.on.has(i)) rs.on.delete(i); else rs.on.add(i); rs.extra.delete(i); return roundRefresh(); }
+  if (a === 'attack') return attack();
+  if (a === 'calc') return calcPick(+b);
+}
+layer.addEventListener('click', e => { const t = e.target.closest('[data-g]'); if (t) gCmd(t.dataset.g, t); });
+pauseEl.addEventListener('click', e => { const t = e.target.closest('[data-g]'); if (t) gCmd(t.dataset.g, t); });
+
+/* ---- 島上、筆錄、結案 ---- */
+function evidenceHTML(s){
+  const got = evFound.has(s.id);
+  return `
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">任務簿</button><span aria-hidden="true">›</span><span>${got ? esc(s.ev) : '可疑的東西'}</span></nav>
+    <p class="eyebrow">${got ? '證物' : '可疑的東西'}</p>
+    <h2>${got ? esc(s.ev) : '閃著紅光的東西'}</h2>
+    <p class="isle-meta">${ISLES[s.id].name}</p>
+    <p class="lead" style="margin-top:10px">${got ? esc(s.evNote) : '這裡好像有人動過手腳。出任務，在文件裡找出所有破綻，就知道這是什麼了。'}</p>
+    <div class="btns">${caught.has(s.id) ? `<button type="button" class="btn primary" data-case="file:${s.id}">看筆錄 ›</button>` : `<button type="button" class="btn primary" data-go="brief:${s.id}">出任務 ›</button>`}${backToTour(s.id)}<button type="button" class="btn" data-go="case">任務簿</button></div>`;
+}
+function caughtHTML(s){
+  const k = s.id, rec = GP.rec[k], L = LEVELS[k];
+  const links = Object.keys(s.clue).map(linkBtn).join('');
   return `
     <nav class="crumb" aria-label="位置"><button type="button" data-go="case">任務簿</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
-    <p class="eyebrow">${isNew ? '逮到了！' : '筆錄'}</p>
+    <p class="eyebrow">筆錄</p>
     <h2>${esc(s.name)}・${esc(s.title)}</h2>
-    <p class="isle-meta">${ISLES[s.id].name}</p>
+    <p class="isle-meta">${ISLES[k].name}・${esc(L.boss.name)}已打倒</p>
+    <div class="res-badge">${badgeSVG(k)}<div><small>碳寶徽章</small><b>${BADGES[k]}</b>${rec ? `<span>${starsInline(rec.stars)} 剩 ${rec.left} 秒${rec.zero ? '・零失誤' : ''}</span>` : ''}</div></div>
+    ${GP.chests[k] ? chestHTML(k) : ''}
     <h3>他的手法</h3><p>${esc(s.trick)}</p>
     <h3>碳寶怎麼拆穿</h3><p>${esc(s.truth)}</p>
     <h3>回島上查證</h3><div class="linkrow">${links}</div>
     ${said(s, s.thanks)}
-    <p class="secret-progress">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}${all ? '，全部到案！' : ''}</p>
-    <div class="btns">${next}${backToTour(s.id, !next)}<button type="button" class="btn" data-go="case">任務簿</button></div>`;
-}
-function slipHTML(s, why){
-  if (why === 'noev') return `
-    <p class="eyebrow">可疑的影子</p>
-    <h2>證據不足</h2>
-    <p class="lead">有個影子一閃，又躲回樹叢後面了。手上沒有證物，抓到也問不出什麼。先在島上找找他留下的東西。</p>
-    ${said(s, s.witness)}
-    <div class="btns"><button type="button" class="btn primary" data-look="ev:${s.id}">請嗅嗅帶路 ›</button>${backToTour(s.id)}<button type="button" class="btn" data-go="case">任務簿</button></div>
-    ${noteP('ev:' + s.id, s)}`;
-  const left = CREW.filter(id => !caught.has(id)).map(id => suspectById[id]);
-  return `
-    <p class="eyebrow">差一點！</p>
-    <h2>又溜走了！</h2>
-    <p class="lead">變變一下子變成草地的顏色，混進樹叢裡不見了。手下還沒抓齊，他總有地方躲。</p>
-    <p class="muted" style="margin-top:8px">還沒到案：${left.map(x => evFound.has(x.id) ? x.name : `${ISLES[x.id].name}的嫌犯`).join('、')}</p>
-    <div class="btns"><button type="button" class="btn primary" data-go="case">任務簿</button></div>`;
+    <div class="btns">${rec && rec.stars < 3 ? `<button type="button" class="btn primary" data-go="brief:${k}">再挑戰拿滿星 ›</button>` : ''}${backToTour(k)}<button type="button" class="btn" data-go="case">任務簿</button></div>`;
 }
 function finaleHTML(){
+  const n = totalStars(), max = KEYS.length*3, rank = n === max ? '名偵探' : n >= 10 ? '資深偵探' : '見習偵探', perfect = GP.ach.has('perfect');
   return `
     <p class="eyebrow">結案報告</p>
-    <h2>五個嫌犯全部到案</h2>
+    <h2>五枚碳寶徽章到手</h2>
+    <div class="medals">${KEYS.map(k => `<span>${badgeSVG(k, caught.has(k))}<small>${BADGES[k]}</small></span>`).join('')}</div>
     <p class="lead">漏漏把藏起來的排放源一個一個交了出來；剪剪把吊牌黏回去，五個階段一格不少；拖拖說，今天就開始減；雙雙把多賣的那張證書退了，一個序號只用一次；變變……正蹲在潟湖邊，把油漆一點一點擦掉。</p>
     <aside class="note"><h3>碳寶的辦案筆記</h3><p>帳要算全、邊界要畫清楚、目標從現在開始、額度用掉就註銷。這些都做到了，才有資格說「碳中和」。</p></aside>
     <h3>碳寶製衣的案情進度表</h3>
     ${meterHTML()}
     <p class="how">1,000 公噸 → 減到 600 公噸 → 600 公噸額度註銷 → 2030 年度淨排放 0，接著繼續往 2050 淨零減。</p>
-    ${(() => { const n = firstTry.size, rank = n === SUSPECTS.length ? '名偵探' : n >= 3 ? '資深偵探' : '見習偵探'; return `<div class="rank"><p>辦案等級</p><b>${rank}</b><small>審問一次就答對 ${n} / ${SUSPECTS.length} 題・祕境 ${foundCount()} / ${SECRETS.length}</small></div>`; })()}
+    <div class="rank"><p>辦案等級</p><b>${rank}</b><small>星星 ${n} / ${max}・祕境 ${foundCount()} / ${SECRETS.length}・成就 ${GP.ach.size} / ${ACH.length}</small></div>
+    ${perfect ? hiddenStoryHTML() : `<p class="muted fin-hint">還有一段隱藏劇情，只有五座島都零失誤破案的偵探看得到。</p>`}
+    <h3>成就</h3>${achHTML()}
     <div class="btns"><button type="button" class="btn primary" data-go="home">回全覽</button><button type="button" class="btn" data-go="case">任務簿</button></div>`;
+}
+function hiddenStoryHTML(){
+  return `<aside class="secret-story"><p class="g-eyebrow">隱藏劇情・碳魔王的真面目</p><p class="muted">只有全程零失誤的偵探，才看得到這一段。</p>${HIDDEN_STORY.map(p => `<p>${esc(p)}</p>`).join('')}
+    <p class="ss-note">碳寶的辦案筆記：碳魔王打不死，只能一年一年把它變小。碳中和不是一張貼紙，是每年重來的功課。</p>
+    <p class="ss-skin">${ic('star')}解鎖特殊造型：<b>黃金碳寶</b>（地圖上的碳寶換上金色偵探帽和披風）</p>
+    <div class="route-sw" role="group" aria-label="造型"><button type="button" data-g="skin:1" aria-pressed="${GP.skin}">黃金碳寶</button><button type="button" data-g="skin:0" aria-pressed="${!GP.skin}">原本造型</button></div></aside>`;
 }
 function caseGo(cmd){
   const [what, id] = cmd.split(':');
   if (what === 'end') return showFinale();
-  const s = suspectById[id]; if (!s) return;
-  if (what === 'file') return showCaught(id, false);
+  if (what === 'file' && suspectById[id]) return showCaught(id);
 }
-function showEvidence(id, isNew){
+function showEvidence(id){
   const s = suspectById[id]; state.view = 'case'; state.hex = null; setModes('');
-  openPanel(evidenceHTML(s, isNew), `CASE FILE ─ 證物・${ISLES[id].name}`, isNew ? '證物！' : ''); bridge.focusCase(id, 'ev', false, true);
+  openPanel(evidenceHTML(s), `CASE FILE ─ ${evFound.has(id) ? '證物' : '可疑的東西'}・${ISLES[id].name}`); bridge.focusCase(id, 'ev', false, true);
 }
-function showCaught(id, isNew){
+function showCaught(id){
+  if (gBusy()) return; leaveGame(); closeList();
   const s = suspectById[id]; state.view = 'case'; state.hex = null; setModes('');
-  openPanel(caughtHTML(s, isNew), `CASE FILE ─ 筆錄・${s.name}`, isNew ? '逮捕！' : ''); bridge.focusCase(id, 'lair', false, true);
+  openPanel(caughtHTML(s), `CASE FILE ─ 筆錄・${s.name}`); bridge.focusCase(id, 'lair', false, true);
 }
-function showFinale(){ interacted(); closeList(); state.view = 'case'; state.hex = null; setModes(''); openPanel(finaleHTML(), 'CASE FILE ─ 結案報告', '結案！'); bridge.focusHome(false); }
+function showFinale(){ if (gBusy()) return; leaveGame(); interacted(); closeList(); state.view = 'finale'; state.hex = null; setModes(''); openPanel(finaleHTML(), 'CASE FILE ─ 結案報告', '結案！'); bridge.focusHome(false); }
 function evidenceFound(id){
-  const s = suspectById[id]; if (!s) return; interacted(); closeList();
-  const isNew = !evFound.has(id); evFound.add(id); bridge.caseSync(id, { found:true, caught:caught.has(id) });
-  if (isNew) bridge.taunt(id, s.boss ? '油漆被發現了？' : '被發現了？！');
-  showEvidence(id, isNew);
+  if (gBusy() || !suspectById[id]) return; leaveGame(); interacted(); closeList();
+  showEvidence(id);
 }
 function suspectClicked(id){
-  const s = suspectById[id]; if (!s) return; interacted(); closeList();
-  if (caught.has(id)) return showCaught(id, false);
-  if (!evFound.has(id) || (s.boss && !crewDone())){
-    bridge.taunt(id, s.boss ? '呵呵，再練練吧！' : '抓不到～');
-    state.view = 'case'; state.hex = null; setModes('');
-    return openPanel(slipHTML(s, evFound.has(id) ? 'boss' : 'noev'), `CASE FILE ─ ${ISLES[id].name}`);
-  }
-  state.view = 'case'; state.hex = null; setModes('');
-  bridge.focusCase(id, 'lair', false, true); bridge.taunt(id, QUIZ[id].taunt);
-  openPanel(quizHTML(s), `CASE FILE ─ 審問・${s.name}`, '審問！');
+  const s = suspectById[id]; if (gBusy() || !s) return; leaveGame(); interacted(); closeList();
+  if (caught.has(id)) return showCaught(id);
+  bridge.taunt(id, s.boss && !crewDone() ? '呵呵，先抓齊我的手下吧！' : s.taunt);
+  showBrief(id);
 }
-const tries = {}, firstTry = new Set();
-function quizHTML(s){
-  const Q = QUIZ[s.id];
-  return `
-    <p class="eyebrow">審問</p>
-    <h2>${esc(s.name)}被逼到樹叢邊了！</h2>
-    <p class="lead">證物在手，碳寶只問一題。答對，就能把${esc(s.name)}帶走。</p>
-    <p class="quiz-q">${esc(Q.q)}</p>
-    <div class="quiz">${Q.opts.map((o, i) => `<button type="button" class="quiz-opt" data-ans="${s.id}:${i}"><span>${'ABC'[i]}</span>${esc(o)}</button>`).join('')}</div>`;
+function chestClicked(k){
+  if (gBusy()) return; leaveGame();
+  if (GP.chests[k] === 'ready' && state.view === 'case' && body.querySelector(`.res-chest[data-chest="${k}"]`)) return openChest(k);
+  showCaught(k); if (GP.chests[k] === 'ready') openChest(k);
 }
-function wrongHTML(s, i){
-  const Q = QUIZ[s.id], h = byId[Q.hint];
-  return `
-    <p class="eyebrow">答錯了！</p>
-    <h2>${esc(s.name)}溜走了</h2>
-    <p class="lead">「${esc(Q.opts[i])}」不對。${esc(s.name)}趁碳寶愣住的時候，一溜煙躲回樹叢。</p>
-    <aside class="event sniff"><p class="ev-t">碳寶的提示</p><p>${esc(Q.why)}</p>
-      <div class="btns"><button type="button" class="btn" data-hex="${Q.hint}">回去看「${esc(h.short)}」</button><button type="button" class="btn primary" data-look="lair:${s.id}">再去抓他 ›</button></div>
-      ${noteP('lair:' + s.id, s)}</aside>`;
-}
-function answer(id, i){
-  const s = suspectById[id], Q = QUIZ[id]; if (!s || caught.has(id)) return;
-  tries[id] = (tries[id] || 0) + 1;
-  if (i === Q.a){ if (tries[id] === 1) firstTry.add(id); return arrest(id); }
-  bridge.taunt(id, '答錯啦～我先溜囉！');
-  openPanel(wrongHTML(s, i), `CASE FILE ─ 審問・${s.name}`, '溜走了');
-}
-function arrest(id){
-  const s = suspectById[id];
-  caught.add(id); updateCaseCount(); bridge.caseSync(id, { found:true, caught:true });
-  bridge.taunt(id, s.boss ? '我、我只是想看起來環保嘛……' : '嗚……被抓到了');
-  showCaught(id, true);
-}
-const visited = new Set();
-const isleSecrets = k => SECRETS.filter(x => x.isle === k);
-const suspectLabel = sus => caught.has(sus.id) || evFound.has(sus.id) ? sus.name : (sus.boss ? '幕後主使' : '躲在島上的嫌犯');
-const NOTES = {
-  ev:() => '嗅嗅聞到味道了！鏡頭帶到附近，找找哪裡在閃紅光，點下去就是證物。',
-  lair:sus => `${suspectLabel(sus)}就躲在樹叢後面，一下探頭一下躲起來。看到就點他，點樹叢也行！`,
-  secret:() => '嗅嗅對著這一帶叫個不停。找找哪裡在閃金光，點下去就算找到祕境。'
-};
-function isleNext(k){
-  const sus = suspectById[k], order = routeOrder(k), seen = order.filter(id => visited.has(id)).length;
-  if (!sus) return null;
-  if (!seen) return { label:'開始調查', attr:`data-hex="${order[0]}"` };
-  const key = sus.hexes.find(id => !visited.has(id));
-  if (key) return { label:`去查關鍵線索：${byId[key].short}`, attr:`data-hex="${key}"` };
-  if (!evFound.has(k)) return { label:'請嗅嗅帶路找證物', attr:`data-look="ev:${k}"`, note:'ev:' + k };
-  if (!caught.has(k)){
-    if (sus.boss && !crewDone()) return { label:'先抓齊四個手下', attr:'data-go="case"' };
-    return { label:`去抓${sus.name}`, attr:`data-look="lair:${k}"`, note:'lair:' + k };
-  }
-  const left = order.find(id => !visited.has(id));
-  if (left) return { label:`把${route === 'basic' ? '必看' : ''}線索查完：${byId[left].short}`, attr:`data-hex="${left}"` };
-  const sec = isleSecrets(k).find(x => !found.has(x.id));
-  if (sec) return { label:'找島上的祕境', attr:`data-look="secret:${sec.id}"`, note:'secret:' + sec.id };
-  const nk = KEYS[KEYS.indexOf(k) + 1];
-  return nk ? { label:`下一座島：${ISLES[nk].name}`, attr:`data-go="isle:${nk}"` } : { label:'看任務簿', attr:'data-go="case"' };
-}
-const noteP = (key, sus, extra = '') => `<p class="ev-note secret-go" data-for="${key}" hidden>${key.startsWith('lair') ? NOTES.lair(sus) : key.startsWith('ev') ? NOTES.ev() : NOTES.secret()}${extra}</p>`;
+const noteP = key => `<p class="ev-note secret-go" data-for="${key}" hidden>嗅嗅對著這一帶叫個不停。找找哪裡在閃金光，點下去就算找到祕境。</p>`;
 function missionHTML(k){
-  const sus = suspectById[k]; if (!sus) return '';
+  const sus = suspectById[k], L = LEVELS[k]; if (!sus || !L) return '';
+  const rec = GP.rec[k], got = caught.has(k), locked = k === 'neu' && !crewDone();
   const order = routeOrder(k), seen = order.filter(id => visited.has(id)).length, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length;
-  const keysDone = sus.hexes.every(id => visited.has(id)), nx = isleNext(k);
-  const keys = sus.hexes.map(id => `<button type="button" class="${visited.has(id) ? 'done' : ''}" data-hex="${id}">${esc(byId[id].short)}</button>`).join('');
-  const crewNote = sus.boss && !crewDone() ? `<small>四個手下還沒抓齊，他一碰就會變色溜走。</small>` : '';
   const secList = secs.filter(x => !found.has(x.id)).map(x => `<button type="button" data-look="secret:${x.id}">？？？・${esc(x.hint)}</button>`).join('');
+  const nextRead = order.find(id => !visited.has(id));
   return `
     <section class="mission" style="--isle:var(--${k})">
-      <p class="m-head"><span class="m-tag">任務</span>抓到<b>${esc(suspectLabel(sus))}</b>${caught.has(k) ? '<span class="caught-stamp" style="position:static;rotate:-6deg">已逮捕</span>' : ''}</p>
-      ${said(sus, caught.has(k) ? sus.thanks : sus.witness)}
-      <div class="m-bar" aria-hidden="true"><i style="width:${Math.round(seen/order.length*100)}%"></i></div>
-      <p class="m-count">${route === 'basic' ? '必看線索' : '線索'}已查 ${seen} / ${order.length}</p>
-      ${routeSwitch(k)}
+      <p class="m-head"><span class="m-tag">關卡 ${LETTER[k]}</span>限時破案：<b>${esc(L.case)}</b>${got ? '<span class="caught-stamp" style="position:static;rotate:-6deg">已破案</span>' : ''}</p>
+      ${said(sus, got ? sus.thanks : sus.witness)}
+      <p class="m-stars">${starsInline(rec ? rec.stars : 0)}<span>${rec ? `最佳：剩 ${rec.left} 秒${rec.zero ? '・零失誤' : ''}` : `倒數 ${levelTime(k)} 秒・100 枚金幣・${esc(L.boss.name)}`}</span></p>
+      ${locked ? `<p class="m-lock">先打倒其他四座島的碳魔王（${CREW.filter(id => caught.has(id)).length} / 4），變變才會現身。</p>` : ''}
       <ol class="m-steps">
-        <li class="${keysDone ? 'done' : ''}"><span>查出關鍵線索<small>${keysDone ? '嫌犯的手法摸清楚了。' : '這幾條線索藏著嫌犯動手腳的痕跡：'}</small><span class="m-keys">${keys}</span></span></li>
-        <li class="${evFound.has(k) ? 'done' : ''}"><span>找到證物${evFound.has(k) ? `<small>${esc(sus.ev)}</small>` : '<small>請嗅嗅帶路，地圖上閃紅光的就是。</small>'}</span></li>
-        <li class="${caught.has(k) ? 'done' : ''}"><span>逮捕${esc(suspectLabel(sus))}${crewNote}</span></li>
-        <li class="bonus"><span>島上祕境 ${sf} / ${secs.length}${secList ? `<span class="m-keys">${secList}</span>` : '<small>全部找到了！</small>'}</span></li>
+        <li class="${seen === order.length ? 'done' : ''}"><span>先讀${route === 'basic' ? '必看' : ''}線索（建議）<small>已讀 ${seen} / ${order.length}，破綻的答案都藏在線索裡</small></span></li>
+        <li class="${evFound.has(k) ? 'done' : ''}"><span>線索真假辨識<small>${evFound.has(k) ? `證物：${esc(sus.ev)}` : `找出 ${flawsOf(L)} 個破綻`}</small></span></li>
+        <li class="${got ? 'done' : ''}"><span>預算攻防，打倒碳魔王<small>${got ? `已收下${BADGES[k]}` : '100 枚金幣，再加一場 Boss 戰'}</small></span></li>
+        <li class="bonus"><span>島上祕境 ${sf} / ${secs.length}・找到送道具${secList ? `<span class="m-keys">${secList}</span>` : '<small>全部找到了！</small>'}</span></li>
       </ol>
-      ${nx ? `<div class="btns"><button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>${seen ? `<button type="button" class="btn" data-hex="${order[0]}">從頭看起</button>` : ''}</div>` : ''}
-      ${['ev:' + k, 'lair:' + k].map(key => noteP(key, sus)).join('')}${secs.map(x => noteP('secret:' + x.id, sus)).join('')}
+      ${routeSwitch(k)}
+      <div class="btns"><button type="button" class="btn primary" data-go="brief:${k}"${locked ? ' disabled' : ''}>${got ? '再挑戰' : '出任務'} ›</button>${nextRead ? `<button type="button" class="btn" data-hex="${nextRead}">${seen ? '繼續讀線索' : '先讀線索'}</button>` : ''}</div>
+      ${GP.chests[k] === 'ready' ? chestHTML(k) : ''}
+      ${secs.map(x => noteP('secret:' + x.id)).join('')}
     </section>`;
 }
 function backToTour(k, primary){
   const h = byId[state.lastHex]; if (!h || h.isle !== k) return '';
-  return `<button type="button" class="btn${primary ? ' primary' : ''}" data-hex="${h.id}">繼續調查：第 ${ORDER[k].indexOf(h.id) + 1} 條線索 ›</button>`;
+  return `<button type="button" class="btn${primary ? ' primary' : ''}" data-hex="${h.id}">繼續讀線索：第 ${ORDER[k].indexOf(h.id) + 1} 條 ›</button>`;
 }
 function tourEvent(h, i, order = ORDER[h.isle]){
   const k = h.isle, sus = suspectById[k]; if (!sus) return '';
-  const here = `<button type="button" class="btn" data-hex="${h.id}">回到這條線索</button>`;
-  if (sus.clue && sus.clue[h.id]){
-    let act = '';
-    if (!evFound.has(k)) act = `<button type="button" class="btn primary" data-look="ev:${k}">請嗅嗅帶路找證物 ›</button>`;
-    else if (!caught.has(k)) act = sus.boss && !crewDone() ? `<button type="button" class="btn" data-go="case">先抓齊四個手下</button>` : `<button type="button" class="btn primary" data-look="lair:${k}">去抓${esc(sus.name)} ›</button>`;
-    return `
-      <aside class="event">
-        <p class="ev-t">${caught.has(k) ? '關鍵線索' : '關鍵線索！'}</p>
-        <p>${esc(sus.clue[h.id])}</p>
-        ${caught.has(k) ? '' : `<p class="scrawl">「${esc(sus.scrawl)}」──${evFound.has(k) ? esc(sus.name) : '？？？'}</p>`}
-        ${act ? `<div class="btns">${act}</div>` : ''}
-        ${noteP('ev:' + k, sus)}${noteP('lair:' + k, sus)}
-      </aside>`;
-  }
-  if (i === order.length - 1 && !caught.has(k)){
-    const nk = KEYS[KEYS.indexOf(k) + 1], nx = isleNext(k);
-    return `
-      <aside class="event">
-        <p class="ev-t">還差一步！</p>
-        <p>線索都查完了，可是${esc(suspectLabel(sus))}還在島上逍遙。</p>
-        <div class="btns">${nx ? `<button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>` : ''}${nk ? `<button type="button" class="btn" data-hex="${routeOrder(nk)[0]}">先去${ISLES[nk].name}</button>` : ''}</div>
-        ${nx && nx.note ? noteP(nx.note, sus) : ''}
-      </aside>`;
-  }
+  if (sus.clue && sus.clue[h.id]) return `
+    <aside class="event">
+      <p class="ev-t">${caught.has(k) ? '關鍵線索' : '關鍵線索！'}</p>
+      <p>${esc(sus.clue[h.id])}</p>
+      ${caught.has(k) ? '' : `<p class="scrawl">「${esc(sus.scrawl)}」──${evFound.has(k) ? esc(sus.name) : '？？？'}</p>
+      <div class="btns"><button type="button" class="btn primary" data-go="brief:${k}">記住了，出任務 ›</button></div>`}
+    </aside>`;
+  if (i === order.length - 1 && !caught.has(k)) return `
+    <aside class="event">
+      <p class="ev-t">線索讀完了！</p>
+      <p>${esc(evFound.has(k) ? sus.name : '嫌犯')}還在島上逍遙。帶著剛學到的，去限時破案吧！</p>
+      <div class="btns"><button type="button" class="btn primary" data-go="brief:${k}">出任務（倒數 ${levelTime(k)} 秒）›</button></div>
+    </aside>`;
   const secs = isleSecrets(k).filter(x => !found.has(x.id));
   const spots = [Math.floor(order.length*0.3), Math.floor(order.length*0.65)].filter(n => n > 0 && !sus.hexes.includes(order[n]));
   const si = spots.indexOf(i);
@@ -1779,9 +2916,9 @@ function tourEvent(h, i, order = ORDER[h.isle]){
     return `
       <aside class="event sniff">
         <p class="ev-t">嗅嗅豎起耳朵……</p>
-        <p>牠對著${esc(sec.hint)}一直叫，那邊好像藏著什麼。</p>
+        <p>牠對著${esc(sec.hint)}一直叫，那邊好像藏著什麼。祕境裡還有道具可以拿！</p>
         <div class="btns"><button type="button" class="btn" data-look="secret:${sec.id}">去看看 ›</button></div>
-        ${noteP('secret:' + sec.id, sus)}
+        ${noteP('secret:' + sec.id)}
       </aside>`;
   }
   return '';
@@ -1827,17 +2964,19 @@ function homeHTML(){
       <p class="isle-owner">島主・${I.owner}</p>
       <p class="isle-q">${I.q}</p>
       <p class="isle-meta">${I.std}・必看 ${BASIC[k] ? BASIC[k].length : ORDER[k].length} 條，全部 ${ORDER[k].length} 條</p>
-      ${suspectById[k] ? `<p class="isle-case">任務：抓到 <b class="${caught.has(k) ? 'got' : ''}">${esc(suspectLabel(suspectById[k]))}${caught.has(k) ? '（已逮捕）' : ''}</b>　線索 ${routeOrder(k).filter(id => visited.has(id)).length}/${routeOrder(k).length}　祕境 ${isleSecrets(k).filter(x => found.has(x.id)).length}/${isleSecrets(k).length}</p>` : ''}
-      <div class="btns"><button type="button" class="btn" data-go="isle:${k}">看整座島</button><button type="button" class="btn primary" data-go="isle:${k}">${ORDER[k].some(id => visited.has(id)) ? '繼續任務' : '出任務'}</button></div>
+      ${LEVELS[k] ? `<p class="isle-case">${starsInline(GP.rec[k] ? GP.rec[k].stars : 0)} 關卡：<b class="${caught.has(k) ? 'got' : ''}">${esc(LEVELS[k].boss.name)}${caught.has(k) ? '（已打倒）' : ''}</b>　線索 ${routeOrder(k).filter(id => visited.has(id)).length}/${routeOrder(k).length}　祕境 ${isleSecrets(k).filter(x => found.has(x.id)).length}/${isleSecrets(k).length}</p>` : ''}
+      <div class="btns"><button type="button" class="btn" data-go="isle:${k}">看整座島</button><button type="button" class="btn primary" data-go="brief:${k}">${caught.has(k) ? '再挑戰' : '出任務'}</button></div>
     </article>`; }).join('');
   const fresh = !visited.size && !evFound.size && !caught.size;
   return `
     <p class="eyebrow">案件檔案</p>
     ${fresh ? `<h2>碳寶偵探，有案子上門了！</h2>
     ${callingCard()}
-    <p class="intro-lead">第一次來？跟著碳寶走<b>新手路線</b>：五座島各看 4 條必看線索，找證物、審問嫌犯，大約 20 分鐘就能看懂碳盤查、碳足跡、碳減量、碳抵換到碳中和是如何一路串連起來的。</p>
-    <div class="btns"><button type="button" class="btn primary" data-go="start">接下案子，出發！</button><button type="button" class="btn" data-go="case">先看任務簿</button></div>` : `<h2>五座島</h2>
-    <p class="secret-cta"><span>✉ 怪盜變變的案子還在查。已逮捕 <b data-case-count>${caught.size}/${SUSPECTS.length}</b>・祕境 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn primary" data-go="case">打開任務簿</button></p>`}
+    <p class="intro-lead">五座島就是五個關卡，每一關都是<b>限時破案</b>：在倒數計時裡抓出文件的破綻、用 100 枚金幣做決定、應付突發危機，最後打倒碳魔王。第一次接觸碳？每座島都有 4 條<b>必看線索</b>（新手路線，五座島約 20 分鐘），可以先讀再出任務。</p>
+    <div class="btns"><button type="button" class="btn primary" data-go="start">接下案子，出發！</button><button type="button" class="btn" data-hex="${routeOrder('inv')[0]}">先讀必看線索</button></div>
+    <h3>怎麼玩</h3>
+    ${rulesHTML()}` : `<h2>五座島</h2>
+    <p class="secret-cta"><span>✉ 怪盜變變的案子還在查。徽章 <b data-case-count>${caught.size}/${SUSPECTS.length}</b>・星星 <b data-star-count>${totalStars()}/${KEYS.length*3}</b>・祕境 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn primary" data-go="case">打開任務簿</button></p>`}
     <h3>五個步驟怎麼串起來</h3>
     ${flowHTML()}
     <h3>碳寶製衣的案情進度表</h3>
@@ -1889,7 +3028,7 @@ function hexHTML(h){
   const sus = suspectById[h.isle], secs = isleSecrets(h.isle);
   const station = route === 'basic' && BASIC[h.isle] ? (must ? `必看 ${ni+1}／${nav.length}・全島第 ${i+1} 條` : `進階・全島第 ${i+1} 條`) : `第 ${i+1}／${order.length} 條線索${must ? '・必看' : ''}`;
   const tw = TW_BITS[h.id] || {}, twItems = (h.items || []).filter(([b]) => (tw.items || []).includes(b)), mainItems = (h.items || []).filter(([b]) => !(tw.items || []).includes(b));
-  const mbar = sus ? `<button type="button" class="mbar" data-go="isle:${h.isle}"><span class="m-tag">任務</span><span>抓到 <b>${esc(suspectLabel(sus))}</b>${caught.has(h.isle) ? '（已逮捕）' : ''}</span><span>證物 ${evFound.has(h.isle) ? '✓' : '？'}</span><span>祕境 ${secs.filter(x => found.has(x.id)).length}/${secs.length}</span></button>` : '';
+  const mbar = sus && LEVELS[h.isle] ? `<button type="button" class="mbar" data-go="isle:${h.isle}"><span class="m-tag">關卡 ${LETTER[h.isle]}</span><span>${caught.has(h.isle) ? `<b>${BADGES[h.isle]}</b>到手` : `打倒 <b>${esc(LEVELS[h.isle].boss.name)}</b>`}</span><span>${starsInline(GP.rec[h.isle] ? GP.rec[h.isle].stars : 0)}</span><span>祕境 ${secs.filter(x => found.has(x.id)).length}/${secs.length}</span></button>` : '';
   let s = `<nav class="crumb" aria-label="位置"><button type="button" data-go="isle:${h.isle}">${I.name}</button><span aria-hidden="true">›</span><span>${esc(h.tag)}</span><span class="station">${station}</span></nav>
     ${mbar}${TW_CLUES.includes(h.id) ? `<p class="tw-badge">台灣現況・資料整理至 ${DATA_DATE}</p>` : ''}
     <h2>${esc(h.title)}</h2>${GIST[h.id] ? `<p class="gist">${esc(GIST[h.id])}</p>` : ''}<p class="lead">${esc(h.lead)}</p>${h.id === 'inv-c1' ? scope3HTML() : h.id === 'cfp-raw' ? lifeHTML() : ''}${tourEvent(h, ni, nav)}`;
@@ -1973,18 +3112,18 @@ function calcUpdate(src){
   out.innerHTML = `<b>${fmt(kg, kg < 100 ? 2 : 0)}</b> kg CO₂e　≈　<b>${fmt(kg/1000, 2)}</b> 公噸 CO₂e`;
 }
 
-function showHome(opts = {}){ state.view='home'; state.hex=null; state.isle=null; setModes('home'); openPanel(homeHTML(), 'CASE FILE ─ 案件檔案'); bridge.focusHome(!!opts.instant); }
-function showIsle(k){ closeList(); state.view='isle'; state.hex=null; state.isle=k; setModes(k); openPanel(isleHTML(k), `CASE FILE ─ ${ISLES[k].name}`); bridge.focusIsle(k); }
+function showHome(opts = {}){ if (gBusy()) return; leaveGame(); state.view='home'; state.hex=null; state.isle=null; setModes('home'); openPanel(homeHTML(), 'CASE FILE ─ 案件檔案'); bridge.focusHome(!!opts.instant); }
+function showIsle(k){ if (gBusy()) return; leaveGame(); closeList(); state.view='isle'; state.hex=null; state.isle=k; setModes(k); openPanel(isleHTML(k), `CASE FILE ─ ${ISLES[k].name}`); bridge.focusIsle(k); }
 function showHex(id){
-  const h = byId[id]; if (!h) return;
-  closeList(); state.view='hex'; state.hex=id; state.isle=h.isle; setModes(h.isle);
+  const h = byId[id]; if (!h || gBusy()) return;
+  leaveGame(); closeList(); state.view='hex'; state.hex=id; state.isle=h.isle; setModes(h.isle);
   const o = navOrder(h), n = o.indexOf(id), full = ORDER[h.isle].indexOf(id);
   const sus = suspectById[h.isle], first = !visited.has(id); visited.add(id); state.lastHex = id;
   if (first && sus && sus.clue && sus.clue[id] && !caught.has(sus.id)) bridge.taunt(sus.id, sus.taunt);
   openPanel(hexHTML(h), `CASE FILE ─ ${ISLES[h.isle].name}・第 ${full+1} 條線索`, n === o.length - 1 ? (!sus || caught.has(sus.id) ? '破案！' : '未破案') : sus && sus.clue && sus.clue[id] && !caught.has(sus.id) ? '關鍵！' : ''); if (h.calc) calcUpdate();
   bridge.focusHex(id); interacted();
 }
-function closePanel(){ panel.hidden = true; state.view='none'; state.hex=null; setModes(''); bridge.clear(); }
+function closePanel(){ if (gBusy()) return pauseGame(); leaveGame(); panel.hidden = true; state.view='none'; state.hex=null; setModes(''); bridge.clear(); }
 function step(d){
   const h = byId[state.hex]; if (!h) return;
   const o = navOrder(h), i = o.indexOf(h.id) + d;
@@ -1997,23 +3136,30 @@ function interacted(){ if (state.interacted) return; state.interacted = true; co
 let listPrevMode = 'home';
 function bookHTML(){
   const all = caught.size === SUSPECTS.length, fresh = !caught.size && !visited.size && !evFound.size;
-  const isles = SUSPECTS.map(sus => {
-    const k = sus.id, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length, seen = routeOrder(k).filter(id => visited.has(id)).length, got = caught.has(k), known = got || evFound.has(k);
-    const act = got ? `<button type="button" class="go-btn" data-case="file:${k}">看筆錄 ›</button>` : `<button type="button" class="go-btn" data-go="isle:${k}">${seen || evFound.has(k) ? '繼續任務' : '出任務'} ›</button>`;
-    return `<li class="suspect${known ? '' : ' unknown'}" style="--isle:var(--${k})">
-      <b class="sn">${ISLES[k].name}</b>${got ? '<span class="caught-stamp">已逮捕</span>' : ''}
-      <small>嫌犯：${known ? `${esc(sus.name)}・${esc(sus.title)}` : (sus.boss ? '幕後主使' : '？？？')}</small>
-      <small><span>${route === 'basic' ? '必看' : '線索'} ${seen}/${routeOrder(k).length}</span>・<span>證物 ${evFound.has(k) ? '✓' : '？'}</span>・<span>祕境 ${sf}/${secs.length}</span></small>
-      ${sus.boss && !got && !crewDone() ? '<p class="muted" style="font-size:13px">四個手下抓齊之前，他一碰就變色溜走。</p>' : ''}${act}</li>`;
+  const isles = KEYS.map(k => {
+    const L = LEVELS[k], secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length, seen = routeOrder(k).filter(id => visited.has(id)).length, got = caught.has(k), rec = GP.rec[k], locked = k === 'neu' && !crewDone();
+    const act = got ? `<button type="button" class="go-btn" data-case="file:${k}">看筆錄 ›</button>` : `<button type="button" class="go-btn" data-go="${locked ? 'isle:' : 'brief:'}${k}">${locked ? '看這座島' : '出任務'} ›</button>`;
+    return `<li class="suspect${got || evFound.has(k) ? '' : ' unknown'}" style="--isle:var(--${k})">
+      ${badgeSVG(k, got)}
+      <b class="sn">${ISLES[k].name}</b>${got ? '<span class="caught-stamp">已破案</span>' : ''}
+      <small>${esc(L.boss.name)}</small>
+      <small>${starsInline(rec ? rec.stars : 0)}</small>
+      <small><span>${route === 'basic' ? '必看' : '線索'} ${seen}/${routeOrder(k).length}</span>・<span>祕境 ${sf}/${secs.length}</span>${GP.chests[k] === 'ready' ? '・<b class="gold">寶箱待開</b>' : ''}</small>
+      ${locked ? '<p class="muted" style="font-size:13px">先打倒其他四座島的碳魔王，變變才會現身。</p>' : ''}${act}
+      ${GP.chests[k] === 'ready' ? `<button type="button" class="go-btn" data-g="chest:${k}">打開黃金寶箱 ›</button>` : ''}</li>`;
   }).join('');
   return `
     <details class="book-letter"${fresh ? ' open' : ''}><summary>怪盜變變的預告函</summary>${callingCard()}</details>
-    <p class="book-prog">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}・祕境 <b>${foundCount()}</b> / ${SECRETS.length}${all ? '・全部到案！' : ''}</p>
+    <p class="book-prog">${ic('medal')} 徽章 <b>${caught.size}</b> / ${KEYS.length}・${ic('star')} 星星 <b>${totalStars()}</b> / ${KEYS.length*3}・祕境 <b>${foundCount()}</b> / ${SECRETS.length}${all ? '・全部到案！' : ''}</p>
+    <div class="book-inv"><span>道具</span>${Object.keys(ITEMS).map(id => `<span class="g-chipx" title="${esc(ITEMS[id].note)}">${ic(id)}${ITEMS[id].name} ×${GP.items[id] || 0}</span>`).join('')}</div>
     ${meterHTML()}
     ${routeSwitch()}
-    <h3 class="book-h">五座島的任務</h3>
+    <h3 class="book-h">五座島的關卡</h3>
     <ul class="wanted book-isles">${isles}</ul>
     ${all ? '<div class="btns"><button type="button" class="btn primary" data-case="end">看結案報告 ›</button></div>' : ''}
+    <h3 class="book-h">成就</h3>
+    ${achHTML()}
+    ${GP.skinGot ? `<div class="route-sw" role="group" aria-label="碳寶造型" style="max-width:360px"><button type="button" data-g="skin:1" aria-pressed="${GP.skin}">黃金碳寶</button><button type="button" data-g="skin:0" aria-pressed="${!GP.skin}">原本造型</button></div>` : ''}
     <h3 class="book-h">全部線索</h3>`;
 }
 function buildList(q = ''){
@@ -2033,6 +3179,8 @@ function buildList(q = ''){
   $('#listEmpty').hidden = hits > 0;
 }
 function openList(){
+  if (gBusy()) return pauseGame();
+  leaveGame();
   if (list.hidden) listPrevMode = [...document.querySelectorAll('.modes button')].find(b => b.getAttribute('aria-pressed') === 'true')?.dataset.mode || '';
   buildList($('#listSearch').value); list.hidden = false; setModes('list');
   if (!state.no3d) setTimeout(() => $('#listSearch').focus({ preventScroll:true }), 30);
@@ -2042,7 +3190,7 @@ function closeList(){ if (state.no3d || list.hidden) return; list.hidden = true;
 body.addEventListener('click', e => {
   const tm = e.target.closest('.term'); if (tm) return showTerm(tm);
   const rt = e.target.closest('[data-route]'); if (rt) return setRoute(rt.dataset.route);
-  const an = e.target.closest('[data-ans]'); if (an){ const [k, n] = an.dataset.ans.split(':'); return answer(k, +n); }
+  const gq = e.target.closest('[data-g]'); if (gq) return gCmd(gq.dataset.g, gq);
   const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-case],[data-look]'); if (!t) return;
   if (t.dataset.look) return look(t);
   if (t.dataset.case) return caseGo(t.dataset.case);
@@ -2051,15 +3199,16 @@ body.addEventListener('click', e => {
   const g = t.dataset.go;
   if (g === 'home') showHome();
   else if (g === 'secrets' || g === 'case') openList();
-  else if (g === 'start') showHex(routeOrder('inv')[0]);
+  else if (g === 'start') showBrief('inv');
+  else if (g.startsWith('brief:')) showBrief(g.slice(6));
   else if (g.startsWith('isle:')) showIsle(g.slice(5));
   else if (g.startsWith('tour:')) showHex(ORDER[g.slice(5)][0]);
 });
 body.addEventListener('input', e => { if (e.target.closest('.calcbox')) calcUpdate(e.target.id); });
 body.addEventListener('change', e => { if (e.target.closest('.calcbox')) calcUpdate(e.target.id); });
 $('#panelClose').addEventListener('click', closePanel);
-$('#panelGrip').addEventListener('click', () => panel.classList.toggle('mini'));
-$('#hud').addEventListener('click', () => { interacted(); openList(); setModes('list'); });
+$('#panelGrip').addEventListener('click', () => { if (!G) panel.classList.toggle('mini'); });
+$('#hud').addEventListener('click', () => { if (gBusy()) return pauseGame(); interacted(); openList(); setModes('list'); });
 document.querySelector('.modes').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   const m = b.dataset.mode;
@@ -2069,9 +3218,10 @@ $('#listCols').addEventListener('click', e => { const b = e.target.closest('[dat
 $('#listCase').addEventListener('click', e => {
   const r = e.target.closest('[data-route]'); if (r) return setRoute(r.dataset.route);
   const tm = e.target.closest('.term'); if (tm) return showTerm(tm);
+  const gq = e.target.closest('[data-g]'); if (gq) return gCmd(gq.dataset.g, gq);
   const b = e.target.closest('[data-go],[data-case]'); if (!b) return;
   if (b.dataset.case) return caseGo(b.dataset.case);
-  const g = b.dataset.go; if (g.startsWith('isle:')) showIsle(g.slice(5));
+  const g = b.dataset.go; if (g.startsWith('isle:')) showIsle(g.slice(5)); else if (g.startsWith('brief:')) showBrief(g.slice(6));
 });
 $('#listSearch').addEventListener('input', e => buildList(e.target.value));
 $('#listClose').addEventListener('click', closeList);
@@ -2098,7 +3248,8 @@ new ResizeObserver(() => bridge.relayout()).observe(panel);
 
 window.UI = {
   state, showHex, showIsle, showHome, closePanel, interacted, showSecret, isFound: id => found.has(id), evidenceFound, suspectClicked,
-  mascotClicked(){ interacted(); if (state.view === 'hex') step(1); else showHex(ORDER[state.view === 'isle' ? state.isle : 'inv'][0]); },
+  busy:gBusy, chestClicked,
+  mascotClicked(){ if (gBusy()) return; interacted(); if (state.view === 'hex') step(1); else showHex(ORDER[state.view === 'isle' ? state.isle : 'inv'][0]); },
   no3d(msg){
     if (state.no3d) return; state.no3d = true;
     document.getElementById('app').classList.add('no3d');
@@ -2482,14 +3633,19 @@ function makeMascot(){
   const hat = new THREE.Group(); hat.position.y = 0.085; hat.rotation.z = 0.12; b.add(hat);
   const crown = new THREE.Mesh(new THREE.SphereGeometry(0.118,14,8,0,Math.PI*2,0,Math.PI/2), hatMat); crown.scale.set(1.05,0.88,1.12); crown.castShadow = true; hat.add(crown);
   const brim = (front) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.085,0.085,0.012,12,1,false, front ? -Math.PI/2 : Math.PI/2, Math.PI), hatMat); m.position.set(0, 0.004, front ? 0.07 : -0.07); m.scale.set(1, 1, 1.25); m.rotation.x = front ? 0.28 : -0.28; m.castShadow = true; return m; };
-  hat.add(brim(true), brim(false));
+  const brims = [brim(true), brim(false)]; hat.add(...brims);
+  const goldM = new THREE.MeshStandardMaterial({ color:'#FFC93C', emissive:'#A86A00', emissiveIntensity:0.35, metalness:0.4, roughness:0.32 });
+  const capeM = new THREE.MeshStandardMaterial({ color:'#F2B21C', emissive:'#8A5600', emissiveIntensity:0.25, metalness:0.25, roughness:0.45, side:THREE.DoubleSide });
+  const cape = new THREE.Mesh(new THREE.SphereGeometry(0.17, 16, 8, Math.PI*1.18, Math.PI*0.64, 0.25, 1.55), capeM); cape.position.set(0, -0.02, -0.02); cape.scale.set(1.15, 1.1, 1.1); cape.visible = false; b.add(cape);
+  const badge = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.01, 6), goldM); badge.rotation.x = Math.PI/2; badge.position.set(0.06, -0.06, 0.118); badge.visible = false; b.add(badge);
   hat.add(part(new THREE.BoxGeometry(0.06,0.014,0.03), mat('#5B4127'), 0, 0.104, 0));
   const lens = new THREE.Group(); lens.position.set(0.31, 0.03, 0.06); lens.rotation.z = -0.5; b.add(lens);
   lens.add(part(new THREE.TorusGeometry(0.05,0.012,6,14), mat('#C9A13B')));
   lens.add(new THREE.Mesh(new THREE.CircleGeometry(0.046,14), new THREE.MeshStandardMaterial({ color:'#CFEFF5', transparent:true, opacity:0.5, roughness:0.1, side:THREE.DoubleSide })));
   lens.add(part(new THREE.CylinderGeometry(0.011,0.013,0.08,6), mat('#5B4127'), 0, -0.09, 0));
   g.traverse(o => { if (o.isMesh){ o.userData.mascot = true; pickables.push(o); } });
-  return { g, b };
+  const skin = on => { [crown, ...brims].forEach(m => { m.material = on ? goldM : hatMat; }); cape.visible = on; badge.visible = on; };
+  return { g, b, skin };
 }
 
 function hash(x,y,z,s){ const v = Math.sin(x*12.9898 + y*78.233 + z*37.719 + s*4.1) * 43758.5453; return v - Math.floor(v); }
@@ -2918,6 +4074,16 @@ const EVIDENCE = {
     return g;
   }
 };
+function makeChest(){
+  const g = new THREE.Group();
+  const gm = new THREE.MeshStandardMaterial({ color:'#E0A21E', emissive:'#8A5600', emissiveIntensity:0.35, metalness:0.45, roughness:0.35 });
+  const tm = new THREE.MeshStandardMaterial({ color:'#FFE07A', emissive:'#C98A0B', emissiveIntensity:0.55, metalness:0.5, roughness:0.25 });
+  g.add(part(new THREE.BoxGeometry(0.42, 0.24, 0.28), gm, 0, 0.12, 0), part(new THREE.BoxGeometry(0.07, 0.25, 0.29), tm, 0, 0.125, 0), part(new THREE.BoxGeometry(0.08, 0.08, 0.03), tm, 0, 0.17, 0.15));
+  const lid = new THREE.Group(); lid.position.set(0, 0.24, -0.14); g.add(lid);
+  for (const [r, len, m] of [[0.14, 0.42, gm], [0.146, 0.07, tm]]){ const t = part(new THREE.CylinderGeometry(r, r, len, 16, 1, false, 0, Math.PI), m, 0, 0, 0.14); t.rotation.z = Math.PI/2; lid.add(t); }
+  const sp = [0, 1, 2].map(i => { const p = new THREE.Sprite(new THREE.SpriteMaterial(addGlow({ map:sparkTex, color:'#FFD45E' }))); p.position.set(Math.cos(i*2.1)*0.3, 0.32 + i*0.12, Math.sin(i*2.1)*0.3); g.add(p); return p; });
+  return { g, lid, sp };
+}
 function makeCage(h){
   const g = new THREE.Group(), wood = smat('#8A5E38'), r = 0.52;
   for (const y of [0.03, h]){ const m = new THREE.Mesh(new THREE.TorusGeometry(r, 0.032, 6, 26), wood); m.rotation.x = Math.PI/2; m.position.y = y; m.castShadow = true; g.add(m); }
@@ -2945,18 +4111,40 @@ function registerCase(key, evHold, lairHold){
   const cage = makeCage(h + 0.15); cage.visible = false; cage.position.z = -0.08; lairHold.add(cage);
   const stars = [0, 1, 2].map(() => { const st = new THREE.Mesh(starV(0.06, 0.026), smat('#FFD45E')); st.visible = false; hold.add(st); return st; });
   for (const o of [v, bush]) o.traverse(m => { if (m.isMesh){ m.userData.suspect = key; m.userData.fac = vTag; pickables.push(m); } });
-  const C = caseObjs[key] = { key, S, evHold, lairHold, sp, evTag, v, hold, vTag, tt, cage, stars, h, ph:D.KEYS.indexOf(key)*1.37, found:false, caught:false, cageT:-1, tauntUntil:0, up:0 };
+  const aura = [0, 1, 2, 3].map(() => { const p = new THREE.Sprite(new THREE.SpriteMaterial(addGlow({ map:sparkTex, color:'#9B5CF6' }))); p.visible = false; hold.add(p); return p; });
+  const chest = makeChest(); chest.g.position.set(0.95, 0, 0.5); chest.g.rotation.y = -0.35; chest.g.visible = false; lairHold.add(chest.g);
+  const chTag = document.createElement('div'); chTag.className = 'fac-tag'; chTag.textContent = '黃金寶箱';
+  const chL = new CSS2DObject(chTag); chL.position.set(0, 0.62, 0); chest.g.add(chL);
+  chest.g.traverse(m => { if (m.isMesh){ m.userData.chest = key; m.userData.fac = chTag; pickables.push(m); } });
+  const C = caseObjs[key] = { key, S, evHold, lairHold, sp, evTag, v, hold, vTag, vL, tL, tt, cage, stars, h, aura, chest, chTag, chState:'none', ph:D.KEYS.indexOf(key)*1.37, found:false, caught:false, cageT:-1, tauntUntil:0, up:0, game:false, boss:false, bossK:0, hitT:0, atkT:0 };
   animators.push((t, dt) => caseTick(C, t, dt || 0.016));
 }
 const camoCol = new THREE.Color();
 function caseTick(C, t, dt){
   const tt = reduceMotion ? 0 : t, now = performance.now();
   let want = 1;
-  if (!C.caught){ const per = C.found ? 2.6 : 4.4, k = ((tt + C.ph*1.9)/per) % 1; want = reduceMotion ? (C.found ? 1 : 0.45) : (k < (C.found ? 0.55 : 0.32) ? 1 : 0); }
+  if (!C.caught && !C.game && !C.boss){ const per = C.found ? 2.6 : 4.4, k = ((tt + C.ph*1.9)/per) % 1; want = reduceMotion ? (C.found ? 1 : 0.45) : (k < (C.found ? 0.55 : 0.32) ? 1 : 0); }
   C.up += (want - C.up)*Math.min(1, dt*9);
+  C.bossK += ((C.boss ? 1 : 0) - C.bossK)*Math.min(1, dt*3.2);
+  let sq = 0, lg = 0;
+  if (C.hitT){ const k = (now - C.hitT)/420; if (k < 1) sq = Math.sin(k*Math.PI); else C.hitT = 0; }
+  if (C.atkT){ const k = (now - C.atkT)/560; if (k < 1) lg = Math.sin(k*Math.PI); else C.atkT = 0; }
+  if (reduceMotion){ sq *= 0.3; lg *= 0.3; }
+  const bs = 1.35*(1 + 0.8*C.bossK), bh = C.h*(1 + 0.8*C.bossK);
+  C.v.scale.set(bs*(1 + 0.12*lg + 0.14*sq), bs*(1 + 0.12*lg - 0.3*sq), bs*(1 + 0.12*lg + 0.14*sq));
+  C.v.position.z = 0.35*lg;
   C.hold.position.y = -C.h*0.62*(1 - C.up);
-  C.hold.rotation.z = C.caught ? 0 : Math.sin(tt*1.7 + C.ph)*0.14*C.up;
+  C.hold.rotation.z = C.caught ? 0 : Math.sin(tt*1.7 + C.ph)*0.14*C.up + Math.sin(now*0.05)*0.16*sq;
+  C.vL.position.y = bh + 0.25; C.tL.position.y = bh + 0.6;
+  C.aura.forEach((p, i) => { p.visible = C.bossK > 0.03; if (!p.visible) return; const k = 0.5 + 0.5*Math.sin(tt*3.2 + i*1.7), a = tt*0.9 + i*Math.PI/2, r = 0.55*(0.6 + C.bossK); p.position.set(Math.cos(a)*r, bh*(0.35 + 0.15*i), Math.sin(a)*r); p.material.opacity = (0.35 + 0.45*k)*C.bossK; p.scale.setScalar((0.5 + 0.5*k)*C.bossK*1.4); });
   if (C.v.userData.skin && !C.caught) C.v.userData.skin.color.lerp(camoCol.copy(grassMat.color), (1 - C.up)*0.85);
+  if (C.v.userData.skin && C.bossK > 0.01) C.v.userData.skin.color.lerp(camoCol.set('#5B2A86'), 0.65*C.bossK);
+  if (C.chest.g.visible){
+    const ch = C.chest, open = C.chState === 'open';
+    ch.lid.rotation.x += ((open ? -1.15 : 0) - ch.lid.rotation.x)*Math.min(1, dt*6);
+    ch.g.position.y = open ? 0 : 0.02 + Math.abs(Math.sin(tt*2.4))*0.06;
+    ch.sp.forEach((p, i) => { const k = 0.5 + 0.5*Math.sin(tt*3 + i*2); p.material.opacity = (open ? 0.2 : 0.5) + 0.4*k; p.scale.setScalar(0.16 + 0.22*k); });
+  }
   C.sp.forEach((p, i) => { const k = 0.5 + 0.5*Math.sin(tt*2.6 + i*2.1 + C.ph); p.material.opacity = 0.35 + 0.65*k; p.scale.setScalar(0.26 + 0.32*k); });
   if (C.cageT >= 0){ const k = Math.min(1, (now - C.cageT)/650), y = k < 0.75 ? 2.6*(1 - (k/0.75)**2) : 0.18*Math.sin((k - 0.75)/0.25*Math.PI); C.cage.position.y = Math.max(0, y); if (k >= 1) C.cageT = -1; }
   if (C.caught) C.stars.forEach((s, i) => { const a = tt*2.4 + i*Math.PI*2/3; s.position.set(Math.cos(a)*0.22, C.h + 0.08 + Math.sin(tt*3 + i)*0.03, Math.sin(a)*0.22); s.rotation.y = tt*3; });
@@ -4480,7 +5668,7 @@ function caseWorld(C, hold){ hold.updateWorldMatrix(true, false); const c = hold
 bridge.focusCase = (id, what, instant, near = true) => {
   const C = caseObjs[id]; if (!C) return;
   focus = { type:'case', id, what, near }; selectTile(null); setLand(false); measure();
-  const hold = what === 'lair' ? C.lairHold : C.evHold, c = caseWorld(C, hold), R = near ? 2.5 : 6, pts = [c.clone().add(new V3(0, 1.5, 0))];
+  const hold = what === 'lair' ? C.lairHold : C.evHold, c = caseWorld(C, hold), R = near ? (C.boss ? 3 : 2.5) : 6, pts = [c.clone().add(new V3(0, C.boss ? 2.6 : 1.5, 0))];
   for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) pts.push(c.clone().add(new V3(dx*R, 0, dz*R)));
   frame(pts, near ? 32 : 48, hold.userData.az ?? 0, instant, c);
 };
@@ -4489,7 +5677,17 @@ bridge.caseSync = (id, st) => {
   if (st.found !== C.found){ C.found = st.found; C.sp.forEach(p => { p.visible = !st.found; }); C.evTag.textContent = st.found ? C.S.ev : '可疑的東西'; }
   if (st.caught !== C.caught){ C.caught = st.caught; C.cage.visible = st.caught; C.cageT = st.caught ? performance.now() : -1; C.stars.forEach(x => { x.visible = st.caught; }); C.vTag.textContent = st.caught ? `${C.S.name}（已逮捕）` : '可疑的影子'; }
 };
-bridge.caseReset = () => { for (const id in caseObjs) bridge.caseSync(id, { found:false, caught:false }); };
+bridge.caseReset = () => { for (const id in caseObjs){ bridge.caseSync(id, { found:false, caught:false }); bridge.bossMode(id, false); bridge.gameMode(id, false); bridge.chest(id, 'none'); } };
+bridge.gameMode = (id, on) => { const C = caseObjs[id]; if (C) C.game = on; };
+bridge.bossMode = (id, on) => {
+  const C = caseObjs[id]; if (!C || C.boss === on) return;
+  C.boss = on; C.vTag.textContent = on ? `碳魔王・${C.S.name}` : C.caught ? `${C.S.name}（已逮捕）` : '可疑的影子'; C.vTag.classList.toggle('show', on);
+  if (on && focus.type === 'case' && focus.id === id) setTimeout(() => bridge.focusCase(id, 'lair', false, true), 60);
+};
+bridge.bossHit = id => { const C = caseObjs[id]; if (C) C.hitT = performance.now(); };
+bridge.bossAttack = id => { const C = caseObjs[id]; if (C) C.atkT = performance.now(); };
+bridge.chest = (id, st) => { const C = caseObjs[id]; if (!C) return; C.chState = st; C.chest.g.visible = st !== 'none'; C.chTag.textContent = st === 'open' ? '黃金寶箱（打開了）' : '黃金寶箱'; };
+bridge.setSkin = on => { mascot.skin(on); mtag.textContent = on ? '黃金碳寶：全程零失誤！' : '碳寶偵探：Go!Go!帶你破案！'; };
 bridge.taunt = (id, text) => { const C = caseObjs[id]; if (!C) return; C.tt.textContent = text; C.tt.classList.add('show'); C.tauntUntil = performance.now() + 3400; };
 bridge.clear = () => { focus = { type:'none' }; selectTile(null); if (measure()){ setLand(true); measure(); frameAll(false); } };
 bridge.setTags = on => labelsEl.classList.toggle('no-tags', !on);
@@ -4502,7 +5700,7 @@ const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
 function pickAt(x, y){
   const r = renderer.domElement.getBoundingClientRect(); ndc.set(((x - r.left)/r.width)*2 - 1, -((y - r.top)/r.height)*2 + 1);
   ray.setFromCamera(ndc, camera);
-  for (const h of ray.intersectObjects(sea.picks.length ? pickables.concat(sea.picks) : pickables, false)){ const u = h.object.userData; if (u.mascot) return { mascot:true }; if (u.owner) return { owner:u.owner }; if (u.secret) return { secret:u.secret, fac:u.fac }; if (u.suspect) return { suspect:u.suspect, fac:u.fac }; if (u.evidence) return { evidence:u.evidence, fac:u.fac }; if (u.fac) return { fac:u.fac }; if (u.hex) return { hex:u.hex }; }
+  for (const h of ray.intersectObjects(sea.picks.length ? pickables.concat(sea.picks) : pickables, false)){ const u = h.object.userData; if (u.chest){ if (caseObjs[u.chest] && caseObjs[u.chest].chest.g.visible) return { chest:u.chest, fac:u.fac }; continue; } if (u.mascot) return { mascot:true }; if (u.owner) return { owner:u.owner }; if (u.secret) return { secret:u.secret, fac:u.fac }; if (u.suspect) return { suspect:u.suspect, fac:u.fac }; if (u.evidence) return { evidence:u.evidence, fac:u.fac }; if (u.fac) return { fac:u.fac }; if (u.hex) return { hex:u.hex }; }
   return null;
 }
 const cv = renderer.domElement; let down = null, hoverEvt = null, hoverId = null;
@@ -4510,7 +5708,8 @@ cv.addEventListener('pointerdown', e => { down = { x:e.clientX, y:e.clientY }; }
 cv.addEventListener('pointerup', e => {
   if (!down) return; const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null; if (moved > 6) return;
   const hit = pickAt(e.clientX, e.clientY); if (!hit) return;
-  if (hit.mascot) UI.mascotClicked(); else if (hit.owner) UI.showIsle(hit.owner); else if (hit.secret) UI.showSecret(hit.secret); else if (hit.suspect) UI.suspectClicked(hit.suspect); else if (hit.evidence) UI.evidenceFound(hit.evidence); else if (hit.fac){ const el = hit.fac; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => { if (el !== hoverFac) el.classList.remove('show'); }, 2600); } else UI.showHex(hit.hex);
+  if (UI.busy()){ if (hit.fac){ const el = hit.fac; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => { if (el !== hoverFac) el.classList.remove('show'); }, 2600); } return; }
+  if (hit.chest) UI.chestClicked(hit.chest); else if (hit.mascot) UI.mascotClicked(); else if (hit.owner) UI.showIsle(hit.owner); else if (hit.secret) UI.showSecret(hit.secret); else if (hit.suspect) UI.suspectClicked(hit.suspect); else if (hit.evidence) UI.evidenceFound(hit.evidence); else if (hit.fac){ const el = hit.fac; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => { if (el !== hoverFac) el.classList.remove('show'); }, 2600); } else UI.showHex(hit.hex);
 });
 cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') hoverEvt = e; });
 let hoverFac = null;
