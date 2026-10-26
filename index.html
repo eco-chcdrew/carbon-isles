@@ -196,6 +196,63 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 .isle-case{margin:6px 0 0;font-size:13.5px;color:var(--muted)}
 .isle-case b{font-weight:500;color:var(--ink)}
 .isle-case .got{color:#B5382A}
+.gist{margin:2px 0 12px;padding:9px 12px 10px;border-radius:12px 6px 12px 8px;background:color-mix(in srgb, #E2B04A 18%, var(--card));font-size:15.5px;line-height:1.65;font-weight:500}
+.gist::before{content:"一句話";display:inline-block;margin-right:8px;font-family:var(--f-hand);font-weight:700;font-size:14px;color:var(--accent)}
+.term{appearance:none;border:0;background:none;padding:0;margin:0;font:inherit;color:inherit;cursor:help;text-decoration:underline dotted;text-decoration-color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:3px}
+.term:hover,.term:focus-visible{background:color-mix(in srgb, var(--accent) 12%, transparent);border-radius:3px}
+.termpop{position:fixed;z-index:60;max-width:min(300px, calc(100vw - 24px));padding:9px 12px 10px;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;box-shadow:3px 4px 0 var(--shade);font-size:14px;line-height:1.6}
+.termpop[hidden]{display:none}
+.termpop b{display:block;font-family:var(--f-hand);font-size:16px;color:var(--accent)}
+.tw-badge{display:inline-block;margin:8px 0 0;padding:2px 10px 3px;border-radius:999px;background:color-mix(in srgb, var(--muted) 14%, var(--card));font-size:12.5px;color:var(--muted)}
+details.tw{margin-top:22px;border:1.5px dashed var(--soft);border-radius:var(--wobble-2);padding:8px 12px 10px}
+details.tw > summary,details.adv > summary{cursor:pointer;font-family:var(--f-hand);font-size:16px;color:var(--muted)}
+details.tw[open] > summary{margin-bottom:8px}
+details.adv{margin-top:16px}
+details.adv > .stations,details.adv > .tablewrap{margin-top:10px}
+.route-sw{display:flex;gap:6px;margin:10px 0 0}
+.route-sw button{flex:1 1 0;appearance:none;cursor:pointer;border:1.5px solid var(--soft);background:var(--paper);border-radius:var(--wobble);padding:5px 8px 6px;font-family:var(--f-hand);font-size:14px;line-height:1.3;color:var(--muted)}
+.route-sw button[aria-pressed="true"]{border-color:var(--isle, var(--accent));color:var(--ink);background:color-mix(in srgb, var(--isle, var(--accent)) 12%, var(--card))}
+.must-star{font-style:normal;color:#D9A441;margin-right:3px}
+.story{margin:4px 0 18px;padding:11px 14px 12px;border-radius:12px;background:color-mix(in srgb, var(--isle) 8%, var(--card));border:1.5px solid color-mix(in srgb, var(--isle) 40%, transparent)}
+.story p{margin:0;font-size:14.5px;line-height:1.7}
+.story .st-t{margin:0 0 4px;font-family:var(--f-hand);font-size:17px;color:var(--isle)}
+.story .st-fig{margin-top:6px;font-family:var(--f-hand);font-size:15px}
+.story .st-fig b{font-weight:400;font-size:20px;color:var(--isle)}
+.meter{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:8px 0 4px}
+.mt{min-width:0;padding:6px 4px 7px;border:1.5px dashed var(--soft);border-radius:10px;text-align:center}
+.mt small,.mt span{display:block;font-size:11.5px;line-height:1.35;color:var(--muted)}
+.mt b{display:block;font-family:var(--f-hand);font-weight:400;font-size:18px;line-height:1.3;color:var(--muted)}
+.mt.got{border-style:solid;border-color:var(--isle);background:color-mix(in srgb, var(--isle) 10%, var(--card))}
+.mt.got b{color:var(--isle)}
+.flow{display:grid;gap:2px;margin:10px 0 4px}
+.fl-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:8px;align-items:center}
+.fl-n{font-family:var(--f-hand);font-size:15px;line-height:1.3;color:var(--accent)}
+.fl-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:center}
+.fl-or{font-family:var(--f-hand);font-size:14px;color:var(--muted)}
+.fl-box{appearance:none;cursor:pointer;text-align:left;width:100%;border:1.5px solid var(--isle);border-left-width:4px;background:var(--card);border-radius:10px;padding:6px 10px 7px;color:var(--ink)}
+.fl-box:hover{background:color-mix(in srgb, var(--isle) 10%, var(--card))}
+.fl-box b{display:block;font-family:var(--f-display);font-weight:400;font-size:17px;line-height:1.3;color:var(--isle)}
+.fl-box small{display:block;font-size:12.5px;line-height:1.45;color:var(--muted)}
+.fl-down{padding-left:72px;font-size:15px;line-height:1.1;color:var(--muted)}
+.scope3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.scope3 > div{border:1.5px solid var(--soft);border-radius:12px;padding:8px 10px;background:var(--card)}
+.scope3 p{margin:0 0 4px;font-family:var(--f-hand);font-size:16px;color:var(--accent)}
+.scope3 ul{list-style:none;margin:0;padding:0;font-size:13.5px;line-height:1.75}
+.scope3 ul b{font-weight:600;margin-right:5px}
+.life{display:grid;gap:7px;margin-top:12px}
+.life > div{display:grid;grid-template-columns:40px minmax(0,1fr) 62px;gap:8px;align-items:center;font-size:13.5px}
+.life i{display:block;height:12px;border-radius:6px;background:var(--cfp)}
+.life small{display:block;color:var(--muted);font-size:12px;line-height:1.3}
+.quiz-q{margin:14px 0 10px;font-size:17px;line-height:1.6;font-weight:500}
+.quiz{display:grid;gap:8px}
+.quiz-opt{appearance:none;cursor:pointer;display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;width:100%;text-align:left;padding:10px 12px;border:1.5px solid var(--soft);background:var(--card);border-radius:var(--wobble-2);font-size:15px;line-height:1.55;color:var(--ink)}
+.quiz-opt:hover,.quiz-opt:focus-visible{border-color:var(--accent);background:var(--paper)}
+.quiz-opt > span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);font-family:var(--f-hand)}
+.rank{margin:18px 0 0;padding:12px 14px 14px;text-align:center;border:2px solid #B5382A;border-radius:14px;rotate:-1deg}
+.rank p{margin:0;font-family:var(--f-hand);color:var(--muted)}
+.rank b{display:block;font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.3;color:#B5382A}
+.rank small{display:block;color:var(--muted)}
+.intro-lead{margin:12px 0 0;font-size:15px}
 .ccard p{margin:0}
 .ccard p + p{margin-top:6px}
 .ccard .sign{text-align:right;margin-top:8px}
@@ -273,6 +330,9 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 .labels.mid .tag{gap:4px;padding:2px;border:0;background:none;box-shadow:none}
 .labels.mid .tag b{background:var(--card);box-shadow:1.5px 2px 0 var(--shade)}
 .labels.mid .tag span{display:none}
+.labels.basic .tag.adv{opacity:.42}
+.labels.basic .tag.adv:hover,.labels.basic .tag.adv:focus-visible,.labels.basic .tag.adv[aria-current="true"]{opacity:1}
+.labels.basic .tag.must b{outline:2px solid #E2B04A;outline-offset:1px}
 .labels.mid .tag:hover,.labels.mid .tag:focus-visible,.labels.mid .tag[aria-current="true"]{padding:2px 9px 3px 2px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
 .labels.mid .tag:hover span,.labels.mid .tag:focus-visible span,.labels.mid .tag[aria-current="true"] span{display:inline}
 .labels.mid .tagwrap:hover,.labels.mid .tagwrap:focus-within{z-index:100000 !important}
@@ -1123,7 +1183,7 @@ const SUSPECTS = [
     hide:'煙味還很重，他一定還躲在島上。看到灰灰的影子從草叢後面探頭，就點他！',
     trick:'盤查的時候只算燒油和用電，把冷媒補充、化糞池、滅火器這些不起眼的排放源藏起來，排放量就少了一大截。',
     truth:'先把排放源一個一個列清楚，小的也要列，再用重大性評估決定怎麼算。冷媒漏掉的部分算範疇一的逸散排放：補了幾公斤冷媒，乘上那種冷媒的全球暖化潛勢（GWP），就是漏掉的排放量。',
-    thanks:'盤查表的空格都補回來了，謝謝碳寶！', hexes:['inv-s1', 'inv-material'],
+    thanks:'盤查表的空格都補回來了，謝謝碳寶！', hexes:['inv-s1'],
     scrawl:'那幾公斤冷媒，誰會發現？', taunt:'哼，被你查到了？',
     clue:{ 'inv-s1':'範疇一包含逸散排放：冷氣、冰箱漏出來的冷媒也要算。漏漏偷偷撕掉的，就是冷媒補充的紀錄。', 'inv-material':'重大性評估是用來決定哪些排放源要算、怎麼算，不是拿來把排放源藏起來。漏漏把小排放源全刪了，還說它們「不重要」。' } },
   { id:'cfp', name:'剪剪', title:'剪邊界螃蟹', ev:'剪成兩半的吊牌',
@@ -1132,7 +1192,7 @@ const SUSPECTS = [
     hide:'剪刀聲還沒停。找找看哪裡有紅色的大鉗子冒出來！',
     trick:'把產品的一生剪掉一大段，只算工廠裡的製造。原料怎麼來、怎麼運、用的時候耗多少電、丟掉以後怎麼處理，全都不算。',
     truth:'碳足跡要照 PCR 把系統邊界畫清楚：從原料一路算到廢棄（搖籃到墳墓），或只算到出廠（搖籃到大門），都要寫明是哪一種。真的要排除一小段，得符合截斷準則，也要說明理由。',
-    thanks:'吊牌黏好了，五個階段一格不少。', hexes:['cfp-pcr', 'cfp-scope'],
+    thanks:'吊牌黏好了，五個階段一格不少。', hexes:['cfp-pcr'],
     scrawl:'喀嚓！少算一點，標籤就好看多了。', taunt:'喀嚓喀嚓，追不到！',
     clue:{ 'cfp-pcr':'PCR 規定了這類產品的系統邊界要畫到哪裡。剪剪偷偷把邊界剪短，只留下工廠裡那一段。', 'cfp-scope':'五個生命週期階段都對得到組織盤查的範疇。剪剪剪掉的，正好是範疇三最大的那幾塊。' } },
   { id:'rdc', name:'拖拖', title:'明天再減樹懶', ev:'每一頁都寫著「明天」的日曆',
@@ -1159,13 +1219,119 @@ const SUSPECTS = [
     hide:'他會變色，躲起來很難找。',
     trick:'不盤查也不減量，買一點便宜的額度，就在產品上貼「100% 碳中和」，再把整座島刷成綠色。看起來很環保，其實什麼都沒做，這就是漂綠。',
     truth:'碳中和要先盤查、先減量，剩下真的減不掉的，才用高品質的額度抵銷並註銷，還要經過查證；宣告時要說清楚是哪個產品、哪一段期間。歐盟從 2026 年 9 月起，也不准產品只靠買額度就說自己對氣候「零影響」。',
-    thanks:'潟湖的油漆擦乾淨了，這次是真的乾淨。', hexes:['neu-claim', 'neu-rules'],
+    thanks:'潟湖的油漆擦乾淨了，這次是真的乾淨。', hexes:['neu-claim'],
     scrawl:'綠綠的，看起來就很環保，不是嗎？', taunt:'呵呵，看得出來嗎？',
     clue:{ 'neu-claim':'碳中和宣告要寫清楚標的、期間和做法。變變的貼紙只有「100% 碳中和」幾個大字，背面什麼都沒有。', 'neu-rules':'只靠買額度、什麼都沒做就喊碳中和，這就是漂綠。變變最拿手的就是這一招。' } }
 ];
-window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS, SUSPECTS };
+const BASIC = {
+  inv:['inv-boundary', 'inv-s1', 'inv-s2', 'inv-c1'],
+  cfp:['cfp-unit', 'cfp-pcr', 'cfp-raw', 'cfp-hotspot'],
+  rdc:['rdc-base', 'rdc-hier', 'rdc-2030', 'rdc-netzero'],
+  ofs:['ofs-what', 'ofs-quality', 'ofs-retire', 'ofs-claim'],
+  neu:['neu-what', 'neu-reduce', 'neu-offset', 'neu-claim']
+};
+const GIST = {
+  'inv-boundary':'先決定要「算誰」：哪些工廠、辦公室算進來。範圍定好，之後每年都照同一個範圍算，才比得出有沒有進步。',
+  'inv-s1':'自己燒的、自己漏的都算範疇一：工廠鍋爐燒天然氣、公務車加油、冷氣漏出來的冷媒。',
+  'inv-s2':'買來的電算範疇二：碳是在電廠排的，但電是你用掉的，所以算你的。',
+  'inv-c1':'其他全部歸範疇三：買的原料、貨運、員工通勤、產品被使用和丟掉……價值鏈上別人那邊排的，都在這裡。',
+  'cfp-unit':'先說好要算「什麼」：例如「一件 T 恤，從種棉花算到丟掉」。',
+  'cfp-pcr':'同一類產品要照同一套規則算，數字才比得起來。這套規則就叫 PCR。',
+  'cfp-raw':'一件產品的一生分成五段：原料、製造、配送、使用、廢棄，每一段都在排碳。',
+  'cfp-hotspot':'哪一段排最多，就先從那一段下手。',
+  'rdc-base':'先選一年當起點（基準年），再訂「哪一年要比它少多少」。',
+  'rdc-hier':'減碳有順序：能不用就不用、要用就省著用、換成乾淨的能源，真的減不掉才抵換。',
+  'rdc-2030':'2050 太遠，要切出 2030 這種看得到的里程碑，每年檢查有沒有跟上。',
+  'rdc-netzero':'淨零就是把排放減到最低（SBTi 要求減九成以上），剩下一點點再用碳移除抵掉。',
+  'ofs-what':'自己減不掉的排放，可以拿別處的減量來平衡，這就是抵換。一份額度通常代表 1 公噸 CO₂e。',
+  'ofs-quality':'額度有好有壞。要問：沒有這筆錢，專案還會做嗎？減掉的量算得準嗎？會不會又排回去？',
+  'ofs-retire':'用掉的額度要在平台上註銷，序號作廢，才不會被別人再用一次。',
+  'ofs-claim':'抵換可以幫忙，但取代不了減量；用了多少額度，要講清楚。',
+  'neu-what':'碳中和：在一段期間內先減量，剩下的用等量額度抵掉，讓淨排放變成 0。',
+  'neu-reduce':'不能只靠買額度：要先照順序減量，抵換只處理減不掉的那一點。',
+  'neu-offset':'剩下的排放，用等量的高品質額度抵掉，而且一定要註銷。',
+  'neu-claim':'宣告要寫清楚對象、期間、減了多少、抵了多少，不能誇大。'
+};
+const DATA_DATE = '2026 年 10 月';
+const TW_CLUES = ['inv-report', 'cfp-label', 'rdc-plan', 'ofs-tw', 'ofs-tcx', 'ofs-use', 'neu-rules'];
+const TW_BITS = { 'inv-boundary':{ note:true }, 'rdc-2030':{ note:true }, 'rdc-netzero':{ items:['台灣的承諾'], note:true }, 'neu-what':{ items:['依據的標準', '台灣'] }, 'neu-offset':{ items:['年份限制'] } };
+const ISLE_TIP = {
+  inv:'碳盤查算的是「整個組織一年」排多少；想算「一個產品一生」排多少，要到碳足跡島。兩種量法可以只做一種，也可以都做。',
+  cfp:'碳足跡和碳盤查是兩種量法：盤查算整個組織一年，碳足跡算一個產品一生。兩個數字角度不同，不能直接相加或互換。'
+};
+const STORY = {
+  inv:{ short:'盤查', m:'1,000', mu:'公噸／年', step:'盤查', fig:'1,000 公噸', unit:'2025 年排放', text:'碳寶製衣是一間虛構的成衣廠，一年做 10 萬件 T 恤。2025 年第一次盤查：範疇一約 120 公噸（鍋爐燒天然氣、公務車加油、冷氣補冷媒）；範疇二約 380 公噸（一年用電約 81 萬度 × 每度 0.467 公斤）；範疇三約 500 公噸（買棉布、貨運、員工通勤）。加起來，一年約 1,000 公噸 CO₂e。' },
+  cfp:{ short:'足跡', m:'6', mu:'公斤／件', step:'碳足跡', fig:'6 公斤', unit:'一件 T 恤', text:'換個角度，算碳寶製衣的一件 T 恤從種棉花到丟掉：原料 2.5、製造 1.2、配送 0.3、使用 1.8（洗、烘、燙）、廢棄 0.2，合計約 6 公斤 CO₂e。熱點在原料和使用。盤查算整間工廠一年，碳足跡算一件衣服一生，兩個數字不能直接相加或互換。' },
+  rdc:{ short:'減量', m:'600', mu:'公噸／年', step:'減量', fig:'600 公噸', unit:'2030 年排放', text:'以 2025 年當基準年，目標 2030 年少排 40%：屋頂裝太陽能、鍋爐換成熱泵、全面換 LED 和高效馬達、冷氣定期檢漏，再請布料供應商一起減。2030 年降到約 600 公噸；長期承諾 2050 年前減到 100 公噸以下，剩下的用碳移除中和，也就是淨零。' },
+  ofs:{ short:'抵換', m:'600', mu:'公噸註銷', step:'抵換', fig:'600 公噸', unit:'額度已註銷', text:'2030 年還剩約 600 公噸一時減不掉。為了宣告這一年碳中和，碳寶製衣向經過確證與查證的專案買了 600 公噸額度（例如森林復育、沼氣回收），在登錄平台上註銷，把序號寫進報告。這 600 公噸額度，誰都不能再用第二次。' },
+  neu:{ short:'中和', m:'0', mu:'淨排放', step:'碳中和', fig:'0 公噸', unit:'2030 年淨排放', text:'宣告：「碳寶製衣 2030 年度營運碳中和」。這一年排放 600 公噸，抵銷並註銷 600 公噸額度，淨排放 0，經第三方查證，附上管理計畫和註銷證明。這不是終點：碳中和每一期都要重做，用的額度要一期比一期少，最後走到 2050 淨零。' }
+};
+const SCOPE3 = {
+  up:[['C1', '買進來的原料、零件和服務'], ['C2', '機器、車輛、廠房'], ['C3', '燃料和電力的上游'], ['C4', '進貨運輸'], ['C5', '廢棄物和廢水處理'], ['C6', '員工出差'], ['C7', '員工通勤'], ['C8', '租來的設備和場地']],
+  down:[['C9', '出貨給客戶的運輸'], ['C10', '產品被下游加工'], ['C11', '產品被使用'], ['C12', '產品被丟掉'], ['C13', '租給別人的資產'], ['C14', '加盟店'], ['C15', '投資和融資']]
+};
+const LIFE = [['原料', 2.5, '種棉花、紡紗前處理'], ['製造', 1.2, '紡紗、織布、染整、縫製'], ['配送', 0.3, '海運、陸運、倉儲'], ['使用', 1.8, '洗衣、烘乾、熨燙'], ['廢棄', 0.2, '焚化、掩埋或回收']];
+const QUIZ = {
+  inv:{ q:'工廠的冷氣一年補了 12 公斤冷媒。盤查時該怎麼處理？', opts:['量很少，可以不用算', '算進範疇一的逸散排放：補了幾公斤 × 冷媒的 GWP', '算進範疇二，因為冷氣是用電的'], a:1, hint:'inv-s1', why:'冷媒是從自己工廠的設備漏出來、直接排進大氣的。想想看，這算哪一個範疇？', taunt:'哼，我什麼都不會說！' },
+  cfp:{ q:'一件 T 恤「從搖籃到墳墓」的碳足跡，要算哪些階段？', opts:['原料、製造、配送、使用、廢棄，五段都算', '只算工廠裡的製造', '只算原料和製造，賣出去以後就不關工廠的事'], a:0, hint:'cfp-unit', why:'「墳墓」指的是產品的最後一站。衣服賣出去以後，還會被穿、被洗、被丟掉。', taunt:'喀嚓！你答得出來嗎？' },
+  rdc:{ q:'一家公司說「我們 2050 年淨零」。怎麼看出它是不是認真的？', opts:['看口號喊得夠不夠大聲', '先買額度把排放全部抵掉就好', '看它有沒有 2030 年前的中期目標，而且每年追蹤進度'], a:2, hint:'rdc-2030', why:'口號和額度都不會讓排放真的變少。認真的公司，會把 2050 切成看得到的里程碑。', taunt:'呼……問簡單一點啦……' },
+  ofs:{ q:'同一張減量額度，要怎麼防止被兩家公司重複使用？', opts:['兩家公司各付一半錢，就可以一起用', '用的時候在登錄平台註銷，序號作廢，只能用一次', '把證書影印一份給另一家公司'], a:1, hint:'ofs-retire', why:'每一份額度都有序號。用掉的那一刻要做什麼，別人才不能再用？', taunt:'哥，他要考我們！' },
+  neu:{ q:'下面哪一家公司，才可以說自己「碳中和」？', opts:['什麼都沒減，直接買便宜額度把排放全部抵掉', '把工廠漆成綠色、門口種一排樹', '先盤查、先減量，剩下的用高品質額度抵銷並註銷，經過查證、寫清楚期間'], a:2, hint:'neu-claim', why:'碳中和的順序是：先算、先減，剩下真的減不掉的才抵，最後還要有人查證。', taunt:'呵呵，最後一題，你猜得到嗎？' }
+};
+const GLOSSARY = {
+  '溫室氣體':'會把熱留在地球的氣體，例如二氧化碳、甲烷、冷媒。',
+  'CO₂e':'二氧化碳當量：把各種溫室氣體都換算成「相當於多少 CO₂」，才能加在一起。',
+  'GWP':'全球暖化潛勢：一種氣體的暖化效果是 CO₂ 的幾倍。CO₂ 是 1，有些冷媒是幾千。',
+  'GHG Protocol':'溫室氣體盤查議定書：全世界最常用的盤查規則，把排放分成三個範疇。',
+  'ISO 14064-1':'教組織怎麼盤查溫室氣體的國際標準，台灣的盤查報告多半照它寫。',
+  'ISO 14067':'教你怎麼算一個產品碳足跡的國際標準。',
+  'ISO 14068-1':'規定怎樣才能宣告碳中和的國際標準，2023 年發布。',
+  'PAS 2050':'英國的產品碳足跡規範，比 ISO 14067 早出現。',
+  'PAS 2060':'英國舊的碳中和規範，已經被 ISO 14068-1 取代。',
+  'PCR':'產品類別規則：同一類產品算碳足跡時共用的一套規則，數字才比得起來。',
+  'SBTi':'科學基礎減量目標倡議：檢查企業的減碳目標，夠不夠讓地球升溫控制在 1.5°C。',
+  'ICVCM':'自願碳市場誠信委員會：訂出「高品質碳權」要符合哪些原則。',
+  'VCMI':'自願碳市場誠信倡議：說明企業用了碳權之後，可以怎麼宣告。',
+  'T-REC':'台灣的再生能源憑證：證明用的是綠電，一張代表 1,000 度。',
+  'NDC':'國家自定貢獻：每個國家向聯合國承諾的減碳目標。',
+  '範疇一':'自己直接排的：燒燃料、公務車加油、設備漏冷媒。',
+  '範疇二':'買來的電和蒸汽：碳在電廠排，但算用電的人的。',
+  '範疇三':'價值鏈上別人那邊排的：原料、運輸、通勤、產品被使用和丟掉，共 15 類。',
+  '組織邊界':'盤查要算進哪些工廠、辦公室、子公司。',
+  '逸散排放':'不是燒出來、而是漏出來的排放，例如冷媒外洩、化糞池的甲烷。',
+  '排放係數':'每用一單位（一度電、一公升油）會排多少溫室氣體。',
+  '活動數據':'實際用了多少：幾度電、幾公升油、幾公斤原料。',
+  '功能單位':'比較碳足跡的基準，例如「一件 T 恤」。',
+  '系統邊界':'這次要算到哪裡：算到出廠，還是一路算到丟掉。',
+  '搖籃到墳墓':'從原料一路算到產品被丟掉。',
+  '搖籃到大門':'只算到產品出廠為止。',
+  '生命週期':'一個產品從原料、製造、運送、使用到丟掉的一生。',
+  '碳盤查':'算出一個組織一年排了多少溫室氣體。',
+  '碳足跡':'一個產品從頭到尾的一生排了多少溫室氣體。',
+  '基準年':'拿來比較減量成果的起點年份。',
+  '淨零':'把排放減到最低，剩下的一點點用等量的碳移除抵掉，是長期目標。',
+  '碳中和':'在一段期間內，先減量，剩下的用額度抵掉，讓淨排放為 0。',
+  '碳移除':'把空氣裡的 CO₂ 抓出來存起來，例如造林、把碳封存到地底。',
+  '減量額度':'也叫碳權：經過查證的減量成果，一份通常代表 1 公噸 CO₂e。',
+  '碳權':'也叫減量額度：經過查證的減量成果，一份通常代表 1 公噸 CO₂e。',
+  '額外性':'這個減量是因為專案才發生的；沒有專案也會發生的，就不能算額度。',
+  '永久性':'減掉或存起來的碳能維持夠久，不會又跑回空氣裡。',
+  '方法學':'計算某一種減量專案「到底減了多少」的公定算法。',
+  '確證':'專案開始前，由第三方檢查計畫書合不合理。',
+  '查證':'由獨立的第三方檢查數據和計算對不對。',
+  '註銷':'額度用掉後在平台上作廢，序號不能再用，避免重複計算。',
+  '殘餘排放':'盡力減量之後，還是減不掉的排放。',
+  '漂綠':'讓產品或公司看起來比實際更環保的宣傳。',
+  '碳費':'台灣向排碳大戶收的費用，一般費率每公噸 300 元。',
+  '自主減量計畫':'要繳碳費的企業自己提的減量計畫，達標就能用比較低的費率。',
+  '重大性評估':'找出哪些排放源大、跟自己有關，決定要算多細。',
+  '熱點':'排放最多的那個階段或項目，通常最值得先減。',
+  '內部碳定價':'公司自己替每公噸碳排訂一個價格，做決定時把它算進成本。',
+  '綠電':'再生能源發的電，例如太陽能、風力。'
+};
+window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS, SUSPECTS, BASIC };
 
-const bridge = window.ISLE3D = { ready:false, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, secretsReset(){}, focusCase(){}, caseSync(){}, caseReset(){}, taunt(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
+const bridge = window.ISLE3D = { ready:false, setRoute(){}, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, secretsReset(){}, focusCase(){}, caseSync(){}, caseReset(){}, taunt(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
 const $ = s => document.querySelector(s);
 const panel = $('#panel'), body = $('#panelBody'), list = $('#list');
 const state = { view:'home', hex:null, isle:null, no3d:false, interacted:false };
@@ -1175,6 +1341,20 @@ function lin(v){ v/=255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055,
 function inkFor(hex){ const n = parseInt(hex.slice(1),16); const L = 0.2126*lin((n>>16)&255) + 0.7152*lin((n>>8)&255) + 0.0722*lin(n&255); return L > 0.18 ? '#14212A' : '#FFFFFF'; }
 const fmt = (n, d=0) => n.toLocaleString('zh-TW', { maximumFractionDigits:d, minimumFractionDigits:d });
 
+let route = 'basic'; try { if (localStorage.getItem('tanbao-route') === 'full') route = 'full'; } catch (e) {}
+const isMust = id => { const h = byId[id]; return !!h && !!BASIC[h.isle] && BASIC[h.isle].includes(id); };
+const routeOrder = k => route === 'basic' && BASIC[k] ? ORDER[k].filter(id => BASIC[k].includes(id)) : ORDER[k];
+const navOrder = h => { const ro = routeOrder(h.isle); return ro.includes(h.id) ? ro : ORDER[h.isle]; };
+const routeSwitch = (k) => `<div class="route-sw" role="group" aria-label="路線"${k ? ` style="--isle:var(--${k})"` : ''}><button type="button" data-route="basic" aria-pressed="${route === 'basic'}">新手路線${k ? `・${BASIC[k].length} 條` : ''}</button><button type="button" data-route="full" aria-pressed="${route === 'full'}">完整路線${k ? `・${ORDER[k].length} 條` : ''}</button></div>`;
+function setRoute(r){ if (r === route) return; route = r; try { localStorage.setItem('tanbao-route', r); } catch (e) {} bridge.setRoute(r); rerender(); }
+function rerender(){
+  const y = body.scrollTop;
+  if (state.view === 'isle' && state.isle) openPanel(isleHTML(state.isle), `CASE FILE ─ ${ISLES[state.isle].name}`);
+  else if (state.view === 'hex' && state.hex){ const h = byId[state.hex]; openPanel(hexHTML(h), fileLabel.textContent, stampEl.hidden ? '' : stampEl.textContent); if (h.calc) calcUpdate(); }
+  else if (state.view === 'home') openPanel(homeHTML(), 'CASE FILE ─ 案件檔案');
+  body.scrollTop = y;
+  if (!list.hidden) buildList($('#listSearch').value);
+}
 function setModes(m){ document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m))); }
 const fileLabel = $('#fileLabel'), stampEl = $('#stamp');
 const secretById = Object.fromEntries(SECRETS.map(s => [s.id, s])), found = new Set();
@@ -1207,7 +1387,7 @@ function showSecret(id){
 }
 const suspectById = Object.fromEntries(SUSPECTS.map(s => [s.id, s])), evFound = new Set(), caught = new Set();
 const CREW = SUSPECTS.filter(s => !s.boss).map(s => s.id), crewDone = () => CREW.every(id => caught.has(id));
-function resetCase(){ evFound.clear(); caught.clear(); visited.clear(); state.lastHex = null; updateCaseCount(); bridge.caseReset(); if (!list.hidden) buildList($('#listSearch').value); }
+function resetCase(){ evFound.clear(); caught.clear(); visited.clear(); firstTry.clear(); for (const k in tries) delete tries[k]; state.lastHex = null; updateCaseCount(); bridge.caseReset(); if (!list.hidden) buildList($('#listSearch').value); }
 function updateCaseCount(){ document.querySelectorAll('[data-case-count]').forEach(el => { el.textContent = `${caught.size}/${SUSPECTS.length}`; }); }
 const said = (s, line) => `<p class="witness" style="--isle:var(--${s.id})"><b>${ISLES[s.id].owner}：</b>「${esc(line)}」</p>`;
 const callingCard = () => `
@@ -1233,7 +1413,7 @@ function evidenceHTML(s, isNew){
 function caughtHTML(s, isNew){
   const all = caught.size === SUSPECTS.length, bossLeft = crewDone() && !all;
   const boss = SUSPECTS.find(x => x.boss);
-  const links = s.hexes.map(id => { const h = byId[id]; return `<button type="button" class="linkbtn" data-hex="${id}"><i aria-hidden="true"></i><span><b>${ISLES[h.isle].name}・${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button>`; }).join('');
+  const links = Object.keys(s.clue).map(id => { const h = byId[id]; return `<button type="button" class="linkbtn" data-hex="${id}"><i aria-hidden="true"></i><span><b>${ISLES[h.isle].name}・${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button>`; }).join('');
   const next = all ? `<button type="button" class="btn primary" data-case="end">看結案報告 ›</button>`
     : bossLeft ? `<button type="button" class="btn primary" data-go="isle:${boss.id}">手下全抓到了，換怪盜變變 ›</button>` : '';
   return `
@@ -1270,6 +1450,10 @@ function finaleHTML(){
     <h2>五個嫌犯全部到案</h2>
     <p class="lead">漏漏把藏起來的排放源一個一個交了出來；剪剪把吊牌黏回去，五個階段一格不少；拖拖說，今天就開始減；雙雙把多賣的那張證書退了，一個序號只用一次；變變……正蹲在潟湖邊，把油漆一點一點擦掉。</p>
     <aside class="note"><h3>碳寶的辦案筆記</h3><p>帳要算全、邊界要畫清楚、目標從現在開始、額度用掉就註銷。這些都做到了，才有資格說「碳中和」。</p></aside>
+    <h3>碳寶製衣的案情進度表</h3>
+    ${meterHTML()}
+    <p class="how">1,000 公噸 → 減到 600 公噸 → 600 公噸額度註銷 → 2030 年度淨排放 0，接著繼續往 2050 淨零減。</p>
+    ${(() => { const n = firstTry.size, rank = n === SUSPECTS.length ? '名偵探' : n >= 3 ? '資深偵探' : '見習偵探'; return `<div class="rank"><p>辦案等級</p><b>${rank}</b><small>審問一次就答對 ${n} / ${SUSPECTS.length} 題・祕境 ${foundCount()} / ${SECRETS.length}</small></div>`; })()}
     <div class="btns"><button type="button" class="btn primary" data-go="home">回全覽</button><button type="button" class="btn" data-go="case">任務簿</button></div>`;
 }
 function caseGo(cmd){
@@ -1301,6 +1485,39 @@ function suspectClicked(id){
     state.view = 'case'; state.hex = null; setModes('');
     return openPanel(slipHTML(s, evFound.has(id) ? 'boss' : 'noev'), `CASE FILE ─ ${ISLES[id].name}`);
   }
+  state.view = 'case'; state.hex = null; setModes('');
+  bridge.focusCase(id, 'lair', false, true); bridge.taunt(id, QUIZ[id].taunt);
+  openPanel(quizHTML(s), `CASE FILE ─ 審問・${s.name}`, '審問！');
+}
+const tries = {}, firstTry = new Set();
+function quizHTML(s){
+  const Q = QUIZ[s.id];
+  return `
+    <p class="eyebrow">審問</p>
+    <h2>${esc(s.name)}被逼到樹叢邊了！</h2>
+    <p class="lead">證物在手，碳寶只問一題。答對，就能把${esc(s.name)}帶走。</p>
+    <p class="quiz-q">${esc(Q.q)}</p>
+    <div class="quiz">${Q.opts.map((o, i) => `<button type="button" class="quiz-opt" data-ans="${s.id}:${i}"><span>${'ABC'[i]}</span>${esc(o)}</button>`).join('')}</div>`;
+}
+function wrongHTML(s, i){
+  const Q = QUIZ[s.id], h = byId[Q.hint];
+  return `
+    <p class="eyebrow">答錯了！</p>
+    <h2>${esc(s.name)}溜走了</h2>
+    <p class="lead">「${esc(Q.opts[i])}」不對。${esc(s.name)}趁碳寶愣住的時候，一溜煙躲回樹叢。</p>
+    <aside class="event sniff"><p class="ev-t">碳寶的提示</p><p>${esc(Q.why)}</p>
+      <div class="btns"><button type="button" class="btn" data-hex="${Q.hint}">回去看「${esc(h.short)}」</button><button type="button" class="btn primary" data-look="lair:${s.id}">再去抓他 ›</button></div>
+      ${noteP('lair:' + s.id, s)}</aside>`;
+}
+function answer(id, i){
+  const s = suspectById[id], Q = QUIZ[id]; if (!s || caught.has(id)) return;
+  tries[id] = (tries[id] || 0) + 1;
+  if (i === Q.a){ if (tries[id] === 1) firstTry.add(id); return arrest(id); }
+  bridge.taunt(id, '答錯啦～我先溜囉！');
+  openPanel(wrongHTML(s, i), `CASE FILE ─ 審問・${s.name}`, '溜走了');
+}
+function arrest(id){
+  const s = suspectById[id];
   caught.add(id); updateCaseCount(); bridge.caseSync(id, { found:true, caught:true });
   bridge.taunt(id, s.boss ? '我、我只是想看起來環保嘛……' : '嗚……被抓到了');
   showCaught(id, true);
@@ -1314,7 +1531,7 @@ const NOTES = {
   secret:() => '嗅嗅對著這一帶叫個不停。找找哪裡在閃金光，點下去就算找到祕境。'
 };
 function isleNext(k){
-  const sus = suspectById[k], order = ORDER[k], seen = order.filter(id => visited.has(id)).length;
+  const sus = suspectById[k], order = routeOrder(k), seen = order.filter(id => visited.has(id)).length;
   if (!sus) return null;
   if (!seen) return { label:'開始調查', attr:`data-hex="${order[0]}"` };
   const key = sus.hexes.find(id => !visited.has(id));
@@ -1325,7 +1542,7 @@ function isleNext(k){
     return { label:`去抓${sus.name}`, attr:`data-look="lair:${k}"`, note:'lair:' + k };
   }
   const left = order.find(id => !visited.has(id));
-  if (left) return { label:`把線索查完（第 ${order.indexOf(left) + 1} 條）`, attr:`data-hex="${left}"` };
+  if (left) return { label:`把${route === 'basic' ? '必看' : ''}線索查完：${byId[left].short}`, attr:`data-hex="${left}"` };
   const sec = isleSecrets(k).find(x => !found.has(x.id));
   if (sec) return { label:'找島上的祕境', attr:`data-look="secret:${sec.id}"`, note:'secret:' + sec.id };
   const nk = KEYS[KEYS.indexOf(k) + 1];
@@ -1334,7 +1551,7 @@ function isleNext(k){
 const noteP = (key, sus, extra = '') => `<p class="ev-note secret-go" data-for="${key}" hidden>${key.startsWith('lair') ? NOTES.lair(sus) : key.startsWith('ev') ? NOTES.ev() : NOTES.secret()}${extra}</p>`;
 function missionHTML(k){
   const sus = suspectById[k]; if (!sus) return '';
-  const order = ORDER[k], seen = order.filter(id => visited.has(id)).length, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length;
+  const order = routeOrder(k), seen = order.filter(id => visited.has(id)).length, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length;
   const keysDone = sus.hexes.every(id => visited.has(id)), nx = isleNext(k);
   const keys = sus.hexes.map(id => `<button type="button" class="${visited.has(id) ? 'done' : ''}" data-hex="${id}">${esc(byId[id].short)}</button>`).join('');
   const crewNote = sus.boss && !crewDone() ? `<small>四個手下還沒抓齊，他一碰就會變色溜走。</small>` : '';
@@ -1344,14 +1561,15 @@ function missionHTML(k){
       <p class="m-head"><span class="m-tag">任務</span>抓到<b>${esc(suspectLabel(sus))}</b>${caught.has(k) ? '<span class="caught-stamp" style="position:static;rotate:-6deg">已逮捕</span>' : ''}</p>
       ${said(sus, caught.has(k) ? sus.thanks : sus.witness)}
       <div class="m-bar" aria-hidden="true"><i style="width:${Math.round(seen/order.length*100)}%"></i></div>
-      <p class="m-count">線索已查 ${seen} / ${order.length}</p>
+      <p class="m-count">${route === 'basic' ? '必看線索' : '線索'}已查 ${seen} / ${order.length}</p>
+      ${routeSwitch(k)}
       <ol class="m-steps">
         <li class="${keysDone ? 'done' : ''}"><span>查出關鍵線索<small>${keysDone ? '嫌犯的手法摸清楚了。' : '這幾條線索藏著嫌犯動手腳的痕跡：'}</small><span class="m-keys">${keys}</span></span></li>
         <li class="${evFound.has(k) ? 'done' : ''}"><span>找到證物${evFound.has(k) ? `<small>${esc(sus.ev)}</small>` : '<small>請嗅嗅帶路，地圖上閃紅光的就是。</small>'}</span></li>
         <li class="${caught.has(k) ? 'done' : ''}"><span>逮捕${esc(suspectLabel(sus))}${crewNote}</span></li>
         <li class="bonus"><span>島上祕境 ${sf} / ${secs.length}${secList ? `<span class="m-keys">${secList}</span>` : '<small>全部找到了！</small>'}</span></li>
       </ol>
-      ${nx ? `<div class="btns"><button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>${seen ? `<button type="button" class="btn" data-hex="${order[0]}">從第 1 條看起</button>` : ''}</div>` : ''}
+      ${nx ? `<div class="btns"><button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>${seen ? `<button type="button" class="btn" data-hex="${order[0]}">從頭看起</button>` : ''}</div>` : ''}
       ${['ev:' + k, 'lair:' + k].map(key => noteP(key, sus)).join('')}${secs.map(x => noteP('secret:' + x.id, sus)).join('')}
     </section>`;
 }
@@ -1359,8 +1577,8 @@ function backToTour(k, primary){
   const h = byId[state.lastHex]; if (!h || h.isle !== k) return '';
   return `<button type="button" class="btn${primary ? ' primary' : ''}" data-hex="${h.id}">繼續調查：第 ${ORDER[k].indexOf(h.id) + 1} 條線索 ›</button>`;
 }
-function tourEvent(h, i){
-  const k = h.isle, sus = suspectById[k], order = ORDER[k]; if (!sus) return '';
+function tourEvent(h, i, order = ORDER[h.isle]){
+  const k = h.isle, sus = suspectById[k]; if (!sus) return '';
   const here = `<button type="button" class="btn" data-hex="${h.id}">回到這條線索</button>`;
   if (sus.clue && sus.clue[h.id]){
     let act = '';
@@ -1381,7 +1599,7 @@ function tourEvent(h, i){
       <aside class="event">
         <p class="ev-t">還差一步！</p>
         <p>線索都查完了，可是${esc(suspectLabel(sus))}還在島上逍遙。</p>
-        <div class="btns">${nx ? `<button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>` : ''}${nk ? `<button type="button" class="btn" data-hex="${ORDER[nk][0]}">先去${ISLES[nk].name}</button>` : ''}</div>
+        <div class="btns">${nx ? `<button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>` : ''}${nk ? `<button type="button" class="btn" data-hex="${routeOrder(nk)[0]}">先去${ISLES[nk].name}</button>` : ''}</div>
         ${nx && nx.note ? noteP(nx.note, sus) : ''}
       </aside>`;
   }
@@ -1400,7 +1618,39 @@ function tourEvent(h, i){
   }
   return '';
 }
-function openPanel(html, label = 'CASE FILE', stamp = ''){ body.innerHTML = html; fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
+const TERMS = Object.keys(GLOSSARY).sort((a, b) => b.length - a.length);
+const termRe = new RegExp(TERMS.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+const SKIP_TERMS = 'button, a, h2, h3, summary, select, label, output, table, .crumb, .mbar, .term, .quiz, .stamp, .formula, .m-tag, .ccard, .meter, .fl-box, .tw-badge';
+function linkTerms(root){
+  const used = new Set(), nodes = [], walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode:n => n.parentElement && n.parentElement.closest(SKIP_TERMS) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  for (const n of nodes){
+    const txt = n.nodeValue; let m, last = 0, frag = null; termRe.lastIndex = 0;
+    while ((m = termRe.exec(txt))){
+      const t = m[0], after = txt[m.index + t.length];
+      if (used.has(t) || after === '島') continue;
+      used.add(t); frag = frag || document.createDocumentFragment();
+      frag.append(txt.slice(last, m.index));
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'term'; b.dataset.term = t; b.textContent = t; frag.append(b);
+      last = m.index + t.length;
+    }
+    if (frag){ frag.append(txt.slice(last)); n.replaceWith(frag); }
+  }
+}
+const termPop = document.createElement('div'); termPop.className = 'termpop'; termPop.hidden = true; termPop.setAttribute('role', 'note'); document.body.appendChild(termPop);
+function showTerm(btn){
+  const t = btn.dataset.term; if (!GLOSSARY[t]) return;
+  if (!termPop.hidden && termPop.dataset.for === t){ termPop.hidden = true; return; }
+  termPop.innerHTML = `<b>${esc(t)}</b>${esc(GLOSSARY[t])}`; termPop.dataset.for = t; termPop.hidden = false;
+  const r = btn.getBoundingClientRect(), w = termPop.offsetWidth, h = termPop.offsetHeight;
+  termPop.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width/2 - w/2)) + 'px';
+  termPop.style.top = (r.bottom + 8 + h < innerHeight ? r.bottom + 6 : Math.max(8, r.top - h - 6)) + 'px';
+}
+const hideTerm = () => { termPop.hidden = true; };
+document.addEventListener('pointerdown', e => { if (!termPop.hidden && !e.target.closest('.term, .termpop')) hideTerm(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideTerm(); });
+body.addEventListener('scroll', hideTerm, { passive:true });
+function openPanel(html, label = 'CASE FILE', stamp = ''){ hideTerm(); body.innerHTML = html; linkTerms(body); fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
 
 function homeHTML(){
   const cards = KEYS.map(k => { const I = ISLES[k]; return `
@@ -1408,17 +1658,26 @@ function homeHTML(){
       <p class="isle-name">${I.name}</p>
       <p class="isle-owner">島主・${I.owner}</p>
       <p class="isle-q">${I.q}</p>
-      <p class="isle-meta">${I.std}・${ORDER[k].length} 條線索</p>
-      ${suspectById[k] ? `<p class="isle-case">任務：抓到 <b class="${caught.has(k) ? 'got' : ''}">${esc(suspectLabel(suspectById[k]))}${caught.has(k) ? '（已逮捕）' : ''}</b>　線索 ${ORDER[k].filter(id => visited.has(id)).length}/${ORDER[k].length}　祕境 ${isleSecrets(k).filter(x => found.has(x.id)).length}/${isleSecrets(k).length}</p>` : ''}
+      <p class="isle-meta">${I.std}・必看 ${BASIC[k] ? BASIC[k].length : ORDER[k].length} 條，全部 ${ORDER[k].length} 條</p>
+      ${suspectById[k] ? `<p class="isle-case">任務：抓到 <b class="${caught.has(k) ? 'got' : ''}">${esc(suspectLabel(suspectById[k]))}${caught.has(k) ? '（已逮捕）' : ''}</b>　線索 ${routeOrder(k).filter(id => visited.has(id)).length}/${routeOrder(k).length}　祕境 ${isleSecrets(k).filter(x => found.has(x.id)).length}/${isleSecrets(k).length}</p>` : ''}
       <div class="btns"><button type="button" class="btn" data-go="isle:${k}">看整座島</button><button type="button" class="btn primary" data-go="isle:${k}">${ORDER[k].some(id => visited.has(id)) ? '繼續任務' : '出任務'}</button></div>
     </article>`; }).join('');
+  const fresh = !visited.size && !evFound.size && !caught.size;
   return `
     <p class="eyebrow">案件檔案</p>
-    <h2>五座島</h2>
-    <p class="lead">碳盤查、碳足跡、碳減量、碳抵換、碳中和，一座島查一個案子。每一塊六角形是一條線索，點下去就能看；打開線索時，紅線會連到其他島上有關的線索。</p>
-    <p class="secret-cta"><span>✉ 怪盜變變寄來一封預告函。已逮捕 <b data-case-count>${caught.size}/${SUSPECTS.length}</b>・祕境 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn primary" data-go="case">打開任務簿</button></p>
+    ${fresh ? `<h2>碳寶偵探，有案子上門了！</h2>
+    ${callingCard()}
+    <p class="intro-lead">第一次來？跟著碳寶走<b>新手路線</b>：五座島各看 4 條必看線索，找證物、審問嫌犯，大約 20 分鐘就能看懂碳盤查、碳足跡、碳減量、碳抵換到碳中和是怎麼一路接起來的。</p>
+    <div class="btns"><button type="button" class="btn primary" data-go="start">接下案子，出發！</button><button type="button" class="btn" data-go="case">先看任務簿</button></div>` : `<h2>五座島</h2>
+    <p class="secret-cta"><span>✉ 怪盜變變的案子還在查。已逮捕 <b data-case-count>${caught.size}/${SUSPECTS.length}</b>・祕境 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn primary" data-go="case">打開任務簿</button></p>`}
+    <h3>五個步驟怎麼接起來</h3>
+    ${flowHTML()}
+    <h3>碳寶製衣的案情進度表</h3>
+    <p class="how">一間虛構的 T 恤工廠，跟著你走完五座島。每破一座島，就揭開一格。</p>
+    ${meterHTML()}
+    <h3>五座島</h3>
     <div class="isles">${cards}</div>
-    <h3>五案對照</h3>
+    <details class="adv"><summary>進階：五案對照表</summary>
     <div class="tablewrap"><table class="cmp wide">
       <thead><tr><th scope="col"><span hidden>項目</span></th><th scope="col">碳盤查</th><th scope="col">碳足跡</th><th scope="col">碳減量</th><th scope="col">碳抵換</th><th scope="col">碳中和</th></tr></thead>
       <tbody>
@@ -1429,12 +1688,12 @@ function homeHTML(){
         <tr><th scope="row">結果</th><td>公噸 CO₂e／年</td><td>kg CO₂e／功能單位</td><td>減量比例與公噸數</td><td>註銷的額度公噸數</td><td>淨排放 0 公噸 CO₂e</td></tr>
         <tr><th scope="row">用在哪</th><td>盤查登錄、碳費、永續報告書</td><td>碳足跡標籤、產品比較</td><td>減量目標、碳費優惠、淨零宣告</td><td>扣抵碳費、增量抵換、碳中和宣告</td><td>組織、產品或活動的碳中和宣告</td></tr>
       </tbody>
-    </table></div>
-    <p class="fine">法規與係數資料更新至 2026 年 10 月；實際申報請以主管機關最新公告為準。</p>`;
+    </table></div></details>
+    <p class="fine">法規與係數資料整理至 ${DATA_DATE}；實際申報請以主管機關最新公告為準。</p>`;
 }
 
-function stationsHTML(k){
-  return ORDER[k].map((id,i) => { const h = byId[id]; return `<li><button type="button" data-hex="${id}"><span class="num" style="--c:${h.c};color:${inkFor(h.c)}">${i+1}</span><span><b>${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button></li>`; }).join('');
+function stationsHTML(k, ids = ORDER[k]){
+  return ids.map(id => { const h = byId[id], i = ORDER[k].indexOf(id); return `<li><button type="button" data-hex="${id}"><span class="num" style="--c:${h.c};color:${inkFor(h.c)}">${i+1}</span><span><b>${isMust(id) ? '<i class="must-star" aria-label="必看">★</i>' : ''}${esc(h.short)}</b><small>${esc(h.tag)}${TW_CLUES.includes(id) ? '・台灣現況' : ''}</small></span></button></li>`; }).join('');
 }
 function isleHTML(k){
   const I = ISLES[k];
@@ -1443,26 +1702,31 @@ function isleHTML(k){
     <h2>${I.q}</h2>
     <p class="owner-line" style="--isle:var(--${k})">島主：<b>${I.owner}</b></p>
     ${suspectById[k] ? missionHTML(k) : ''}
+    ${storyHTML(k)}
 
     <p class="isle-meta">${I.std}</p>
     <p class="lead" style="margin-top:10px">${I.intro}</p>
-    <p class="isle-shape">${I.shape}</p>
+    <p class="isle-shape">${I.shape}</p>${ISLE_TIP[k] ? `<p class="isle-shape"><b>注意：</b>${ISLE_TIP[k]}</p>` : ''}
     <p class="isle-fac">島上設施：<b>${I.facilities.join('・')}</b></p>
     <p class="isle-fac">永續行動：<b>${I.eco.join('・')}</b></p>
     ${suspectById[k] ? '' : `<div class="btns"><button type="button" class="btn primary" data-go="tour:${k}">開始調查</button></div>`}
-    <h3>${ORDER[k].length} 條線索</h3>
-    <ol class="stations">${stationsHTML(k)}</ol>`;
+    ${route === 'basic' && BASIC[k] ? `<h3>必看線索・${BASIC[k].length} 條</h3>
+    <ol class="stations">${stationsHTML(k, routeOrder(k))}</ol>
+    <details class="adv"><summary>進階線索（${ORDER[k].length - BASIC[k].length} 條）</summary><ol class="stations">${stationsHTML(k, ORDER[k].filter(id => !isMust(id)))}</ol></details>` : `<h3>${ORDER[k].length} 條線索</h3>
+    <ol class="stations">${stationsHTML(k)}</ol>`}`;
 }
 
 function hexHTML(h){
-  const I = ISLES[h.isle], order = ORDER[h.isle], i = order.indexOf(h.id);
+  const I = ISLES[h.isle], order = ORDER[h.isle], i = order.indexOf(h.id), nav = navOrder(h), ni = nav.indexOf(h.id), must = isMust(h.id);
   const sus = suspectById[h.isle], secs = isleSecrets(h.isle);
+  const station = route === 'basic' && BASIC[h.isle] ? (must ? `必看 ${ni+1}／${nav.length}・全島第 ${i+1} 條` : `進階・全島第 ${i+1} 條`) : `第 ${i+1}／${order.length} 條線索${must ? '・必看' : ''}`;
+  const tw = TW_BITS[h.id] || {}, twItems = (h.items || []).filter(([b]) => (tw.items || []).includes(b)), mainItems = (h.items || []).filter(([b]) => !(tw.items || []).includes(b));
   const mbar = sus ? `<button type="button" class="mbar" data-go="isle:${h.isle}"><span class="m-tag">任務</span><span>抓到 <b>${esc(suspectLabel(sus))}</b>${caught.has(h.isle) ? '（已逮捕）' : ''}</span><span>證物 ${evFound.has(h.isle) ? '✓' : '？'}</span><span>祕境 ${secs.filter(x => found.has(x.id)).length}/${secs.length}</span></button>` : '';
-  let s = `<nav class="crumb" aria-label="位置"><button type="button" data-go="isle:${h.isle}">${I.name}</button><span aria-hidden="true">›</span><span>${esc(h.tag)}</span><span class="station">第 ${i+1}／${order.length} 條線索</span></nav>
-    ${mbar}
-    <h2>${esc(h.title)}</h2><p class="lead">${esc(h.lead)}</p>${tourEvent(h, i)}`;
+  let s = `<nav class="crumb" aria-label="位置"><button type="button" data-go="isle:${h.isle}">${I.name}</button><span aria-hidden="true">›</span><span>${esc(h.tag)}</span><span class="station">${station}</span></nav>
+    ${mbar}${TW_CLUES.includes(h.id) ? `<p class="tw-badge">台灣現況・資料整理至 ${DATA_DATE}</p>` : ''}
+    <h2>${esc(h.title)}</h2>${GIST[h.id] ? `<p class="gist">${esc(GIST[h.id])}</p>` : ''}<p class="lead">${esc(h.lead)}</p>${h.id === 'inv-c1' ? scope3HTML() : h.id === 'cfp-raw' ? lifeHTML() : ''}${tourEvent(h, ni, nav)}`;
   const how = (h.formula || h.how) ? `<h3>怎麼算</h3>${h.formula ? `<p class="formula">${esc(h.formula)}</p>` : ''}${h.how ? `<p class="how">${esc(h.how)}</p>` : ''}` : '';
-  const items = h.items ? `<h3>${esc(h.itemsTitle || '重點')}</h3><ul class="items" style="--c:${h.c}">${h.items.map(([b,t]) => `<li><div><b>${esc(b)}</b><span>${esc(t)}</span></div></li>`).join('')}</ul>` : '';
+  const items = mainItems.length ? `<h3>${esc(h.itemsTitle || '重點')}</h3><ul class="items" style="--c:${h.c}">${mainItems.map(([b,t]) => `<li><div><b>${esc(b)}</b><span>${esc(t)}</span></div></li>`).join('')}</ul>` : '';
   s += h.first ? how + items : items + how;
   if (h.table) s += `<h3>17 項對照</h3><div class="tablewrap"><table class="cmp scope-table"><thead><tr><th scope="col">範疇／類別</th><th scope="col">碳足跡</th><th scope="col">算在哪裡</th></tr></thead><tbody>${h.table.map(([n,st,w]) => `<tr><th scope="row">${esc(n)}</th><td><span class="st ${st === '計入' ? 'in' : st === '視情況' ? 'maybe' : 'out'}">${esc(st)}</span></td><td>${esc(w)}</td></tr>`).join('')}</tbody></table></div>`;
   if (h.iso) s += `<h3>ISO 14064-1 對應</h3><div class="chips"><span class="chip">${esc(h.iso)}</span></div>`;
@@ -1483,17 +1747,45 @@ function hexHTML(h){
       <output class="calc-out" id="calcOut" for="calcAct calcEf"></output>
       <p class="fine">電力排碳係數已含 GWP 換算。正式盤查請使用環境部公告的係數管理表與能源署公告值。</p>
     </div>`;
-  if (h.note) s += `<aside class="note"><h3>${esc(h.noteTitle || '補充')}</h3><p>${esc(h.note)}</p></aside>`;
+  if (h.note && !tw.note) s += `<aside class="note"><h3>${esc(h.noteTitle || '補充')}</h3><p>${esc(h.note)}</p></aside>`;
+  if (twItems.length || (h.note && tw.note)) s += `<details class="tw"><summary>台灣現況與法規細節（進階）</summary>${twItems.length ? `<ul class="items" style="--c:${h.c}">${twItems.map(([b,t]) => `<li><div><b>${esc(b)}</b><span>${esc(t)}</span></div></li>`).join('')}</ul>` : ''}${h.note && tw.note ? `<p class="how" style="margin-top:8px">${esc(h.note)}</p>` : ''}<p class="fine">資料整理至 ${DATA_DATE}，實際規定以主管機關最新公告為準。</p></details>`;
   const ls = LINKS.filter(L => L.a === h.id || L.b === h.id);
   if (ls.length) s += `<h3>紅線連到哪裡</h3><div class="linkrow">${ls.map(L => { const o = byId[L.a === h.id ? L.b : L.a]; return `<button type="button" class="linkbtn" data-hex="${o.id}"><i aria-hidden="true"></i><span><b>${ISLES[o.isle].name}・${esc(o.short)}</b><small>${esc(L.text)}</small></span></button>`; }).join('')}</div>`;
-  const prev = i > 0 ? `<button type="button" class="btn" data-hex="${order[i-1]}">‹ ${esc(byId[order[i-1]].short)}</button>` : `<button type="button" class="btn" data-go="isle:${h.isle}">‹ ${I.name} CASE FILE</button>`;
+  const prev = ni > 0 ? `<button type="button" class="btn" data-hex="${nav[ni-1]}">‹ ${esc(byId[nav[ni-1]].short)}</button>` : `<button type="button" class="btn" data-go="isle:${h.isle}">‹ ${I.name} CASE FILE</button>`;
   let next;
-  if (i < order.length - 1) next = `<button type="button" class="btn primary" data-hex="${order[i+1]}">${esc(byId[order[i+1]].short)} ›</button>`;
-  else { const nk = KEYS[KEYS.indexOf(h.isle) + 1], free = sus && !caught.has(sus.id), cls = free ? 'btn' : 'btn primary'; next = nk ? `<button type="button" class="${cls}" data-hex="${ORDER[nk][0]}">下一座島：${ISLES[nk].name} ›</button>` : `<button type="button" class="${cls}" data-go="home">五座島都走完了，回全覽 ›</button>`; }
+  if (ni < nav.length - 1) next = `<button type="button" class="btn primary" data-hex="${nav[ni+1]}">${esc(byId[nav[ni+1]].short)} ›</button>`;
+  else { const nk = KEYS[KEYS.indexOf(h.isle) + 1], free = sus && !caught.has(sus.id), cls = free ? 'btn' : 'btn primary'; next = nk ? `<button type="button" class="${cls}" data-hex="${routeOrder(nk)[0]}">下一座島：${ISLES[nk].name} ›</button>` : `<button type="button" class="${cls}" data-go="home">五座島都走完了，回全覽 ›</button>`; }
   s += `<div class="navrow">${prev}${next}</div>`;
   return s;
 }
 
+function scope3HTML(){
+  const col = (t, list) => `<div><p>${t}</p><ul>${list.map(([c, d]) => `<li><b>${c}</b>${esc(d)}</li>`).join('')}</ul></div>`;
+  return `<aside class="story" style="--isle:var(--inv)"><p class="st-t">範疇三一次看懂</p><p>範疇三分成 15 類，記住一個原則就好：<b>買進來之前</b>的算上游，<b>賣出去之後</b>的算下游。不是每一類都跟每家公司有關，先找出最大的幾類就好。碳寶製衣最大的是買棉布（C1）、貨運（C4、C9）和員工通勤（C7）。</p>
+    <div class="scope3">${col('上游・8 類', SCOPE3.up)}${col('下游・7 類', SCOPE3.down)}</div></aside>`;
+}
+function lifeHTML(){
+  const max = Math.max(...LIFE.map(x => x[1])), tot = LIFE.reduce((a, x) => a + x[1], 0);
+  return `<aside class="story" style="--isle:var(--cfp)"><p class="st-t">一件 T 恤的一生（碳寶製衣・示意數字）</p>
+    <div class="life">${LIFE.map(([n, v, d]) => `<div><b>${n}</b><span><i style="width:${Math.round(v/max*100)}%"></i><small>${esc(d)}</small></span><span>${v.toFixed(1)} 公斤</span></div>`).join('')}</div>
+    <p class="st-fig">合計約 <b>${tot.toFixed(1)}</b> 公斤 CO₂e。熱點在原料和使用。</p>
+    <p class="fine">數字是虛構的示意；真實的 T 恤碳足跡會因棉花產地、洗衣習慣而差很多。</p></aside>`;
+}
+const storyHTML = k => STORY[k] ? `<aside class="story" style="--isle:var(--${k})"><p class="st-t">案例・碳寶製衣（${STORY[k].step}篇）</p><p>${esc(STORY[k].text)}</p><p class="st-fig">${STORY[k].unit}：<b>${STORY[k].fig}</b></p></aside>` : '';
+const meterHTML = () => `<div class="meter">${KEYS.map(k => { const st = STORY[k], got = caught.has(k); return `<div class="mt${got ? ' got' : ''}" style="--isle:var(--${k})"><small>${LETTER[k]}・${st.short}</small><b>${got ? st.m : '？'}</b><span>${got ? st.mu : '未破案'}</span></div>`; }).join('')}</div>`;
+const flowHTML = () => {
+  const box = (k, t, d) => `<button type="button" class="fl-box" data-go="isle:${k}" style="--isle:var(--${k})"><b>${LETTER[k]}・${t}</b><small>${d}</small></button>`;
+  return `<div class="flow">
+    <div class="fl-row"><span class="fl-n">① 先量</span><div class="fl-pair">${box('inv', '碳盤查', '整個組織一年排多少')}<span class="fl-or">或</span>${box('cfp', '碳足跡', '一個產品一生排多少')}</div></div>
+    <div class="fl-down" aria-hidden="true">↓</div>
+    <div class="fl-row"><span class="fl-n">② 再減</span>${box('rdc', '碳減量', '訂目標，一步一步減下來')}</div>
+    <div class="fl-down" aria-hidden="true">↓</div>
+    <div class="fl-row"><span class="fl-n">③ 才抵</span>${box('ofs', '碳抵換', '減不掉的，才買高品質額度抵掉')}</div>
+    <div class="fl-down" aria-hidden="true">↓</div>
+    <div class="fl-row"><span class="fl-n">④ 宣告</span>${box('neu', '碳中和', '某段期間的淨排放為 0')}</div>
+  </div>
+  <p class="fine">盤查和碳足跡是兩種量法，可以只做一種，也可以兩種都做；遊戲照 A 到 E 走，是為了方便一路看下來。</p>`;
+};
 function look(btn){
   const key = btn.dataset.look, [what, id] = key.split(':'); interacted(); closeList();
   if (what === 'secret'){ if (found.has(id)) return showSecret(id); bridge.focusSecret(id, false, false); }
@@ -1518,18 +1810,18 @@ function showIsle(k){ closeList(); state.view='isle'; state.hex=null; state.isle
 function showHex(id){
   const h = byId[id]; if (!h) return;
   closeList(); state.view='hex'; state.hex=id; state.isle=h.isle; setModes(h.isle);
-  const o = ORDER[h.isle], n = o.indexOf(id);
+  const o = navOrder(h), n = o.indexOf(id), full = ORDER[h.isle].indexOf(id);
   const sus = suspectById[h.isle], first = !visited.has(id); visited.add(id); state.lastHex = id;
   if (first && sus && sus.clue && sus.clue[id] && !caught.has(sus.id)) bridge.taunt(sus.id, sus.taunt);
-  openPanel(hexHTML(h), `CASE FILE ─ ${ISLES[h.isle].name}・第 ${n+1} 條線索`, n === o.length - 1 ? (!sus || caught.has(sus.id) ? '破案！' : '未破案') : sus && sus.clue && sus.clue[id] && !caught.has(sus.id) ? '關鍵！' : ''); if (h.calc) calcUpdate();
+  openPanel(hexHTML(h), `CASE FILE ─ ${ISLES[h.isle].name}・第 ${full+1} 條線索`, n === o.length - 1 ? (!sus || caught.has(sus.id) ? '破案！' : '未破案') : sus && sus.clue && sus.clue[id] && !caught.has(sus.id) ? '關鍵！' : ''); if (h.calc) calcUpdate();
   bridge.focusHex(id); interacted();
 }
 function closePanel(){ panel.hidden = true; state.view='none'; state.hex=null; setModes(''); bridge.clear(); }
 function step(d){
   const h = byId[state.hex]; if (!h) return;
-  const o = ORDER[h.isle], i = o.indexOf(h.id) + d;
+  const o = navOrder(h), i = o.indexOf(h.id) + d;
   if (i >= 0 && i < o.length) showHex(o[i]);
-  else if (i >= o.length) { const nk = KEYS[KEYS.indexOf(h.isle) + 1]; if (nk) showHex(ORDER[nk][0]); else showHome(); }
+  else if (i >= o.length) { const nk = KEYS[KEYS.indexOf(h.isle) + 1]; if (nk) showHex(routeOrder(nk)[0]); else showHome(); }
   else showIsle(h.isle);
 }
 function interacted(){ if (state.interacted) return; state.interacted = true; const hint = $('#hint'); if (hint) hint.hidden = true; document.dispatchEvent(new CustomEvent('isle:interacted')); }
@@ -1538,17 +1830,19 @@ let listPrevMode = 'home';
 function bookHTML(){
   const all = caught.size === SUSPECTS.length, fresh = !caught.size && !visited.size && !evFound.size;
   const isles = SUSPECTS.map(sus => {
-    const k = sus.id, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length, seen = ORDER[k].filter(id => visited.has(id)).length, got = caught.has(k), known = got || evFound.has(k);
+    const k = sus.id, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length, seen = routeOrder(k).filter(id => visited.has(id)).length, got = caught.has(k), known = got || evFound.has(k);
     const act = got ? `<button type="button" class="go-btn" data-case="file:${k}">看筆錄 ›</button>` : `<button type="button" class="go-btn" data-go="isle:${k}">${seen || evFound.has(k) ? '繼續任務' : '出任務'} ›</button>`;
     return `<li class="suspect${known ? '' : ' unknown'}" style="--isle:var(--${k})">
       <b class="sn">${ISLES[k].name}</b>${got ? '<span class="caught-stamp">已逮捕</span>' : ''}
       <small>嫌犯：${known ? `${esc(sus.name)}・${esc(sus.title)}` : (sus.boss ? '幕後主使' : '？？？')}</small>
-      <small>線索 ${seen}/${ORDER[k].length}・證物 ${evFound.has(k) ? '✓' : '？'}・祕境 ${sf}/${secs.length}</small>
+      <small>${route === 'basic' ? '必看' : '線索'} ${seen}/${routeOrder(k).length}・證物 ${evFound.has(k) ? '✓' : '？'}・祕境 ${sf}/${secs.length}</small>
       ${sus.boss && !got && !crewDone() ? '<p class="muted" style="font-size:13px">四個手下抓齊之前，他一碰就變色溜走。</p>' : ''}${act}</li>`;
   }).join('');
   return `
     <details class="book-letter"${fresh ? ' open' : ''}><summary>怪盜變變的預告函</summary>${callingCard()}</details>
     <p class="book-prog">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}・祕境 <b>${foundCount()}</b> / ${SECRETS.length}${all ? '・全部到案！' : ''}</p>
+    ${meterHTML()}
+    ${routeSwitch()}
     <h3 class="book-h">五座島的任務</h3>
     <ul class="wanted book-isles">${isles}</ul>
     ${all ? '<div class="btns"><button type="button" class="btn primary" data-case="end">看結案報告 ›</button></div>' : ''}
@@ -1563,7 +1857,7 @@ function buildList(q = ''){
       const hay = [h.short,h.title,h.tag,h.lead,h.note||'',h.formula||'',h.how||'',h.iso||'',(h.scopes||[]).join(' '),(h.cuts||[]).join(' '),(h.table||[]).flat().join(' '),(h.items||[]).flat().join(' ')].join(' ').toLowerCase();
       if (term && !hay.includes(term)) return '';
       hits++;
-      return `<li><button type="button" data-hex="${id}"><span class="num" style="--c:${h.c};color:${inkFor(h.c)}">${i+1}</span><span><b>${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button></li>`;
+      return `<li><button type="button" data-hex="${id}"><span class="num" style="--c:${h.c};color:${inkFor(h.c)}">${i+1}</span><span><b>${isMust(id) ? '<i class="must-star" aria-label="必看">★</i>' : ''}${esc(h.short)}</b><small>${esc(h.tag)}${TW_CLUES.includes(id) ? '・台灣現況' : ''}</small></span></button></li>`;
     }).join('');
     return rows ? `<section style="--isle:var(--${k})"><h3>${ISLES[k].name}</h3><ol>${rows}</ol></section>` : '';
   }).join('');
@@ -1578,6 +1872,9 @@ function openList(){
 function closeList(){ if (state.no3d || list.hidden) return; list.hidden = true; setModes(listPrevMode); }
 
 body.addEventListener('click', e => {
+  const tm = e.target.closest('.term'); if (tm) return showTerm(tm);
+  const rt = e.target.closest('[data-route]'); if (rt) return setRoute(rt.dataset.route);
+  const an = e.target.closest('[data-ans]'); if (an){ const [k, n] = an.dataset.ans.split(':'); return answer(k, +n); }
   const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-case],[data-look]'); if (!t) return;
   if (t.dataset.look) return look(t);
   if (t.dataset.case) return caseGo(t.dataset.case);
@@ -1586,6 +1883,7 @@ body.addEventListener('click', e => {
   const g = t.dataset.go;
   if (g === 'home') showHome();
   else if (g === 'secrets' || g === 'case') openList();
+  else if (g === 'start') showHex(routeOrder('inv')[0]);
   else if (g.startsWith('isle:')) showIsle(g.slice(5));
   else if (g.startsWith('tour:')) showHex(ORDER[g.slice(5)][0]);
 });
@@ -1599,6 +1897,8 @@ document.querySelector('.modes').addEventListener('click', e => {
 });
 $('#listCols').addEventListener('click', e => { const b = e.target.closest('[data-hex]'); if (b) showHex(b.dataset.hex); });
 $('#listCase').addEventListener('click', e => {
+  const r = e.target.closest('[data-route]'); if (r) return setRoute(r.dataset.route);
+  const tm = e.target.closest('.term'); if (tm) return showTerm(tm);
   const b = e.target.closest('[data-go],[data-case]'); if (!b) return;
   if (b.dataset.case) return caseGo(b.dataset.case);
   const g = b.dataset.go; if (g.startsWith('isle:')) showIsle(g.slice(5));
@@ -1638,6 +1938,7 @@ window.UI = {
     if (state.view === 'home') panel.hidden = true;
   },
   ready3d(){
+    bridge.setRoute(route);
     $('#loader').hidden = true;
     if (state.no3d) { state.no3d = false; document.getElementById('app').classList.remove('no3d'); $('#listNote').hidden = true; list.hidden = true; }
     if (state.view === 'hex') bridge.focusHex(state.hex, true);
@@ -2992,7 +3293,7 @@ D.KEYS.forEach((key, ki) => {
     for (const [type, x=0, z=0, rot=0, sc=1, arg] of h.build){ const fn = BUILD[type]; if (!fn) continue; const b = arg === undefined ? fn() : Array.isArray(arg) ? fn(...arg) : fn(arg); b.position.set(x, TOP, z); b.rotation.y = rot; b.scale.multiplyScalar(sc); tile.add(b); }
     tile.traverse(o => { if (o.isMesh){ o.userData.hex = h.id; pickables.push(o); } });
     const wrap = document.createElement('div'); wrap.className = 'tagwrap';
-    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'tag'; btn.style.setProperty('--c', h.c);
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'tag' + (D.BASIC && D.BASIC[key] ? (D.BASIC[key].includes(h.id) ? ' must' : ' adv') : ''); btn.style.setProperty('--c', h.c);
     const num = D.ORDER[key].indexOf(h.id) + 1;
     btn.innerHTML = `<i aria-hidden="true"></i><b>${num}</b><span>${h.short}</span>`; btn.setAttribute('aria-label', `${num}. ${h.short}`); btn.title = h.short;
     btn.addEventListener('click', e => { e.stopPropagation(); UI.showHex(h.id); });
@@ -3985,6 +4286,7 @@ bridge.caseReset = () => { for (const id in caseObjs) bridge.caseSync(id, { foun
 bridge.taunt = (id, text) => { const C = caseObjs[id]; if (!C) return; C.tt.textContent = text; C.tt.classList.add('show'); C.tauntUntil = performance.now() + 3400; };
 bridge.clear = () => { focus = { type:'none' }; selectTile(null); if (measure()){ setLand(true); measure(); frameAll(false); } };
 bridge.setTags = on => labelsEl.classList.toggle('no-tags', !on);
+bridge.setRoute = r => labelsEl.classList.toggle('basic', r === 'basic');
 bridge.setLinks = on => { showLinks = on; };
 bridge.relayout = () => { if (!bridge.ready) return; if (measure()){ if (focus.type === 'none'){ setLand(true); measure(); frameAll(false); } else refocus(false); } };
 controls.addEventListener('start', () => { tween = null; UI.interacted(); });
