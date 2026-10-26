@@ -1714,6 +1714,14 @@ function makeTile(sideColor, key, seed, elev = 0){
 }
 const shallowMat = new THREE.MeshStandardMaterial({ color:'#3CC3DA', roughness:0.5 });
 const foamMat = new THREE.MeshStandardMaterial({ color:'#F5FBFF', roughness:0.7 });
+const seaU = { uTime:{ value:0 }, uCrest:{ value:new THREE.Color('#F5FBFF') }, uCrestAmt:{ value:0.55 } };
+foamMat.onBeforeCompile = sh => {
+  sh.uniforms.uTime = seaU.uTime;
+  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec2 vSurf;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvec4 sw4 = vec4(transformed, 1.0);\n#ifdef USE_INSTANCING\nsw4 = instanceMatrix*sw4;\n#endif\nvSurf = (modelMatrix*sw4).xz;');
+  sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform float uTime; varying vec2 vSurf;')
+    .replace('vec4 diffuseColor = vec4( diffuse, opacity );', 'vec4 diffuseColor = vec4( diffuse, opacity );\ndiffuseColor.rgb *= 0.9 + 0.1*(0.5 + 0.5*sin(dot(vSurf, vec2(1.1, 0.8)) - uTime*1.4));');
+};
 const foamGeo = new THREE.RingGeometry(0.88, 1.3, 40).rotateX(-Math.PI/2), shalGeo = new THREE.CircleGeometry(1, 40).rotateX(-Math.PI/2);
 const shelfGeo = new THREE.CylinderGeometry(0.95, 1.15, 0.5, 7);
 const shores = [], m4 = new THREE.Matrix4();
@@ -2581,6 +2589,41 @@ D.KEYS.forEach((key, ki) => {
 
 const waterGeo = new THREE.PlaneGeometry(560, 560, 40, 40); waterGeo.rotateX(-Math.PI/2);
 const waterMat = new THREE.MeshStandardMaterial({ color:'#1E6FD6', roughness:0.6, metalness:0 });
+waterMat.onBeforeCompile = sh => {
+  Object.assign(sh.uniforms, seaU);
+  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vSea;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvSea = (modelMatrix*vec4(transformed, 1.0)).xyz;');
+  sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
+    uniform float uTime; uniform vec3 uCrest; uniform float uCrestAmt; varying vec3 vSea;
+    float sh1(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7)))*43758.5453); }
+    float crests(vec2 p, float t, float aa){
+      vec2 wind = normalize(vec2(0.3, 1.0)), side = vec2(-wind.y, wind.x);
+      float cs = 3.4, acc = 0.0; vec2 cell = floor(p/cs);
+      for (int j = -1; j <= 1; j++) for (int i = -1; i <= 1; i++){
+        vec2 c = cell + vec2(float(i), float(j));
+        float r1 = sh1(c), r2 = sh1(c + 19.19), r3 = sh1(c + 7.7);
+        float life = fract(t/9.0 + r3);
+        vec2 d = p - ((c + 0.2 + 0.6*vec2(r1, r2))*cs + wind*(life - 0.5)*1.4);
+        float qx = dot(d, side), qy = dot(d, wind), hl = 0.38 + 0.32*r1, u = clamp(qx/hl, -1.0, 1.0);
+        float dist = length(vec2(max(abs(qx) - hl, 0.0), qy - 0.2*qx*qx/hl));
+        float th = 0.07*(1.0 - 0.7*u*u);
+        acc = max(acc, (1.0 - smoothstep(th - aa, th + aa, dist))*pow(sin(3.14159*life), 1.5)*(0.6 + 0.4*r2));
+      }
+      return acc;
+    }`)
+    .replace('vec4 diffuseColor = vec4( diffuse, opacity );', `vec4 diffuseColor = vec4( diffuse, opacity );
+    {
+      vec2 p = vSea.xz; float aa = max(length(fwidth(p))*0.7, 0.002);
+      float sw = sin(dot(p, vec2(0.16, 0.06)) - uTime*0.7)*0.6 + sin(dot(p, vec2(-0.05, 0.19)) + uTime*0.5)*0.4;
+      diffuseColor.rgb *= 1.0 + sw*0.06;
+      float vis = smoothstep(0.5, 1.6, 0.07/aa);
+      diffuseColor.rgb = mix(diffuseColor.rgb, uCrest, crests(p, uTime, aa)*uCrestAmt*vis);
+    }`)
+    .replace('#include <normal_fragment_begin>', `#include <normal_fragment_begin>
+    { vec2 gp = vSea.xz; vec2 g = vec2(sin(gp.x*0.8 + uTime*1.0 + sin(gp.y*0.55)), sin(gp.y*0.7 - uTime*0.8 + sin(gp.x*0.45)));
+      normal = normalize(normal + (viewMatrix*vec4(g.x*0.07, 0.0, g.y*0.07, 0.0)).xyz); }`)
+    .replace('#include <dithering_fragment>', '#include <dithering_fragment>\ngl_FragColor.a = 0.0;');
+};
 const water = new THREE.Mesh(waterGeo, waterMat); water.position.y = -0.06; water.frustumCulled = false; scene.add(water);
 
 const mountainMat = new THREE.MeshStandardMaterial({ color:'#4A9A55', flatShading:true, roughness:1 });
@@ -2715,12 +2758,12 @@ const bowMat = new THREE.ShaderMaterial({ uniforms:{ op:{ value:0.3 }, r0:{ valu
       gl_FragColor = vec4(hue(0.78*(1.0 - t)), a); }` });
 const rainbow = new THREE.Mesh(new THREE.RingGeometry(84, 96, 120, 1, 0, Math.PI), bowMat); rainbow.position.copy(azDir(BOW_AZ, 300, -8)); rainbow.frustumCulled = false; scene.add(rainbow);
 
-const farBirdMat = new THREE.MeshBasicMaterial({ color:'#2C3846', side:THREE.DoubleSide });
+const farBirdMat = new THREE.MeshBasicMaterial({ color:'#2C3846', side:THREE.DoubleSide, fog:false });
 const flocks = [];
 function farBird(){ const g = new THREE.Group(), L = new THREE.Group(), Rw = new THREE.Group(); g.add(L, Rw); const wing = s => { const w = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.05, 0.22), farBirdMat); w.position.x = s*0.45; return w; }; L.add(wing(-1)); Rw.add(wing(1)); g.add(new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.08, 0.36), farBirdMat)); g.userData.w = [L, Rw]; return g; }
-for (const [R, hgt, sp, n, ph] of [[64, 24, 0.035, 7, 0.4], [108, 34, -0.025, 9, 2.6], [150, 42, 0.02, 5, 4.4]]){
+for (const [R, hgt, sp, n, ph] of [[175, 34, 0.03, 7, 0.4], [215, 46, -0.022, 9, 2.6], [250, 56, 0.018, 5, 4.4]]){
   const f = new THREE.Group(); scene.add(f); const birds = [];
-  for (let i = 0; i < n; i++){ const b = farBird(), k = Math.ceil(i/2), s = i % 2 ? 1 : -1; b.position.set(s*k*2.2, (hash(i, n, 1, 1) - 0.5)*0.8, -k*2.4); b.scale.setScalar(1.7); f.add(b); birds.push(b); }
+  for (let i = 0; i < n; i++){ const b = farBird(), k = Math.ceil(i/2), s = i % 2 ? 1 : -1; b.position.set(s*k*3.4, (hash(i, n, 1, 1) - 0.5)*1.2, -k*3.6); b.scale.setScalar(2.6); f.add(b); birds.push(b); }
   flocks.push({ f, birds, R, hgt, sp, ph });
 }
 const farShipMat = new THREE.MeshBasicMaterial({ color:'#4C5C72' });
@@ -2762,8 +2805,8 @@ function updateSky(t){
   const face = o => Math.atan2(camera.position.x - o.position.x, camera.position.z - o.position.z);
   rays.forEach(r => { r.rotation.y = face(r); r.rotation.z = r.userData.tilt; r.material.opacity = (r.userData.op ?? 0.2)*r.userData.k*(0.75 + 0.25*Math.sin(tt*0.35 + r.userData.ph)); });
   rainbow.rotation.y = face(rainbow);
-  flocks.forEach(({ f, birds, R, hgt, sp, ph }) => { const a = tt*sp + ph; f.position.set(Math.sin(a)*R, hgt + Math.sin(tt*0.3 + ph)*1.5, -Math.cos(a)*R); f.rotation.y = Math.atan2(Math.cos(a)*Math.sign(sp), Math.sin(a)*Math.sign(sp)); birds.forEach((b, i) => { const fl = reduceMotion ? 0.25 : Math.sin(tt*5 + i*0.7 + ph)*0.5; b.userData.w[0].rotation.z = -fl; b.userData.w[1].rotation.z = fl; }); });
-  farShips.forEach(({ s, a0, R, ph }) => { const a = a0 + Math.sin(tt*0.012 + ph)*0.12; s.position.set(Math.sin(a)*R, 0, -Math.cos(a)*R); s.rotation.y = -a + (Math.cos(tt*0.012 + ph) > 0 ? 0 : Math.PI); });
+  flocks.forEach(({ f, birds, R, hgt, sp, ph }) => { const a = tt*sp + ph; f.position.set(camera.position.x + Math.sin(a)*R*s, hgt + Math.sin(tt*0.3 + ph)*1.5, camera.position.z - Math.cos(a)*R*s); f.rotation.y = Math.atan2(Math.cos(a)*Math.sign(sp), Math.sin(a)*Math.sign(sp)); birds.forEach((b, i) => { const fl = reduceMotion ? 0.25 : Math.sin(tt*5 + i*0.7 + ph)*0.5; b.userData.w[0].rotation.z = -fl; b.userData.w[1].rotation.z = fl; }); });
+  const sc = s; farShips.forEach(({ s, a0, R, ph }) => { const a = a0 + Math.sin(tt*0.012 + ph)*0.12; s.position.set(camera.position.x + Math.sin(a)*R*sc, 0, camera.position.z - Math.cos(a)*R*sc); s.rotation.y = -a + (Math.cos(tt*0.012 + ph) > 0 ? 0 : Math.PI); });
   wisps.forEach(({ s, x0, ph }) => { s.position.x = x0 + Math.sin(tt*0.03 + ph)*8; });
 }
 
@@ -2824,7 +2867,7 @@ function isDark(){ const a = document.documentElement.getAttribute('data-theme')
 function applyTheme(){
   theme = isDark() ? THEMES.night : THEMES.day;
   scene.background = new THREE.Color(theme.sky); scene.fog.color.set(theme.sky);
-  waterMat.color.set(theme.water); shallowMat.color.set(theme.shallow); foamMat.color.set(theme.foam); mountainMat.color.set(theme.mount); mountainMat2.color.set(theme.mount2);
+  waterMat.color.set(theme.water); seaU.uCrest.value.set(theme.stars ? '#7E97C2' : '#F2F9FF'); seaU.uCrestAmt.value = theme.stars ? 0.4 : 0.5; shallowMat.color.set(theme.shallow); foamMat.color.set(theme.foam); mountainMat.color.set(theme.mount); mountainMat2.color.set(theme.mount2);
   hemi.color.set(theme.hs); hemi.groundColor.set(theme.hg); hemi.intensity = theme.hi;
   sun.color.set(theme.sun); sun.intensity = theme.si; winMat.emissiveIntensity = theme.win; bulbMat.emissiveIntensity = theme.win ? 2.4 : 0.35;
   smokeMats.forEach(m => m.color.set(theme.smoke)); cloudMat.color.set(theme.cloud); cloudMat.emissiveIntensity = theme.cloudE; stars.visible = theme.stars; routeMat.color.set(theme.route); glintMat.opacity = theme.stars ? 0.3 : 0.75;
@@ -2857,7 +2900,7 @@ const bookMat = new THREE.ShaderMaterial({
       float edgeD = smoothstep(0.03, 0.08, dz);
       float gx = lum(texture2D(tColor, uv + dx).rgb) - lum(texture2D(tColor, uv - dx).rgb);
       float gy = lum(texture2D(tColor, uv + dy).rgb) - lum(texture2D(tColor, uv - dy).rgb);
-      float edgeC = smoothstep(0.08, 0.2, length(vec2(gx, gy)));
+      float edgeC = smoothstep(0.08, 0.2, length(vec2(gx, gy)))*texture2D(tColor, uv).a;
       float fade = 1.0 - smoothstep(fd.x, fd.y, z0);
       float ink = clamp(max(edgeD*0.9, edgeC*0.4)*fade, 0.0, 1.0);
       vec3 c = texture2D(tColor, vUv).rgb;
@@ -3016,7 +3059,7 @@ function addTurtle(cx, cz, i){
     g.position.set(cx + Math.cos(a)*R0, -0.04 + Math.sin(tt*1.1 + ph)*0.02, cz + Math.sin(a)*R0*0.8); g.rotation.y = headingOf(-Math.sin(a)*dir, Math.cos(a)*0.8*dir);
     for (const f of flips) f.pv.rotation.y = f.base + f.s*sw*f.amp; });
 }
-const SCHOOL = [['#0A3F86', 0.5], ['#D7ECFF', 0.55], ['#FFB347', 0.7], ['#0A3F86', 0.45], ['#7FE3FF', 0.6], ['#D7ECFF', 0.5], ['#0A3F86', 0.5]];
+const SCHOOL = [['#0A3F86', 0.5], ['#8FBDE8', 0.45], ['#FFB347', 0.7], ['#0A3F86', 0.45], ['#7FE3FF', 0.55], ['#8FBDE8', 0.42], ['#0A3F86', 0.5]];
 function addSchool(cx, cz, i){
   const [c, op] = SCHOOL[i % SCHOOL.length], n = 16 + (i % 3)*5, m = fadeMat(c, op); m.userData.op = op; sea.fishMats.push(m);
   const im = new THREE.InstancedMesh(fishGeo, m, n); im.frustumCulled = false; seaGroup.add(im);
@@ -3024,7 +3067,7 @@ function addSchool(cx, cz, i){
   const offs = Array.from({ length:n }, (_, k) => [(hash(k, i, 1, 2) - 0.5)*0.9, hash(k, i, 3, 4)*0.9, hash(k, i, 5, 6)*6.28]);
   sea.anim.push(t => { const tt = reduceMotion ? 0 : t;
     for (let k = 0; k < n; k++){ const [dr, lag, wp] = offs[k], a = tt*sp + ph - sg*lag, r = R0 + dr + Math.sin(tt*1.7 + wp)*0.07;
-      qA.setFromAxisAngle(Yaxis, headingOf(-Math.sin(a)*sg, Math.cos(a)*0.75*sg) + Math.sin(tt*9 + wp)*0.18);
+      qA.setFromAxisAngle(Yaxis, headingOf(-Math.sin(a)*sg, Math.cos(a)*0.75*sg) + Math.sin(tt*4 + wp)*0.12);
       m4.compose(pA.set(cx + Math.cos(a)*r, 0.014, cz + Math.sin(a)*r*0.75), qA, sA.set(sz, 1, sz)); im.setMatrixAt(k, m4); }
     im.instanceMatrix.needsUpdate = true; });
 }
@@ -3090,7 +3133,7 @@ function applySeaTheme(){
   facGlow.forEach(m => { m.emissiveIntensity = dark ? m.userData.base*2.5 + 0.5 : m.userData.base; }); facNight.forEach(o => { o.visible = dark; }); facHalos.forEach(m => { m.opacity = dark ? 0.75 : 0.25; });
   sea.dimMats.forEach(m => m.color.set(dark ? '#6F86A8' : '#FFFFFF'));
   sea.night.forEach(o => { o.visible = dark; });
-  sea.fishMats.forEach(m => { m.opacity = m.userData.op*(dark ? 0.55 : 1); });
+  sea.fishMats.forEach(m => { m.opacity = m.userData.op*(dark ? 0.4 : 1); });
   cloudShadeMat.opacity = dark ? 0.05 : 0.13; lowCloudMat.color.set(dark ? '#46557A' : '#FFFFFF'); lowCloudMat.emissiveIntensity = dark ? 0 : 0.35; lowCloudMat.opacity = dark ? 0.5 : 0.96; reefFishMat.opacity = dark ? 0.6 : 0.95;
   glintMat.color.set('#7FF6FF'); glints.visible = dark;
 }
@@ -3372,7 +3415,7 @@ function loop(){
   if (!reduceMotion){
     for (const em of emitters) for (const p of em.puffs){ const k = (t*0.28 + p.ph) % 1; p.m.position.set(em.x + k*0.16, em.y + k*0.9, em.z); p.m.scale.setScalar(0.8 + k*1.9); p.m.material.opacity = 0.62*(1 - k); }
     for (const c of clouds){ const u = c.userData; u.a += u.speed*dt; c.position.set(Math.cos(u.a)*u.d, u.y, Math.sin(u.a)*u.d); }
-    updateGlints(t);
+    updateGlints(t); seaU.uTime.value = t;
   }
   for (const f of animators) f(t, dt);
   for (const f of sea.anim) f(t, dt);
