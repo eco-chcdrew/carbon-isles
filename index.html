@@ -3076,7 +3076,7 @@ function lifeHTML(){
   return `<aside class="story" style="--isle:var(--cfp)"><p class="st-t">一件 T 恤的一生（碳寶製衣・示意數字）</p>
     <div class="life">${LIFE.map(([n, v, d]) => `<div><b>${n}</b><span><i style="width:${Math.round(v/max*100)}%"></i><small>${esc(d)}</small></span><span>${v.toFixed(1)} 公斤</span></div>`).join('')}</div>
     <p class="st-fig">合計約 <b>${tot.toFixed(1)}</b> 公斤 CO₂e。熱點在原料和使用。</p>
-    <p class="fine">數字是虛構的示意；真實的 T 恤碳足跡會因棉花產地、洗衣習慣而差很多。</p></aside>`;
+    <p class="fine">數字是示意；真實的 T 恤碳足跡會因棉花產地、洗衣習慣而差很多。</p></aside>`;
 }
 const storyHTML = k => STORY[k] ? `<aside class="story" style="--isle:var(--${k})"><p class="st-t">案例・碳寶製衣（${STORY[k].step}篇）</p><p>${esc(STORY[k].text)}</p><p class="st-fig">${STORY[k].unit}：<b>${STORY[k].fig}</b></p></aside>` : '';
 const meterHTML = () => `<div class="meter">${KEYS.map(k => { const st = STORY[k], got = caught.has(k); return `<div class="mt${got ? ' got' : ''}" style="--isle:var(--${k})"><small>${LETTER[k]}・${st.short}</small><b>${got ? st.m : '？'}</b><span>${got ? st.mu : '未破案'}</span></div>`; }).join('')}</div>`;
