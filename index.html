@@ -163,6 +163,27 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 .toggle.secret b{font-weight:400}
 .secret-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;margin:18px 0 0;padding:10px 12px;border:1.5px dashed var(--soft);border-radius:var(--wobble);font-size:14px;font-family:var(--f-hand)}
 .secret-cta b{font-weight:400;font-size:17px;color:var(--accent)}
+.toggle.case::before{background:#C7472F;border-color:#C7472F}
+.toggle.case b{font-weight:400}
+.ccard p{margin:0}
+.ccard p + p{margin-top:6px}
+.ccard .sign{text-align:right;margin-top:8px}
+.wanted{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+.suspect{position:relative;background:var(--card);border:1.5px solid var(--soft);border-left:4px solid var(--isle);border-radius:var(--wobble-2);padding:10px 14px 12px;box-shadow:2px 3px 0 var(--shade)}
+.suspect.unknown{border-style:dashed;border-left-style:solid;background:transparent;box-shadow:none}
+.suspect .sn{display:block;font-family:var(--f-display);font-weight:400;font-size:19px;line-height:1.3;padding-right:74px}
+.suspect.unknown .sn{color:var(--muted);letter-spacing:.12em}
+.suspect small{display:block;font-size:12.5px;color:var(--muted)}
+.suspect > p{margin:6px 0 0;font-size:14px}
+.go-btn{appearance:none;display:block;border:0;background:none;padding:0;margin-top:8px;font-family:var(--f-hand);font-size:15px;color:var(--accent);cursor:pointer;text-align:left}
+.go-btn:hover{text-decoration:underline wavy;text-underline-offset:4px}
+.caught-stamp{position:absolute;top:10px;right:12px;font-family:var(--f-hand);font-size:15px;line-height:1.2;color:#B5382A;border:2px solid #B5382A;border-radius:6px;padding:2px 8px;rotate:-8deg}
+.witness{margin:12px 0 0;padding:9px 12px 10px;border-left:3px solid var(--isle);background:color-mix(in srgb, var(--card) 80%, transparent);border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.65}
+.witness b{font-family:var(--f-hand);font-weight:700;color:var(--isle)}
+.muted{color:var(--muted)}
+.taunt{position:relative;pointer-events:none;opacity:0;transition:opacity .2s;font-family:var(--f-hand);font-weight:700;font-size:15px;line-height:1.2;background:#FFF4EC;color:#8E2A1E;border:1.5px solid #B5382A;padding:4px 11px 5px;border-radius:var(--wobble);white-space:nowrap;box-shadow:2px 2px 0 var(--shade)}
+.taunt.show{opacity:1}
+.taunt::after{content:"";position:absolute;left:50%;bottom:-8px;width:11px;height:11px;margin-left:-6px;background:#FFF4EC;border-right:1.5px solid #B5382A;border-bottom:1.5px solid #B5382A;rotate:45deg}
 .secret-progress{margin:12px 0 0;font-size:14px;color:var(--muted)}
 .secret-progress b{font-family:var(--f-hand);font-weight:400;font-size:19px;color:var(--accent)}
 .secret-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
@@ -361,6 +382,7 @@ button.secret-item:hover{border-color:var(--line)}
       <button type="button" class="toggle" id="tgTags" aria-pressed="true">標籤</button>
       <button type="button" class="toggle links" id="tgLinks" aria-pressed="false">全部紅線</button>
       <button type="button" class="toggle secret" id="tgSecrets">祕境 <b data-secret-count>0/11</b></button>
+      <button type="button" class="toggle case" id="tgCase">通緝令 <b data-case-count>0/5</b></button>
       <span class="hint" id="hint">點六角形看線索，拖曳可以轉，滾輪或兩指縮放</span>
     </div>
   </div>
@@ -1058,9 +1080,46 @@ const SECRETS = [
   { id:'neu-cave', isle:'neu', name:'海蝕洞', hint:'碳中和島海邊的岩壁', note:'海浪日夜拍打岩壁，掏出了這個洞。人類排放的二氧化碳，大約有四分之一被海洋吸收。' },
   { id:'neu-islet', isle:'neu', name:'無人島', hint:'碳中和島後方的海上', note:'從這座無人島回頭看，碳中和島剛好是一個完整的「0」。' }
 ];
-window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS };
+const SUSPECTS = [
+  { id:'inv', name:'漏漏', title:'漏報小煙怪', ev:'撕掉標籤的冷媒鋼瓶',
+    evNote:'鋼瓶上的標籤被撕掉了，可是重量騙不了人：這一年補了 12 公斤冷媒，盤查表上卻一個字也沒寫。',
+    witness:'昨晚有一團灰灰的煙在島上飄來飄去，飄過的地方，我的盤查表就少了好幾行。',
+    hide:'煙味還很重，他一定還躲在島上。看到灰灰的影子從草叢後面探頭，就點他！',
+    trick:'盤查的時候只算燒油和用電，把冷媒補充、化糞池、滅火器這些不起眼的排放源藏起來，排放量就少了一大截。',
+    truth:'先把排放源一個一個列清楚，小的也要列，再用重大性評估決定怎麼算。冷媒漏掉的部分算範疇一的逸散排放：補了幾公斤冷媒，乘上那種冷媒的全球暖化潛勢（GWP），就是漏掉的排放量。',
+    thanks:'盤查表的空格都補回來了，謝謝碳寶！', hexes:['inv-s1', 'inv-material'] },
+  { id:'cfp', name:'剪剪', title:'剪邊界螃蟹', ev:'剪成兩半的吊牌',
+    evNote:'吊牌上的碳足跡只剩「製造」那一格，原料、運輸、使用、廢棄四格全被剪掉了，難怪數字小得不像話。',
+    witness:'半夜一直聽到「喀嚓、喀嚓」的聲音，好像有人拿剪刀在剪東西。',
+    hide:'剪刀聲還沒停。找找看哪裡有紅色的大鉗子冒出來！',
+    trick:'把產品的一生剪掉一大段，只算工廠裡的製造。原料怎麼來、怎麼運、用的時候耗多少電、丟掉以後怎麼處理，全都不算。',
+    truth:'碳足跡要照 PCR 把系統邊界畫清楚：從原料一路算到廢棄（搖籃到墳墓），或只算到出廠（搖籃到大門），都要寫明是哪一種。真的要排除一小段，得符合截斷準則，也要說明理由。',
+    thanks:'吊牌黏好了，五個階段一格不少。', hexes:['cfp-pcr', 'cfp-scope'] },
+  { id:'rdc', name:'拖拖', title:'明天再減樹懶', ev:'每一頁都寫著「明天」的日曆',
+    evNote:'從 2026 翻到 2049，每一頁都寫著「明天再減」，只有 2050 那一頁畫了一個大大的愛心。',
+    witness:'有個慢吞吞的傢伙一直說「明天再減、明天再減」，說完就躺下去睡了。',
+    hide:'他走路很慢，一定還沒走遠。找找看樹叢後面有沒有毛茸茸的頭。',
+    trick:'只喊一句「2050 淨零」，中間什麼都不做，每天都說明天再開始減。',
+    truth:'淨零要有路線圖。SBTi 要求先訂 5 到 10 年內的近期目標，2030 年前就得減下一大段；每年也要追蹤，減了多少、還差多少，一年一年算清楚。',
+    thanks:'拖拖今天真的開始減了，我們一起往下走！', hexes:['rdc-2030'] },
+  { id:'ofs', name:'雙雙', title:'重複計算浣熊兄弟', ev:'兩張一模一樣的額度證書',
+    evNote:'兩張證書的序號都是 TW-0427。同一公噸的減量，被賣了兩次。',
+    witness:'水晶旁邊有兩個長得一模一樣的影子，手上拿著同一張紙，一個往東跑、一個往西跑。',
+    hide:'兩個都還在島上！注意看，有兩條條紋尾巴的地方就是了。',
+    trick:'同一份減量額度，哥哥賣給 A 公司，弟弟再賣給 B 公司，兩家公司都拿去抵自己的排放。這就叫重複計算。',
+    truth:'每一公噸額度都有自己的序號。拿去抵換時，要在登錄平台上註銷，註銷之後就不能再賣、再用，是誰用掉的也查得到。',
+    thanks:'多出來的那張證書，已經作廢了。', hexes:['ofs-retire'] },
+  { id:'neu', name:'怪盜變變', title:'漂綠變色龍', boss:true, ev:'一桶綠油漆和一疊貼紙',
+    evNote:'貼紙上印著「100% 碳中和」，背面什麼數字都沒有。油漆還沒乾，他剛剛一定還在這裡。',
+    witness:'有人把潟湖邊刷得綠油油的，油漆味好重！還聽到有人在笑：「看起來環保就好啦～」',
+    hide:'他會變色，躲起來很難找。',
+    trick:'不盤查也不減量，買一點便宜的額度，就在產品上貼「100% 碳中和」，再把整座島刷成綠色。看起來很環保，其實什麼都沒做，這就是漂綠。',
+    truth:'碳中和要先盤查、先減量，剩下真的減不掉的，才用高品質的額度抵銷並註銷，還要經過查證；宣告時要說清楚是哪個產品、哪一段期間。歐盟從 2026 年 9 月起，也不准產品只靠買額度就說自己對氣候「零影響」。',
+    thanks:'潟湖的油漆擦乾淨了，這次是真的乾淨。', hexes:['neu-claim', 'neu-rules'] }
+];
+window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS, SUSPECTS };
 
-const bridge = window.ISLE3D = { ready:false, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, secretsReset(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
+const bridge = window.ISLE3D = { ready:false, focusHex(){}, focusIsle(){}, focusHome(){}, focusSecret(){}, secretFound(){}, secretsReset(){}, focusCase(){}, caseSync(){}, caseReset(){}, taunt(){}, clear(){}, setTags(){}, setLinks(){}, relayout(){} };
 const $ = s => document.querySelector(s);
 const panel = $('#panel'), body = $('#panelBody'), list = $('#list');
 const state = { view:'home', hex:null, isle:null, no3d:false, interacted:false };
@@ -1078,7 +1137,7 @@ function resetSecrets(){
   found.clear(); updateSecretCount(); bridge.secretsReset();
   if (state.view === 'secret' || state.view === 'secrets') openPanel(secretsHTML(), '祕境筆記');
 }
-window.addEventListener('pageshow', e => { if (e.persisted) resetSecrets(); });
+window.addEventListener('pageshow', e => { if (e.persisted){ resetSecrets(); resetCase(); } });
 const foundCount = () => SECRETS.filter(s => found.has(s.id)).length;
 function updateSecretCount(){ document.querySelectorAll('[data-secret-count]').forEach(el => { el.textContent = `${foundCount()}/${SECRETS.length}`; }); }
 function secretHTML(s, isNew){
@@ -1118,6 +1177,136 @@ function hintSecret(id){
   const y = body.scrollTop; openPanel(secretsHTML(id), '祕境筆記'); body.scrollTop = y;
   bridge.focusSecret(id, false, false);
 }
+const suspectById = Object.fromEntries(SUSPECTS.map(s => [s.id, s])), evFound = new Set(), caught = new Set();
+const CREW = SUSPECTS.filter(s => !s.boss).map(s => s.id), crewDone = () => CREW.every(id => caught.has(id));
+function resetCase(){ evFound.clear(); caught.clear(); updateCaseCount(); bridge.caseReset(); if (state.view === 'case') openPanel(caseHTML(), 'CASE FILE ─ 通緝令'); }
+function updateCaseCount(){ document.querySelectorAll('[data-case-count]').forEach(el => { el.textContent = `${caught.size}/${SUSPECTS.length}`; }); }
+const said = (s, line) => `<p class="witness" style="--isle:var(--${s.id})"><b>${ISLES[s.id].owner}：</b>「${esc(line)}」</p>`;
+function nextStep(s){
+  if (caught.has(s.id)) return `<button type="button" class="go-btn" data-case="file:${s.id}">看筆錄 ›</button>`;
+  if (!evFound.has(s.id)) return `<button type="button" class="go-btn" data-case="ev:${s.id}">請嗅嗅帶路 ›</button>`;
+  if (s.boss && !crewDone()) return `<p class="muted">先把四個手下抓齊，他就躲不住了。</p>`;
+  return `<button type="button" class="go-btn" data-case="lair:${s.id}">去抓他 ›</button>`;
+}
+const callingCard = () => `
+  <aside class="note ccard">
+    <h3>預告函</h3>
+    <p>致 碳寶偵探：</p>
+    <p>今晚，我要讓五座島全部「看起來」很環保。帳只算一半、標籤剪掉一截、目標拖到明天、一張額度賣兩次，最後在每座島蓋上大大的「碳中和」。</p>
+    <p>抓得到，就來抓吧。</p>
+    <p class="sign">──怪盜變變</p>
+  </aside>`;
+function suspectCard(s, active){
+  const I = ISLES[s.id], st = `style="--isle:var(--${s.id})"`;
+  const note = active === 'ev:' + s.id ? '<p class="secret-go">嗅嗅聞到味道了，就在這附近。找找哪裡有紅色的光點，點下去就是證物。</p>'
+    : active === 'lair:' + s.id ? '<p class="secret-go">他就躲在附近的樹叢後面，一下探頭一下躲起來。看到他就點下去，點樹叢也行！</p>' : '';
+  if (caught.has(s.id)) return `<li class="suspect" ${st}><span class="caught-stamp">已逮捕</span><b class="sn">${esc(s.name)}</b><small>${esc(s.title)}・${I.name}</small>${nextStep(s)}</li>`;
+  if (!evFound.has(s.id)) return `<li class="suspect unknown" ${st}><b class="sn">${s.boss ? '幕後主使' : '？？？'}</b><small>${I.name}</small>${said(s, s.witness)}${nextStep(s)}${note}</li>`;
+  return `<li class="suspect" ${st}><b class="sn">${esc(s.name)}</b><small>${esc(s.title)}・${I.name}</small><p>證物：${esc(s.ev)}</p>${nextStep(s)}${note}</li>`;
+}
+function caseHTML(active){
+  return `
+    <p class="eyebrow">通緝令</p>
+    <h2>怪盜變變事件</h2>
+    ${callingCard()}
+    <p class="lead" style="margin-top:18px">五座島各躲著一個嫌犯。先找到他留下的證物，才抓得到人；島主們都看到了一些事，聽聽他們怎麼說。離開碳寶島再回來，案子會重新開始。</p>
+    <p class="secret-progress">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}</p>
+    <ul class="wanted">${SUSPECTS.map(s => suspectCard(s, active)).join('')}</ul>
+    ${caught.size === SUSPECTS.length ? '<div class="btns"><button type="button" class="btn primary" data-case="end">看結案報告 ›</button></div>' : ''}`;
+}
+function evidenceHTML(s, isNew){
+  const ready = !s.boss || crewDone();
+  return `
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">通緝令</button><span aria-hidden="true">›</span><span>${esc(s.ev)}</span></nav>
+    <p class="eyebrow">${isNew ? '找到證物！' : '證物'}</p>
+    <h2>${esc(s.ev)}</h2>
+    <p class="isle-meta">${ISLES[s.id].name}</p>
+    <p class="lead" style="margin-top:10px">${esc(s.evNote)}</p>
+    <aside class="note"><h3>嫌犯是……</h3><p>${esc(s.name)}，${esc(s.title)}。${esc(s.hide)}${ready ? '' : '先把四個手下抓齊，他就躲不住了。'}</p></aside>
+    <div class="btns">${ready ? `<button type="button" class="btn primary" data-case="lair:${s.id}">去抓他 ›</button>` : ''}<button type="button" class="btn" data-go="case">通緝令</button></div>`;
+}
+function caughtHTML(s, isNew){
+  const all = caught.size === SUSPECTS.length, bossLeft = crewDone() && !all;
+  const boss = SUSPECTS.find(x => x.boss);
+  const links = s.hexes.map(id => { const h = byId[id]; return `<button type="button" class="linkbtn" data-hex="${id}"><i aria-hidden="true"></i><span><b>${ISLES[h.isle].name}・${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button>`; }).join('');
+  const next = all ? `<button type="button" class="btn primary" data-case="end">看結案報告 ›</button>`
+    : bossLeft ? `<button type="button" class="btn primary" data-case="${evFound.has(boss.id) ? 'lair' : 'ev'}:${boss.id}">手下全抓到了，換怪盜變變 ›</button>` : '';
+  return `
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">通緝令</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
+    <p class="eyebrow">${isNew ? '逮到了！' : '筆錄'}</p>
+    <h2>${esc(s.name)}・${esc(s.title)}</h2>
+    <p class="isle-meta">${ISLES[s.id].name}</p>
+    <h3>他的手法</h3><p>${esc(s.trick)}</p>
+    <h3>碳寶怎麼拆穿</h3><p>${esc(s.truth)}</p>
+    <h3>回島上查證</h3><div class="linkrow">${links}</div>
+    ${said(s, s.thanks)}
+    <p class="secret-progress">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}${all ? '，全部到案！' : ''}</p>
+    <div class="btns">${next}<button type="button" class="btn" data-go="case">通緝令</button></div>`;
+}
+function slipHTML(s, why){
+  if (why === 'noev') return `
+    <p class="eyebrow">可疑的影子</p>
+    <h2>證據不足</h2>
+    <p class="lead">有個影子一閃，又躲回樹叢後面了。手上沒有證物，抓到也問不出什麼。先在島上找找他留下的東西。</p>
+    ${said(s, s.witness)}
+    <div class="btns"><button type="button" class="btn primary" data-case="ev:${s.id}">請嗅嗅帶路 ›</button><button type="button" class="btn" data-go="case">通緝令</button></div>`;
+  const left = CREW.filter(id => !caught.has(id)).map(id => suspectById[id]);
+  return `
+    <p class="eyebrow">差一點！</p>
+    <h2>又溜走了！</h2>
+    <p class="lead">變變一下子變成草地的顏色，混進樹叢裡不見了。手下還沒抓齊，他總有地方躲。</p>
+    <p class="muted" style="margin-top:8px">還沒到案：${left.map(x => evFound.has(x.id) ? x.name : `${ISLES[x.id].name}的嫌犯`).join('、')}</p>
+    <div class="btns"><button type="button" class="btn primary" data-go="case">通緝令</button></div>`;
+}
+function finaleHTML(){
+  return `
+    <p class="eyebrow">結案報告</p>
+    <h2>五個嫌犯全部到案</h2>
+    <p class="lead">漏漏把藏起來的排放源一個一個交了出來；剪剪把吊牌黏回去，五個階段一格不少；拖拖說，今天就開始減；雙雙把多賣的那張證書退了，一個序號只用一次；變變……正蹲在潟湖邊，把油漆一點一點擦掉。</p>
+    <aside class="note"><h3>碳寶的辦案筆記</h3><p>帳要算全、邊界要畫清楚、目標從現在開始、額度用掉就註銷。這些都做到了，才有資格說「碳中和」。</p></aside>
+    <div class="btns"><button type="button" class="btn primary" data-go="home">回全景</button><button type="button" class="btn" data-go="case">通緝令</button></div>`;
+}
+function showCase(active){
+  interacted(); closeList(); state.view = 'case'; state.hex = null; setModes('');
+  const y = body.scrollTop, keep = active && !panel.hidden && /通緝令/.test(fileLabel.textContent);
+  openPanel(caseHTML(active), 'CASE FILE ─ 通緝令'); if (keep) body.scrollTop = y;
+  const on = active && body.querySelector('.secret-go'); if (on) on.closest('li').scrollIntoView({ block:'nearest' });
+}
+function caseGo(cmd){
+  const [what, id] = cmd.split(':');
+  if (what === 'end') return showFinale();
+  const s = suspectById[id]; if (!s) return;
+  if (what === 'file') return showCaught(id, false);
+  if (what === 'ev'){ if (evFound.has(id)) return showEvidence(id, false); showCase('ev:' + id); bridge.focusCase(id, 'ev', false, false); return; }
+  if (what === 'lair'){ showCase('lair:' + id); bridge.focusCase(id, 'lair', false, true); }
+}
+function showEvidence(id, isNew){
+  const s = suspectById[id]; state.view = 'case'; state.hex = null; setModes('');
+  openPanel(evidenceHTML(s, isNew), `CASE FILE ─ 證物・${ISLES[id].name}`, isNew ? '證物！' : ''); bridge.focusCase(id, 'ev', false, true);
+}
+function showCaught(id, isNew){
+  const s = suspectById[id]; state.view = 'case'; state.hex = null; setModes('');
+  openPanel(caughtHTML(s, isNew), `CASE FILE ─ 筆錄・${s.name}`, isNew ? '逮捕！' : ''); bridge.focusCase(id, 'lair', false, true);
+}
+function showFinale(){ interacted(); closeList(); state.view = 'case'; state.hex = null; setModes(''); openPanel(finaleHTML(), 'CASE FILE ─ 結案報告', '結案！'); bridge.focusHome(false); }
+function evidenceFound(id){
+  const s = suspectById[id]; if (!s) return; interacted(); closeList();
+  const isNew = !evFound.has(id); evFound.add(id); bridge.caseSync(id, { found:true, caught:caught.has(id) });
+  if (isNew) bridge.taunt(id, s.boss ? '油漆被發現了？' : '被發現了？！');
+  showEvidence(id, isNew);
+}
+function suspectClicked(id){
+  const s = suspectById[id]; if (!s) return; interacted(); closeList();
+  if (caught.has(id)) return showCaught(id, false);
+  if (!evFound.has(id) || (s.boss && !crewDone())){
+    bridge.taunt(id, s.boss ? '呵呵，再練練吧！' : '抓不到～');
+    state.view = 'case'; state.hex = null; setModes('');
+    return openPanel(slipHTML(s, evFound.has(id) ? 'boss' : 'noev'), `CASE FILE ─ ${ISLES[id].name}`);
+  }
+  caught.add(id); updateCaseCount(); bridge.caseSync(id, { found:true, caught:true });
+  bridge.taunt(id, s.boss ? '我、我只是想看起來環保嘛……' : '嗚……被抓到了');
+  showCaught(id, true);
+}
 function openPanel(html, label = 'CASE FILE', stamp = ''){ body.innerHTML = html; fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
 
 function homeHTML(){
@@ -1133,6 +1322,7 @@ function homeHTML(){
     <p class="eyebrow">案件簡報</p>
     <h2>五座島</h2>
     <p class="lead">碳盤查、碳足跡、碳減量、碳抵換、碳中和，一座島查一個案子。每一塊六角形是一條線索，點下去就能看；打開線索時，紅線會連到其他島上有關的線索。</p>
+    <p class="secret-cta"><span>✉ 怪盜變變寄來一封預告函。已逮捕 <b data-case-count>${caught.size}/${SUSPECTS.length}</b></span><button type="button" class="btn primary" data-go="case">打開通緝令</button></p>
     <div class="isles">${cards}</div>
     <p class="secret-cta"><span>✦ 地圖上藏了幾個祕境，已經找到 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn" data-go="secrets">打開祕境筆記</button></p>
     <h3>五案對照</h3>
@@ -1159,6 +1349,7 @@ function isleHTML(k){
     <nav class="crumb" aria-label="位置"><button type="button" data-go="home">全景</button><span aria-hidden="true">›</span><span>${I.name}</span></nav>
     <h2>${I.q}</h2>
     <p class="owner-line" style="--isle:var(--${k})">島主：<b>${I.owner}</b></p>
+    ${suspectById[k] ? said(suspectById[k], caught.has(k) ? suspectById[k].thanks : suspectById[k].witness) + (caught.has(k) ? '' : nextStep(suspectById[k])) : ''}
     <p class="isle-meta">${I.std}</p>
     <p class="lead" style="margin-top:10px">${I.intro}</p>
     <p class="isle-shape">${I.shape}</p>
@@ -1260,13 +1451,15 @@ function openList(){
 function closeList(){ if (state.no3d || list.hidden) return; list.hidden = true; setModes(listPrevMode); }
 
 body.addEventListener('click', e => {
-  const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-hint]'); if (!t) return;
+  const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-hint],[data-case]'); if (!t) return;
+  if (t.dataset.case) return caseGo(t.dataset.case);
   if (t.dataset.hint) return hintSecret(t.dataset.hint);
   if (t.dataset.hex) return showHex(t.dataset.hex);
   if (t.dataset.secret) return showSecret(t.dataset.secret);
   const g = t.dataset.go;
   if (g === 'home') showHome();
   else if (g === 'secrets') showSecrets();
+  else if (g === 'case') showCase();
   else if (g.startsWith('isle:')) showIsle(g.slice(5));
   else if (g.startsWith('tour:')) showHex(ORDER[g.slice(5)][0]);
 });
@@ -1286,7 +1479,8 @@ function toggle(btn, fn){ btn.addEventListener('click', () => { const on = btn.g
 toggle($('#tgTags'), on => bridge.setTags(on));
 toggle($('#tgLinks'), on => bridge.setLinks(on));
 $('#tgSecrets').addEventListener('click', showSecrets);
-updateSecretCount();
+$('#tgCase').addEventListener('click', () => showCase());
+updateSecretCount(); updateCaseCount();
 const dnBtns = document.querySelectorAll('.daynight button');
 const darkNow = () => { const a = document.documentElement.getAttribute('data-theme'); return a ? a === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
 const syncDayNight = () => dnBtns.forEach(b => b.setAttribute('aria-pressed', String((b.dataset.theme === 'dark') === darkNow())));
@@ -1304,7 +1498,7 @@ document.addEventListener('keydown', e => {
 new ResizeObserver(() => bridge.relayout()).observe(panel);
 
 window.UI = {
-  state, showHex, showIsle, showHome, closePanel, interacted, showSecret, showSecrets, isFound: id => found.has(id),
+  state, showHex, showIsle, showHome, closePanel, interacted, showSecret, showSecrets, isFound: id => found.has(id), evidenceFound, suspectClicked,
   mascotClicked(){ interacted(); if (state.view === 'hex') step(1); else showHex(ORDER[state.view === 'isle' ? state.isle : 'inv'][0]); },
   no3d(msg){
     if (state.no3d) return; state.no3d = true;
@@ -1906,6 +2100,231 @@ function registerKeeper(kp, key){
   tag.innerHTML = `<small>島主</small><b>${D.ISLES[key].owner}</b>`;
   const lbl = new CSS2DObject(tag); lbl.position.set(0, 0.02, 0.62); kp.add(lbl);
   keepers.push(kp);
+}
+
+
+const villEyeW = new THREE.MeshStandardMaterial({ color:'#FFFDF6', roughness:0.4 });
+function slyFace(g, cy, R, o = {}){
+  const ex = o.ex ?? R*0.36, ey = o.ey ?? R*0.08, er = o.er ?? R*0.19, pupils = [];
+  const onS = (x, y, lift) => { const z = Math.sqrt(Math.max(0.0001, R*R - x*x - y*y)), n = new V3(x, y, z).normalize(); return { p:new V3(x, cy + y, z).addScaledVector(n, lift), n }; };
+  if (o.mask){
+    const t0 = Math.acos(Math.min(0.99, (ey + er*1.3)/R)), t1 = Math.acos(Math.max(-0.99, (ey - er*1.2)/R));
+    const band = new THREE.Mesh(new THREE.SphereGeometry(R*1.02, 28, 6, Math.PI/2 - 1.0, 2.0, t0, t1 - t0), smat(o.mask)); band.position.y = cy; g.add(band);
+  }
+  for (const s of [-1, 1]){
+    const e = onS(s*ex, ey, o.mask ? er*0.4 : er*0.08), eye = new THREE.Mesh(sphG(er), villEyeW);
+    eye.position.copy(e.p); eye.quaternion.setFromUnitVectors(ZF, e.n); eye.rotateZ(s*0.22); eye.scale.set(1.15, 0.62, 0.45); g.add(eye);
+    const pu = new THREE.Mesh(sphG(er*0.5), eyeMat); pu.position.set(0, -er*0.12, er*0.8); pu.userData.k = er*0.42; eye.add(pu); pupils.push(pu);
+    const bp = onS(s*ex*1.05, ey + er*(o.mask ? 1.9 : 1.4), 0.006), brow = new THREE.Mesh(new THREE.BoxGeometry(er*2.1, er*0.42, er*0.35), eyeMat);
+    brow.position.copy(bp.p); brow.quaternion.setFromUnitVectors(ZF, bp.n); brow.rotateZ(s*0.42); g.add(brow);
+  }
+  const m = onS(R*0.08, ey - er*(o.mask ? 2.1 : 1.75), 0.004), mouth = new THREE.Mesh(new THREE.TorusGeometry(er*0.7, er*0.15, 4, 12, Math.PI*0.7), eyeMat);
+  mouth.position.copy(m.p); mouth.quaternion.setFromUnitVectors(ZF, m.n); mouth.rotateZ(Math.PI*1.12); g.add(mouth);
+  return pupils;
+}
+const shifty = (pupils, t, ph) => pupils.forEach(p => { p.position.x = Math.sin(t*1.3 + ph)*p.userData.k; });
+const VILLAINS = {
+  inv(){
+    const g = new THREE.Group(), b = new THREE.Group(); g.add(b);
+    const c = '#A9ADBA', c2 = '#BBBECA', ph = Math.random()*6, R = 0.27, cy = 0.52;
+    b.add(sball(R, c, 0, cy, 0));
+    for (const [r, x, y, z] of [[0.12, -0.2, 0.68, -0.04], [0.11, 0.17, 0.71, -0.06], [0.1, 0, 0.78, -0.1]]) b.add(sball(r, c, x, y, z));
+    const puffs = [[0.19, -0.13, 0.33, 0.0], [0.15, 0.12, 0.24, -0.04], [0.12, -0.02, 0.13, 0.02], [0.08, 0.1, 0.05, 0.05]].map(([r, x, y, z]) => { const p = sball(r, c2, x, y, z); b.add(p); return p; });
+    const pupils = slyFace(b, cy, R, { mask:'#3A3350' });
+    const arms = [-1, 1].map(s => { const a = sball(0.075, c2, s*0.3, cy - 0.08, 0.06); b.add(a); return a; });
+    animators.push(t => { const tt = reduceMotion ? 0 : t; b.position.y = 0.05 + Math.sin(tt*2.2 + ph)*0.04; puffs.forEach((p, i) => p.scale.setScalar(1 + Math.sin(tt*3 + i*1.7)*0.12)); arms[0].position.y = cy - 0.08 + Math.sin(tt*3 + ph)*0.04; arms[1].position.y = cy - 0.08 - Math.sin(tt*3 + ph)*0.04; shifty(pupils, tt, ph); });
+    g.userData.h = 0.9; return g;
+  },
+  cfp(){
+    const g = new THREE.Group(), b = new THREE.Group(); g.add(b);
+    const c = '#D9533A', ph = Math.random()*6, R = 0.24, cy = 0.26;
+    const body = sball(R, c, 0, cy, 0); body.scale.set(1.3, 0.78, 1); b.add(body);
+    const belly = sball(0.13, '#F2A585', 0, cy - 0.07, 0.12); belly.scale.set(1.4, 0.6, 0.6); b.add(belly);
+    const pupils = [];
+    for (const s of [-1, 1]){
+      b.add(part(new THREE.CylinderGeometry(0.018, 0.022, 0.16, 6), smat(c), s*0.09, cy + 0.24, 0.08));
+      const eye = new THREE.Mesh(sphG(0.055), villEyeW); eye.position.set(s*0.09, cy + 0.34, 0.09); eye.scale.set(1, 0.78, 0.85); b.add(eye);
+      const pu = new THREE.Mesh(sphG(0.026), eyeMat); pu.position.set(0, -0.006, 0.046); pu.userData.k = 0.02; eye.add(pu); pupils.push(pu);
+      const brow = part(new THREE.BoxGeometry(0.09, 0.018, 0.02), eyeMat, s*0.09, cy + 0.4, 0.12); brow.rotation.z = s*0.45; b.add(brow);
+      for (let i = 0; i < 3; i++){ const lg = part(new THREE.CylinderGeometry(0.014, 0.011, 0.2, 5), smat(c), s*(0.27 + i*0.02), cy - 0.12, 0.06 - i*0.1); lg.rotation.z = s*1.05; b.add(lg); }
+    }
+    const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.011, 4, 12, Math.PI*0.75), eyeMat); mouth.position.set(0.01, cy + 0.03, 0.232); mouth.rotation.z = Math.PI*1.1; b.add(mouth);
+    const blades = [];
+    for (const s of [-1, 1]){
+      const arm = new THREE.Group(); arm.position.set(s*0.3, cy + 0.04, 0.08); arm.rotation.y = -s*0.45; b.add(arm);
+      const fa = part(new THREE.CylinderGeometry(0.03, 0.036, 0.16, 6), smat(c), 0, 0.03, 0.06); fa.rotation.x = Math.PI/2.4; arm.add(fa);
+      const hinge = new THREE.Group(); hinge.position.set(0, 0.07, 0.15); arm.add(hinge);
+      hinge.add(sball(0.05, c));
+      for (const k of [-1, 1]){
+        const bl = new THREE.Group(); hinge.add(bl);
+        bl.add(part(new THREE.BoxGeometry(0.032, 0.012, 0.21), smat('#D5DCE2'), 0, 0, 0.11));
+        const ring = part(new THREE.TorusGeometry(0.035, 0.01, 6, 12), smat(c), 0, 0, -0.05); ring.rotation.x = Math.PI/2; bl.add(ring);
+        blades.push({ bl, k });
+      }
+    }
+    animators.push(t => { const tt = reduceMotion ? 0 : t; b.position.x = Math.sin(tt*1.8 + ph)*0.05; const o = 0.08 + 0.32*Math.abs(Math.sin(tt*4 + ph)); blades.forEach(({ bl, k }) => { bl.rotation.y = k*o; }); shifty(pupils, tt, ph); });
+    g.userData.h = 0.78; return g;
+  },
+  rdc(){
+    const g = new THREE.Group(), b = new THREE.Group(); g.add(b);
+    const c = '#9B7A58', ph = Math.random()*6, cy = 0.4;
+    const body = sball(0.27, c, 0, cy, 0); body.scale.set(1, 1.12, 0.95); b.add(body);
+    const face = sball(0.19, '#EAD9BC', 0, cy + 0.06, 0.2); face.scale.set(1.1, 0.85, 0.5); b.add(face);
+    for (const s of [-1, 1]){
+      const pt = new THREE.Mesh(blushGeo, smat('#5A4330')); pt.scale.set(0.062, 0.034, 1); pt.position.set(s*0.075, cy + 0.075, 0.29); pt.rotation.z = s*0.5; b.add(pt);
+      const lid = new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.007, 4, 10, Math.PI), smat('#F3E7D2')); lid.position.set(s*0.075, cy + 0.07, 0.294); lid.rotation.z = Math.PI; b.add(lid);
+      const arm = part(new THREE.CylinderGeometry(0.045, 0.04, 0.32, 8), smat(c), s*0.25, cy - 0.06, 0.06); arm.rotation.z = s*0.35; b.add(arm);
+      const f = sball(0.07, '#7A5C40', s*0.1, 0.05, 0.05); f.scale.set(1, 0.6, 1.3); b.add(f);
+    }
+    b.add(sball(0.02, '#3B2A1E', 0, cy + 0.035, 0.292));
+    const yawn = sball(0.024, '#5A3426', 0, cy - 0.015, 0.282); yawn.scale.set(1, 0.75, 0.4); b.add(yawn);
+    const sign = new THREE.Group(); sign.position.set(0.28, 0.02, 0.12); sign.rotation.y = -0.25; b.add(sign);
+    sign.add(part(new THREE.CylinderGeometry(0.012, 0.012, 0.56, 6), smat('#8A5E38'), 0, 0.28, 0));
+    const tex = canvasTex(192, 104, (x, w, h) => { x.fillStyle = '#FFF8E6'; x.fillRect(0, 0, w, h); x.strokeStyle = '#8A5E38'; x.lineWidth = 7; x.strokeRect(4, 4, w - 8, h - 8); x.fillStyle = '#B5382A'; x.font = 'bold 46px "LXGW WenKai TC", "Kaiti TC", serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('明天再減', w/2, h/2 + 2); });
+    const fm = new THREE.MeshStandardMaterial({ map:tex, roughness:0.7 }), edge = smat('#E9E1C8');
+    const board = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.18, 0.015), [edge, edge, edge, edge, fm, fm]); board.position.y = 0.56; board.castShadow = true; sign.add(board);
+    const zTex = canvasTex(64, 64, (x, w, h) => { x.fillStyle = '#4F6189'; x.font = 'bold 48px serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('z', w/2, h/2); });
+    const zs = [0, 1].map(() => { const z = new THREE.Sprite(new THREE.SpriteMaterial({ map:zTex, transparent:true, depthWrite:false })); b.add(z); return z; });
+    animators.push(t => { const tt = reduceMotion ? 0 : t; b.rotation.z = Math.sin(tt*0.7 + ph)*0.08; sign.rotation.z = Math.sin(tt*0.9 + ph)*0.06; zs.forEach((z, i) => { const k = (tt*0.32 + i*0.5) % 1; z.position.set(-0.12 - k*0.12, cy + 0.34 + k*0.3, 0.05); z.material.opacity = Math.sin(k*Math.PI); z.scale.setScalar(0.1 + k*0.09); }); });
+    g.userData.h = 0.98; return g;
+  },
+  ofs(){
+    const g = new THREE.Group(), bros = [];
+    const cert = canvasTex(160, 112, (x, w, h) => { x.fillStyle = '#FFFDF4'; x.fillRect(0, 0, w, h); x.strokeStyle = '#C9A13B'; x.lineWidth = 6; x.strokeRect(5, 5, w - 10, h - 10); x.fillStyle = '#5B4A2E'; x.textAlign = 'center'; x.font = 'bold 24px sans-serif'; x.fillText('減量額度', w/2, 40); x.font = 'bold 18px monospace'; x.fillText('No. TW-0427', w/2, 70); x.fillStyle = '#C7472F'; x.beginPath(); x.arc(w - 30, h - 26, 13, 0, Math.PI*2); x.fill(); });
+    const certMat = new THREE.MeshStandardMaterial({ map:cert, roughness:0.8, side:THREE.DoubleSide });
+    for (const s of [-1, 1]){
+      const k = new THREE.Group(); k.position.x = s*0.21; k.rotation.y = -s*0.18; g.add(k); const b = new THREE.Group(); k.add(b);
+      const c = '#8E939B', cy = 0.44, ph = s > 0 ? 0 : Math.PI;
+      const body = sball(0.15, c, 0, 0.17, 0); body.scale.set(1, 1.05, 0.95); b.add(body);
+      const belly = sball(0.1, '#E7E3DA', 0, 0.15, 0.08); belly.scale.set(1, 1, 0.6); b.add(belly);
+      b.add(sball(0.17, c, 0, cy, 0));
+      for (const e of [-1, 1]){ const ear = part(new THREE.ConeGeometry(0.06, 0.1, 10), smat(c), e*0.11, cy + 0.15, -0.02); ear.rotation.z = -e*0.35; b.add(ear); }
+      const muzzle = sball(0.07, '#EDE9E0', 0, cy - 0.06, 0.13); muzzle.scale.set(1.2, 0.8, 0.8); b.add(muzzle);
+      b.add(sball(0.022, '#1B1F24', 0, cy - 0.03, 0.19));
+      const pupils = slyFace(b, cy, 0.17, { mask:'#2A2D33', er:0.034 });
+      const tail = new THREE.Group(); tail.position.set(-s*0.05, 0.12, -0.13); tail.rotation.set(-0.9, 0, -s*0.4); b.add(tail);
+      for (let i = 0; i < 5; i++) tail.add(part(new THREE.CylinderGeometry(0.055 - i*0.004, 0.058 - i*0.004, 0.06, 10), smat(i % 2 ? '#3A3D44' : c), 0, i*0.06, 0));
+      const paw = new THREE.Group(); paw.position.set(s*0.15, 0.3, 0.08); b.add(paw);
+      paw.add(sball(0.045, c));
+      const sheet = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.155), certMat); sheet.position.set(s*0.03, 0.12, 0.02); sheet.rotation.z = -s*0.15; paw.add(sheet);
+      bros.push({ b, paw, ph, pupils });
+    }
+    animators.push(t => { const tt = reduceMotion ? 0 : t; bros.forEach(({ b, paw, ph, pupils }) => { b.position.y = Math.max(0, Math.sin(tt*3 + ph))*0.07; paw.rotation.z = Math.sin(tt*4 + ph)*0.25; shifty(pupils, tt, ph); }); });
+    g.userData.h = 0.82; return g;
+  },
+  neu(){
+    const g = new THREE.Group(), b = new THREE.Group(); g.add(b);
+    const skin = new THREE.MeshStandardMaterial({ color:'#5DB548', roughness:0.5 }), ph = Math.random()*6;
+    const sk = (r, x, y, z) => part(sphG(r), skin, x, y, z);
+    const body = sk(0.24, 0, 0.36, -0.04); body.scale.set(0.85, 0.95, 1.2); b.add(body);
+    const cape = part(new THREE.SphereGeometry(0.27, 18, 10, Math.PI*1.15, Math.PI*0.7, 0.35, 1.6), new THREE.MeshStandardMaterial({ color:'#1F4A3A', roughness:0.7, side:THREE.DoubleSide }), 0, 0.42, -0.06); cape.scale.set(1, 1.05, 1.25); b.add(cape);
+    const head = new THREE.Group(); head.position.set(0, 0.64, 0.1); b.add(head);
+    const hd = sk(0.2, 0, 0, 0); head.add(hd);
+    const casque = part(new THREE.ConeGeometry(0.11, 0.18, 16), skin, 0, 0.15, -0.07); casque.rotation.x = -0.6; head.add(casque);
+    const pupils = slyFace(head, 0, 0.2, { mask:'#1F2A24', er:0.042, ex:0.075 });
+    const beret = sball(0.16, '#2B2F3A', 0.02, 0.15, 0.02); beret.scale.set(1.15, 0.38, 1.1); beret.rotation.z = 0.25; head.add(beret);
+    head.add(sball(0.025, '#2B2F3A', 0.06, 0.22, 0.02));
+    const pts = []; for (let i = 0; i <= 30; i++){ const u = i/30, a = u*Math.PI*2.3, r = 0.17*(1 - u*0.72); pts.push(new V3(0, 0.2 + r*Math.sin(a), -0.47 + r*Math.cos(a))); }
+    b.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, 0.04, 8), skin));
+    for (const [x, z] of [[-0.13, 0.12], [0.13, 0.12], [-0.13, -0.18], [0.13, -0.18]]) b.add(part(new THREE.CylinderGeometry(0.035, 0.03, 0.18, 8), skin, x, 0.09, z));
+    const roller = new THREE.Group(); roller.position.set(0.25, 0.42, 0.18); b.add(roller);
+    roller.add(sk(0.05, 0, 0, 0));
+    const hdl = part(new THREE.CylinderGeometry(0.012, 0.012, 0.3, 6), smat('#7D8C99'), 0, 0.15, 0.02); roller.add(hdl);
+    const rl = part(new THREE.CylinderGeometry(0.055, 0.055, 0.22, 14), smat('#4CB84A'), 0, 0.32, 0.04); rl.rotation.z = Math.PI/2; roller.add(rl);
+    g.userData.skin = skin;
+    animators.push(t => { const tt = reduceMotion ? 0 : t; skin.color.setHSL(0.27 + 0.1*Math.sin(tt*0.5 + ph), 0.5, 0.45 + 0.06*Math.sin(tt*0.9)); roller.rotation.x = -0.3 + Math.sin(tt*2.6 + ph)*0.35; head.rotation.y = Math.sin(tt*0.8 + ph)*0.25; shifty(pupils, tt, ph); });
+    g.userData.h = 0.92; return g;
+  }
+};
+const EVIDENCE = {
+  inv(){
+    const g = new THREE.Group(), c = new THREE.Group(); c.rotation.z = Math.PI/2*0.94; c.position.y = 0.1; g.add(c);
+    c.add(part(new THREE.CylinderGeometry(0.1, 0.1, 0.32, 16), smat('#7FB6D3')));
+    c.add(part(new THREE.SphereGeometry(0.1, 16, 8, 0, Math.PI*2, 0, Math.PI/2), smat('#7FB6D3'), 0, 0.16, 0));
+    c.add(part(new THREE.CylinderGeometry(0.025, 0.03, 0.06, 8), smat('#9AA5AD'), 0, 0.27, 0));
+    const hw = part(new THREE.TorusGeometry(0.035, 0.01, 6, 12), smat('#C7472F'), 0, 0.31, 0); hw.rotation.x = Math.PI/2; c.add(hw);
+    c.add(part(new THREE.CylinderGeometry(0.103, 0.103, 0.1, 16, 1, true, 0, Math.PI*1.1), new THREE.MeshStandardMaterial({ color:'#F4F1EA', roughness:0.8, side:THREE.DoubleSide }), 0, -0.03, 0));
+    return g;
+  },
+  cfp(){
+    const g = new THREE.Group(), ink = '#5B4127';
+    const half = (top) => canvasTex(96, 80, (x, w, h) => { x.fillStyle = '#E6C99A'; x.fillRect(0, 0, w, h); x.fillStyle = ink; x.textAlign = 'center'; if (top){ x.beginPath(); x.arc(w/2, 14, 6, 0, Math.PI*2); x.fillStyle = '#B99A6A'; x.fill(); x.fillStyle = ink; x.font = 'bold 20px sans-serif'; x.fillText('碳足跡', w/2, 46); x.font = '16px sans-serif'; x.fillText('製造 ✓', w/2, 70); } else { x.font = '15px sans-serif'; x.fillText('原料・運輸', w/2, 30); x.fillText('使用・廢棄', w/2, 54); } });
+    [true, false].forEach((top, i) => { const m = new THREE.MeshStandardMaterial({ map:half(top), roughness:0.85 }), e = smat('#C9A97A'); const p = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.012, 0.17), [e, e, m, e, e, e]); p.position.set(i ? 0.07 : -0.06, 0.01, i ? 0.12 : -0.06); p.rotation.y = i ? 0.5 : -0.2; p.castShadow = true; g.add(p); });
+    const str = part(new THREE.TorusGeometry(0.07, 0.006, 4, 16), smat('#C7472F'), -0.06, 0.015, -0.2); str.rotation.x = Math.PI/2; g.add(str);
+    return g;
+  },
+  rdc(){
+    const g = new THREE.Group();
+    const tex = canvasTex(128, 128, (x, w, h) => { x.fillStyle = '#FFFDF6'; x.fillRect(0, 0, w, h); x.fillStyle = '#C7472F'; x.fillRect(0, 0, w, 30); x.fillStyle = '#FFFFFF'; x.font = 'bold 18px sans-serif'; x.textAlign = 'center'; x.fillText('2049', w/2, 22); x.fillStyle = '#3B2A1E'; x.font = 'bold 44px "LXGW WenKai TC", "Kaiti TC", serif'; x.fillText('明天', w/2, 84); x.font = '20px sans-serif'; x.fillText('再減', w/2, 114); });
+    const face = new THREE.MeshStandardMaterial({ map:tex, roughness:0.8 }), back = smat('#8A5E38');
+    const front = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.02), [back, back, back, back, face, back]); front.position.set(0, 0.14, 0.045); front.rotation.x = -0.32; front.castShadow = true; g.add(front);
+    const stand = part(new THREE.BoxGeometry(0.3, 0.3, 0.015), back, 0, 0.14, -0.06); stand.rotation.x = 0.32; g.add(stand);
+    for (let i = 0; i < 5; i++){ const r = part(new THREE.TorusGeometry(0.016, 0.004, 4, 8), smat('#9AA5AD'), -0.1 + i*0.05, 0.285, -0.008); r.rotation.y = Math.PI/2; g.add(r); }
+    return g;
+  },
+  ofs(){
+    const g = new THREE.Group();
+    const tex = canvasTex(160, 112, (x, w, h) => { x.fillStyle = '#FFFDF4'; x.fillRect(0, 0, w, h); x.strokeStyle = '#C9A13B'; x.lineWidth = 6; x.strokeRect(5, 5, w - 10, h - 10); x.fillStyle = '#5B4A2E'; x.textAlign = 'center'; x.font = 'bold 24px sans-serif'; x.fillText('減量額度', w/2, 40); x.font = 'bold 18px monospace'; x.fillText('No. TW-0427', w/2, 70); x.fillStyle = '#C7472F'; x.beginPath(); x.arc(w - 30, h - 26, 13, 0, Math.PI*2); x.fill(); });
+    const m = new THREE.MeshStandardMaterial({ map:tex, roughness:0.85 }), e = smat('#EDE6D2');
+    [[-0.08, -0.03, -0.25], [0.08, 0.05, 0.3]].forEach(([x, z, r], i) => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.008, 0.18), [e, e, m, e, e, e]); p.position.set(x, 0.006 + i*0.01, z); p.rotation.y = r; p.castShadow = true; g.add(p); });
+    return g;
+  },
+  neu(){
+    const g = new THREE.Group(), paint = smat('#4CB84A');
+    g.add(part(new THREE.CylinderGeometry(0.12, 0.1, 0.2, 16), smat('#C9D2D9'), 0, 0.1, 0));
+    g.add(part(new THREE.CylinderGeometry(0.11, 0.11, 0.012, 16), paint, 0, 0.2, 0));
+    for (const [a, l] of [[0.3, 0.08], [1.9, 0.12], [3.6, 0.06]]) g.add(part(new THREE.CylinderGeometry(0.014, 0.008, l, 6), paint, Math.cos(a)*0.118, 0.2 - l/2, Math.sin(a)*0.118));
+    const hd = part(new THREE.TorusGeometry(0.12, 0.008, 4, 16, Math.PI), smat('#7D8C99'), 0, 0.2, 0); hd.rotation.y = 0.4; g.add(hd);
+    const pud = new THREE.Mesh(new THREE.CircleGeometry(0.16, 18).rotateX(-Math.PI/2), paint); pud.position.set(0.15, 0.012, 0.1); pud.scale.set(1.3, 1, 0.8); g.add(pud);
+    const st = canvasTex(96, 96, (x, w, h) => { x.fillStyle = '#E9F7E3'; x.beginPath(); x.arc(w/2, h/2, 44, 0, Math.PI*2); x.fill(); x.strokeStyle = '#2E8B3A'; x.lineWidth = 5; x.stroke(); x.fillStyle = '#2E8B3A'; x.textAlign = 'center'; x.font = 'bold 24px sans-serif'; x.fillText('100%', w/2, 46); x.font = 'bold 16px sans-serif'; x.fillText('碳中和', w/2, 68); });
+    const sm = new THREE.MeshStandardMaterial({ map:st, roughness:0.7, alphaTest:0.5 });
+    for (let i = 0; i < 3; i++){ const p = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.15).rotateX(-Math.PI/2), sm); p.position.set(-0.18 + i*0.035, 0.014 + i*0.004, 0.09 - i*0.025); p.rotation.y = i*0.5; g.add(p); }
+    return g;
+  }
+};
+function makeCage(h){
+  const g = new THREE.Group(), wood = smat('#8A5E38'), r = 0.52;
+  for (const y of [0.03, h]){ const m = new THREE.Mesh(new THREE.TorusGeometry(r, 0.032, 6, 26), wood); m.rotation.x = Math.PI/2; m.position.y = y; m.castShadow = true; g.add(m); }
+  for (let i = 0; i < 10; i++){ const a = i/10*Math.PI*2; g.add(part(new THREE.CylinderGeometry(0.02, 0.02, h, 5), wood, Math.cos(a)*r, h/2, Math.sin(a)*r)); }
+  g.add(part(new THREE.ConeGeometry(r + 0.1, 0.26, 10), smat('#A5452F'), 0, h + 0.13, 0), sball(0.05, '#C9A13B', 0, h + 0.29, 0));
+  return g;
+}
+const caseObjs = {};
+function registerCase(key, evHold, lairHold){
+  const S = D.SUSPECTS.find(x => x.id === key); if (!S) return;
+  const ev = EVIDENCE[key](); ev.scale.setScalar(1.7); ev.position.z = 0.1; evHold.add(ev);
+  const evTag = document.createElement('div'); evTag.className = 'fac-tag'; evTag.textContent = '可疑的東西';
+  const evL = new CSS2DObject(evTag); evL.position.set(0, 0.95, 0.1); evHold.add(evL);
+  const sp = [0, 1, 2].map(i => { const p = new THREE.Sprite(new THREE.SpriteMaterial(addGlow({ map:sparkTex, color:'#FF8E5E' }))); p.position.set(Math.cos(i*2.1)*0.4, 0.22 + i*0.24, 0.1 + Math.sin(i*2.1)*0.4); evHold.add(p); return p; });
+  ev.traverse(m => { if (m.isMesh){ m.userData.evidence = key; m.userData.fac = evTag; pickables.push(m); } });
+  const bush = new THREE.Group(); bush.position.z = 0.42; lairHold.add(bush);
+  for (const [r, x, y, z, c] of [[0.3, -0.2, 0.22, 0, '#3E8F3A'], [0.34, 0.16, 0.26, 0.04, '#4FA04A'], [0.24, 0.43, 0.16, -0.06, '#3E8F3A'], [0.22, -0.47, 0.14, -0.04, '#4FA04A']]) bush.add(ball(r, c, x, y, z, 1));
+  const rk = BUILD.rocks(); rk.scale.setScalar(2.2); rk.position.set(-0.55, 0, -0.32); lairHold.add(rk);
+  const v = VILLAINS[key](); v.scale.setScalar(1.35); const h = v.userData.h*1.35;
+  const hold = new THREE.Group(); hold.position.z = -0.08; hold.add(v); lairHold.add(hold);
+  const vTag = document.createElement('div'); vTag.className = 'fac-tag'; vTag.textContent = '可疑的影子';
+  const vL = new CSS2DObject(vTag); vL.position.set(0, h + 0.25, 0); hold.add(vL);
+  const tt = document.createElement('div'); tt.className = 'taunt';
+  const tL = new CSS2DObject(tt); tL.position.set(0, h + 0.6, 0); hold.add(tL);
+  const cage = makeCage(h + 0.15); cage.visible = false; cage.position.z = -0.08; lairHold.add(cage);
+  const stars = [0, 1, 2].map(() => { const st = new THREE.Mesh(starV(0.06, 0.026), smat('#FFD45E')); st.visible = false; hold.add(st); return st; });
+  for (const o of [v, bush]) o.traverse(m => { if (m.isMesh){ m.userData.suspect = key; m.userData.fac = vTag; pickables.push(m); } });
+  const C = caseObjs[key] = { key, S, evHold, lairHold, sp, evTag, v, hold, vTag, tt, cage, stars, h, ph:D.KEYS.indexOf(key)*1.37, found:false, caught:false, cageT:-1, tauntUntil:0, up:0 };
+  animators.push((t, dt) => caseTick(C, t, dt || 0.016));
+}
+const camoCol = new THREE.Color();
+function caseTick(C, t, dt){
+  const tt = reduceMotion ? 0 : t, now = performance.now();
+  let want = 1;
+  if (!C.caught){ const per = C.found ? 2.6 : 4.4, k = ((tt + C.ph*1.9)/per) % 1; want = reduceMotion ? (C.found ? 1 : 0.45) : (k < (C.found ? 0.55 : 0.32) ? 1 : 0); }
+  C.up += (want - C.up)*Math.min(1, dt*9);
+  C.hold.position.y = -C.h*0.62*(1 - C.up);
+  C.hold.rotation.z = C.caught ? 0 : Math.sin(tt*1.7 + C.ph)*0.14*C.up;
+  if (C.v.userData.skin && !C.caught) C.v.userData.skin.color.lerp(camoCol.copy(grassMat.color), (1 - C.up)*0.85);
+  C.sp.forEach((p, i) => { const k = 0.5 + 0.5*Math.sin(tt*2.6 + i*2.1 + C.ph); p.material.opacity = 0.35 + 0.65*k; p.scale.setScalar(0.26 + 0.32*k); });
+  if (C.cageT >= 0){ const k = Math.min(1, (now - C.cageT)/650), y = k < 0.75 ? 2.6*(1 - (k/0.75)**2) : 0.18*Math.sin((k - 0.75)/0.25*Math.PI); C.cage.position.y = Math.max(0, y); if (k >= 1) C.cageT = -1; }
+  if (C.caught) C.stars.forEach((s, i) => { const a = tt*2.4 + i*Math.PI*2/3; s.position.set(Math.cos(a)*0.22, C.h + 0.08 + Math.sin(tt*3 + i)*0.03, Math.sin(a)*0.22); s.rotation.y = tt*3; });
+  if (C.tauntUntil && now > C.tauntUntil){ C.tt.classList.remove('show'); C.tauntUntil = 0; }
 }
 
 const facGlow = [], facNight = [], facHalos = [];
@@ -2540,6 +2959,43 @@ D.KEYS.forEach((key, ki) => {
       const f = spec.make(); f.position.set(t.lx, topY, t.lz); f.rotation.y = Math.atan2(t.lx, t.lz); grp.add(f); registerFacility(f, spec.name);
     });
   }
+  const caseT = [];
+  if (D.SUSPECTS.some(x => x.id === key)){
+    const occ4 = new Set(hexes.map(({ h }) => `${h.q},${h.r}`)), wharf = terr.find(t => t.spec && t.spec.low);
+    const close = (lx, lz, list, d) => list.some(t => Math.hypot(t.lx - lx, t.lz - lz) < d);
+    const spots = k => { const cand = [];
+      for (const { h } of hexes) for (const [dq, dr] of DIRS6){
+        const q = h.q + dq, r = h.r + dr, id = `${q},${r}`; if (occ4.has(id) || cand.some(c => c.id === id)) continue;
+        if ((knoll && q === knoll.q && r === knoll.r) || (hide && q === hide.q && r === hide.r) || terr.some(t => t.q === q && t.r === r) || ecoT.some(t => t.q === q && t.r === r)) continue;
+        if (key === 'neu' && (Math.abs(q) + Math.abs(r) + Math.abs(q + r))/2 <= 1) continue;
+        const ap = axial(q, r), lx = ap.x - cx, lz = ap.z - cz;
+        if (toes.some(([x, z]) => Math.hypot(x - cx - lx, z - cz - lz) < 1.8*k)) continue;
+        if (knoll && Math.hypot(lx - knoll.lx, lz - knoll.lz) < 1.9*k) continue;
+        if (hide && Math.hypot(lx - hide.lx, lz - hide.lz) < 1.9*k) continue;
+        if (wharf && Math.hypot(lx - wharf.lx, lz - wharf.lz) < 2.2*k) continue;
+        if (close(lx, lz, terr, 1.9*k) || close(lx, lz, ecoT, 1.9*k)) continue;
+        cand.push({ id, q, r, lx, lz });
+      }
+      return cand; };
+    const evSc = c => c.lz*0.6 + Math.abs(c.lx)*0.3 + hash(c.q, c.r, ki, 91)*0.5;
+    let ev = null, lair = null;
+    for (const k of [1, 0.85, 0.72]){
+      const cand = spots(k); ev = cand.slice().sort((a, b) => evSc(b) - evSc(a))[0];
+      if (!ev) continue;
+      const lairSc = c => Math.hypot(c.lx - ev.lx, c.lz - ev.lz) + Math.abs(c.lx)*0.5 + hash(c.q, c.r, ki, 93)*0.5;
+      lair = cand.filter(c => c !== ev && Math.hypot(c.lx - ev.lx, c.lz - ev.lz) >= 1.7).sort((a, b) => lairSc(b) - lairSc(a))[0];
+      if (lair) break;
+    }
+    if (ev && lair){
+      const holds = [ev, lair].map(t => {
+        const topY = TOP - SLAB, hh = topY + SEA_Y;
+        const kr = new THREE.Mesh(cliffGeo(seed++, hh, 1.0, 1.14), [cliffMat, grassMat, grassMat]); kr.position.set(t.lx, topY - hh/2, t.lz); kr.castShadow = kr.receiveShadow = true; grp.add(kr);
+        info.land.push([t.lx, t.lz, 1.13]); caseT.push(t);
+        const hg = new THREE.Group(); hg.position.set(t.lx, topY, t.lz); hg.rotation.y = Math.atan2(t.lx, t.lz); hg.userData.az = hg.rotation.y; grp.add(hg); return hg;
+      });
+      registerCase(key, holds[0], holds[1]);
+    }
+  }
   const occ = new Set(hexes.map(({ h }) => `${h.q},${h.r}`)), seen = new Set();
   for (const { h } of hexes) for (const [dq, dr] of DIRS6){
     const q = h.q + dq, r = h.r + dr, id = `${q},${r}`;
@@ -2548,6 +3004,7 @@ D.KEYS.forEach((key, ki) => {
     if (terr.some(t => t.q === q && t.r === r)) continue;
     if (hide && q === hide.q && r === hide.r) continue;
     if (ecoT.some(t => t.q === q && t.r === r)) continue;
+    if (caseT.some(t => t.q === q && t.r === r)) continue;
     if (key === 'neu' && (Math.abs(q) + Math.abs(r) + Math.abs(q + r))/2 <= 1) continue;
     const ap = axial(q, r), lx = ap.x - cx, lz = ap.z - cz;
     if (toes.some(([x, z]) => Math.hypot(x - cx - lx, z - cz - lz) < 1.6)) continue;
@@ -2818,6 +3275,19 @@ function updateSky(t){
 }
 
 const mascot = makeMascot(); scene.add(mascot.g);
+{
+  const dog = new THREE.Group(); dog.position.set(-0.4, -0.15, 0.06); dog.rotation.y = 0.45; mascot.g.add(dog);
+  const fur = '#E9C79A', ear = '#9A6B3F';
+  const bd = sball(0.06, fur, 0, 0.08, -0.02); bd.scale.set(0.9, 0.85, 1.35); dog.add(bd);
+  const head = new THREE.Group(); head.position.set(0, 0.14, 0.06); dog.add(head);
+  head.add(sball(0.05, fur)); const snout = sball(0.026, '#F5E3C8', 0, -0.012, 0.045); head.add(snout); head.add(sball(0.012, '#2A1E16', 0, 0, 0.071));
+  for (const s of [-1, 1]){ head.add(sball(0.009, '#1B1F24', s*0.02, 0.014, 0.044)); const e = sball(0.022, ear, s*0.046, 0.012, -0.004); e.scale.set(0.5, 1.25, 0.8); head.add(e); }
+  const scarf = part(new THREE.TorusGeometry(0.034, 0.012, 6, 14), smat('#C7472F'), 0, 0.11, 0.035); scarf.rotation.x = Math.PI/2.3; dog.add(scarf);
+  for (const [x, z] of [[-0.03, 0.03], [0.03, 0.03], [-0.03, -0.06], [0.03, -0.06]]) dog.add(part(new THREE.CylinderGeometry(0.012, 0.012, 0.05, 5), smat(fur), x, 0.025, z));
+  const tail = new THREE.Group(); tail.position.set(0, 0.1, -0.1); dog.add(tail); const tl = part(new THREE.CylinderGeometry(0.008, 0.012, 0.07, 5), smat(fur), 0, 0.03, 0); tail.add(tl); tail.rotation.x = -0.6;
+  dog.traverse(o => { if (o.isMesh){ o.userData.mascot = true; pickables.push(o); } });
+  animators.push(t => { if (reduceMotion) return; tail.rotation.z = Math.sin(t*12)*0.6; head.rotation.x = Math.sin(t*3)*0.14 + 0.08; snout.scale.setScalar(1 + Math.max(0, Math.sin(t*9))*0.12); });
+}
 const mtag = document.createElement('div'); mtag.className = 'mascot-tag'; mtag.textContent = '碳寶偵探：Go!Go!帶你破案！';
 const mlabel = new CSS2DObject(mtag); mlabel.center.set(0, 0); mlabel.position.set(0, 0.34, 0); mascot.g.add(mlabel);
 const BUB = {
@@ -3369,6 +3839,21 @@ bridge.focusSecret = (id, instant, near = true) => {
 };
 bridge.secretsReset = () => { for (const id in secrets){ const s = secrets[id]; s.found = false; s.tag.textContent = '？？？'; s.sp.forEach(p => { p.visible = true; }); } };
 bridge.secretFound = id => { const s = secrets[id]; if (!s) return; s.found = true; s.tag.textContent = s.S.name; s.sp.forEach(p => { p.visible = false; }); };
+function caseWorld(C, hold){ hold.updateWorldMatrix(true, false); const c = hold.localToWorld(new V3(0, 0.3, 0)); return c.add(isles[C.key].target).sub(isles[C.key].group.position); }
+bridge.focusCase = (id, what, instant, near = true) => {
+  const C = caseObjs[id]; if (!C) return;
+  focus = { type:'case', id, what, near }; selectTile(null); setLand(false); measure();
+  const hold = what === 'lair' ? C.lairHold : C.evHold, c = caseWorld(C, hold), R = near ? 2.5 : 6, pts = [c.clone().add(new V3(0, 1.5, 0))];
+  for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) pts.push(c.clone().add(new V3(dx*R, 0, dz*R)));
+  frame(pts, near ? 32 : 48, hold.userData.az ?? 0, instant, c);
+};
+bridge.caseSync = (id, st) => {
+  const C = caseObjs[id]; if (!C) return;
+  if (st.found !== C.found){ C.found = st.found; C.sp.forEach(p => { p.visible = !st.found; }); C.evTag.textContent = st.found ? C.S.ev : '可疑的東西'; }
+  if (st.caught !== C.caught){ C.caught = st.caught; C.cage.visible = st.caught; C.cageT = st.caught ? performance.now() : -1; C.stars.forEach(x => { x.visible = st.caught; }); C.vTag.textContent = st.caught ? `${C.S.name}（已逮捕）` : '可疑的影子'; }
+};
+bridge.caseReset = () => { for (const id in caseObjs) bridge.caseSync(id, { found:false, caught:false }); };
+bridge.taunt = (id, text) => { const C = caseObjs[id]; if (!C) return; C.tt.textContent = text; C.tt.classList.add('show'); C.tauntUntil = performance.now() + 3400; };
 bridge.clear = () => { focus = { type:'none' }; selectTile(null); if (measure()){ setLand(true); measure(); frameAll(false); } };
 bridge.setTags = on => labelsEl.classList.toggle('no-tags', !on);
 bridge.setLinks = on => { showLinks = on; };
@@ -3379,7 +3864,7 @@ const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
 function pickAt(x, y){
   const r = renderer.domElement.getBoundingClientRect(); ndc.set(((x - r.left)/r.width)*2 - 1, -((y - r.top)/r.height)*2 + 1);
   ray.setFromCamera(ndc, camera);
-  for (const h of ray.intersectObjects(sea.picks.length ? pickables.concat(sea.picks) : pickables, false)){ const u = h.object.userData; if (u.mascot) return { mascot:true }; if (u.owner) return { owner:u.owner }; if (u.secret) return { secret:u.secret, fac:u.fac }; if (u.fac) return { fac:u.fac }; if (u.hex) return { hex:u.hex }; }
+  for (const h of ray.intersectObjects(sea.picks.length ? pickables.concat(sea.picks) : pickables, false)){ const u = h.object.userData; if (u.mascot) return { mascot:true }; if (u.owner) return { owner:u.owner }; if (u.secret) return { secret:u.secret, fac:u.fac }; if (u.suspect) return { suspect:u.suspect, fac:u.fac }; if (u.evidence) return { evidence:u.evidence, fac:u.fac }; if (u.fac) return { fac:u.fac }; if (u.hex) return { hex:u.hex }; }
   return null;
 }
 const cv = renderer.domElement; let down = null, hoverEvt = null, hoverId = null;
@@ -3387,7 +3872,7 @@ cv.addEventListener('pointerdown', e => { down = { x:e.clientX, y:e.clientY }; }
 cv.addEventListener('pointerup', e => {
   if (!down) return; const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null; if (moved > 6) return;
   const hit = pickAt(e.clientX, e.clientY); if (!hit) return;
-  if (hit.mascot) UI.mascotClicked(); else if (hit.owner) UI.showIsle(hit.owner); else if (hit.secret) UI.showSecret(hit.secret); else if (hit.fac){ const el = hit.fac; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => { if (el !== hoverFac) el.classList.remove('show'); }, 2600); } else UI.showHex(hit.hex);
+  if (hit.mascot) UI.mascotClicked(); else if (hit.owner) UI.showIsle(hit.owner); else if (hit.secret) UI.showSecret(hit.secret); else if (hit.suspect) UI.suspectClicked(hit.suspect); else if (hit.evidence) UI.evidenceFound(hit.evidence); else if (hit.fac){ const el = hit.fac; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => { if (el !== hoverFac) el.classList.remove('show'); }, 2600); } else UI.showHex(hit.hex);
 });
 cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') hoverEvt = e; });
 let hoverFac = null;
@@ -3400,7 +3885,7 @@ function resize(){
   return flipped;
 }
 new ResizeObserver(() => { const flipped = resize(); if (bridge.ready && flipped) refocus(true); }).observe(stage);
-function refocus(instant){ if (focus.type === 'hex') bridge.focusHex(focus.id, instant); else if (focus.type === 'isle') bridge.focusIsle(focus.k, instant); else if (focus.type === 'secret') bridge.focusSecret(focus.id, instant, focus.near); else if (focus.type === 'home') bridge.focusHome(instant); }
+function refocus(instant){ if (focus.type === 'hex') bridge.focusHex(focus.id, instant); else if (focus.type === 'isle') bridge.focusIsle(focus.k, instant); else if (focus.type === 'secret') bridge.focusSecret(focus.id, instant, focus.near); else if (focus.type === 'case') bridge.focusCase(focus.id, focus.what, instant, focus.near); else if (focus.type === 'home') bridge.focusHome(instant); }
 
 const clock = new THREE.Clock();
 const ease = k => k < 0.5 ? 4*k*k*k : 1 - Math.pow(-2*k + 2, 3)/2;
@@ -3487,7 +3972,7 @@ function declutter(){
     if (el.style.display === 'none' || el.hidden) continue;
     const c = el.classList; let kind;
     if (c.contains('isle-title')) kind = 1;
-    else if (c.contains('fac-tag')){ if (!c.contains('show')) continue; kind = 0; }
+    else if (c.contains('fac-tag') || c.contains('taunt')){ if (!c.contains('show')) continue; kind = 0; }
     else if (c.contains('owner-tag')) kind = 2;
     else if (c.contains('tagwrap')) kind = el.querySelector('.tag[aria-current="true"]') ? 2 : 3;
     else continue;
