@@ -159,12 +159,8 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 .isle-fac b{font-weight:500;color:var(--ink)}
 .fac-tag{pointer-events:none;opacity:0;transition:opacity .2s;font-family:var(--f-hand);font-weight:700;font-size:15px;line-height:1.2;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--wobble-2);padding:3px 10px 4px;white-space:nowrap;box-shadow:2px 2px 0 var(--shade)}
 .fac-tag.show{opacity:1}
-.toggle.secret::before{content:"✦";width:auto;height:auto;border:0;border-radius:0;background:none;color:#D9A441;font-size:14px;line-height:1}
-.toggle.secret b{font-weight:400}
 .secret-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;margin:18px 0 0;padding:10px 12px;border:1.5px dashed var(--soft);border-radius:var(--wobble);font-size:14px;font-family:var(--f-hand)}
 .secret-cta b{font-weight:400;font-size:17px;color:var(--accent)}
-.toggle.case::before{background:#C7472F;border-color:#C7472F}
-.toggle.case b{font-weight:400}
 .mission{position:relative;margin:12px 0 18px;padding:12px 14px 14px;border:2px solid var(--line);border-radius:var(--wobble-2);background:var(--card);box-shadow:2px 3px 0 var(--shade)}
 .m-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin:0;font-family:var(--f-hand);font-size:18px;line-height:1.35}
 .m-tag{font-size:13px;line-height:1.3;color:#FFF;background:#B5382A;border-radius:4px;padding:1px 7px 2px;align-self:center}
@@ -221,16 +217,7 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 .taunt::after{content:"";position:absolute;left:50%;bottom:-8px;width:11px;height:11px;margin-left:-6px;background:#FFF4EC;border-right:1.5px solid #B5382A;border-bottom:1.5px solid #B5382A;rotate:45deg}
 .secret-progress{margin:12px 0 0;font-size:14px;color:var(--muted)}
 .secret-progress b{font-family:var(--f-hand);font-weight:400;font-size:19px;color:var(--accent)}
-.secret-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
-.secret-item{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;box-sizing:border-box;text-align:left;appearance:none;background:var(--card);border:1.5px solid var(--soft);border-radius:var(--wobble-2);padding:9px 13px;font:inherit;color:var(--ink);cursor:pointer}
-button.secret-item:hover{border-color:var(--line)}
-.secret-item b{font-family:var(--f-display);font-weight:400;font-size:17px}
-.secret-item small{font-size:12.5px;color:var(--muted)}
-.locked .secret-item{border-style:dashed;background:transparent}
-.locked .secret-item:hover{border-color:var(--accent)}
-.secret-item .go{font-family:var(--f-hand);font-size:14px;color:var(--accent)}
 .secret-go{margin:6px 2px 0;font-size:13.5px;line-height:1.5;color:var(--accent);font-family:var(--f-hand)}
-.locked .secret-item b{color:var(--muted);letter-spacing:.2em}
 .tablewrap{overflow-x:auto;background:var(--card);border:1.5px solid var(--soft);border-radius:var(--wobble-2)}
 .cmp{width:100%;border-collapse:collapse;font-size:13.5px;line-height:1.5}
 .cmp th,.cmp td{text-align:left;vertical-align:top;padding:8px 8px;border-bottom:1px dashed var(--soft)}
@@ -325,6 +312,21 @@ button.secret-item:hover{border-color:var(--line)}
 .list-cols h3{font-family:var(--f-display);font-weight:400;font-size:21px;margin:0 0 8px;color:var(--isle)}
 .list-cols ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .list-empty{color:var(--muted);margin:16px 0 0}
+.book{margin-top:12px}
+.book[hidden]{display:none}
+.book-letter{margin:0;border:0}
+.book-letter > summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;font-family:var(--f-hand);font-size:16px;color:var(--accent);padding:4px 2px}
+.book-letter > summary::-webkit-details-marker{display:none}
+.book-letter > summary::before{content:"✉";font-size:15px}
+.book-letter[open] > summary{margin-bottom:6px}
+.book-letter .note{margin-top:14px;max-width:640px}
+.book-prog{margin:12px 0 0;font-family:var(--f-hand);font-size:16px}
+.book-prog b{font-weight:400;font-size:20px;color:var(--accent)}
+.book-h{font-family:var(--f-display);font-weight:400;font-size:21px;margin:18px 0 8px}
+.book-isles{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:0}
+.book-isles .sn{padding-right:0;white-space:nowrap}
+.book-isles .caught-stamp{position:static;display:inline-block;margin:0 0 4px;font-size:13px;padding:1px 6px}
+.book-isles small{line-height:1.6}
 .no3d #ui{z-index:6}
 .no3d .topbar,.no3d .dock,.no3d #listClose{display:none}
 
@@ -416,8 +418,6 @@ button.secret-item:hover{border-color:var(--line)}
     <div class="dock">
       <button type="button" class="toggle" id="tgTags" aria-pressed="true">標籤</button>
       <button type="button" class="toggle links" id="tgLinks" aria-pressed="false">全部紅線</button>
-      <button type="button" class="toggle secret" id="tgSecrets">祕境 <b data-secret-count>0/11</b></button>
-      <button type="button" class="toggle case" id="tgCase">通緝令 <b data-case-count>0/5</b></button>
       <span class="hint" id="hint">點六角形看線索，拖曳可以轉，滾輪或兩指縮放</span>
     </div>
   </div>
@@ -430,6 +430,7 @@ button.secret-item:hover{border-color:var(--line)}
         <button type="button" class="btn" id="listClose">關閉</button>
       </div>
       <p class="list-note" id="listNote" hidden></p>
+      <div class="book" id="listCase"></div>
       <div class="list-cols" id="listCols"></div>
       <p class="list-empty" id="listEmpty" hidden>找不到符合的線索，換個關鍵字試試。</p>
     </div>
@@ -1180,7 +1181,7 @@ const secretById = Object.fromEntries(SECRETS.map(s => [s.id, s])), found = new 
 try { localStorage.removeItem('tanbao-secrets'); } catch (e) {}
 function resetSecrets(){
   found.clear(); updateSecretCount(); bridge.secretsReset();
-  if (state.view === 'secret' || state.view === 'secrets') openPanel(secretsHTML(), '祕境筆記');
+  if (!list.hidden) buildList($('#listSearch').value);
 }
 window.addEventListener('pageshow', e => { if (e.persisted){ resetSecrets(); resetCase(); } });
 const foundCount = () => SECRETS.filter(s => found.has(s.id)).length;
@@ -1188,24 +1189,13 @@ function updateSecretCount(){ document.querySelectorAll('[data-secret-count]').f
 function secretHTML(s, isNew){
   const n = foundCount(), all = n === SECRETS.length;
   return `
-    <nav class="crumb" aria-label="位置"><button type="button" data-go="secrets">祕境筆記</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="secrets">任務簿</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
     <p class="eyebrow">${isNew ? '發現祕境！' : '祕境'}</p>
     <h2>${esc(s.name)}</h2>
     <p class="isle-meta">${ISLES[s.isle].name}</p>
     <p class="lead" style="margin-top:10px">${esc(s.note)}</p>
     <p class="secret-progress">已發現 <b>${n}</b> / ${SECRETS.length} 個祕境${all ? '，全部找到了！' : '。'}</p>
-    <div class="btns">${backToTour(s.isle, true) || `<button type="button" class="btn primary" data-go="isle:${s.isle}">回到${ISLES[s.isle].name}</button>`}<button type="button" class="btn" data-go="secrets">祕境筆記</button></div>`;
-}
-function secretsHTML(active){
-  const items = SECRETS.map(s => found.has(s.id)
-    ? `<li><button type="button" class="secret-item" data-secret="${s.id}"><b>${esc(s.name)}</b><small>${ISLES[s.isle].name}</small></button></li>`
-    : `<li class="locked"><button type="button" class="secret-item" data-hint="${s.id}" aria-pressed="${active === s.id}"><b>？？？</b><small>線索：${esc(s.hint)}</small><span class="go">帶我去附近 ›</span></button>${active === s.id ? '<p class="secret-go">鏡頭已經帶到附近了，找找看哪裡在閃，點下去就算找到。</p>' : ''}</li>`).join('');
-  return `
-    <p class="eyebrow">祕境筆記</p>
-    <h2>地圖上的祕境</h2>
-    <p class="lead">島的四周藏著海蝕洞、天然石拱門、隱藏瀑布、無人島、山頂觀景台、森林裡的小路，還有沙灘上的洞穴。看到閃閃發亮的地方，就轉過去、靠近一點點點看，找到的會記在這裡。離開碳寶島再回來，祕境會重新藏好。</p>
-    <p class="secret-progress">已發現 <b>${foundCount()}</b> / ${SECRETS.length} 個祕境</p>
-    <ul class="secret-list">${items}</ul>`;
+    <div class="btns">${backToTour(s.isle, true) || `<button type="button" class="btn primary" data-go="isle:${s.isle}">回到${ISLES[s.isle].name}</button>`}<button type="button" class="btn" data-go="secrets">任務簿</button></div>`;
 }
 function showSecret(id){
   const s = secretById[id]; if (!s) return;
@@ -1215,24 +1205,11 @@ function showSecret(id){
   openPanel(secretHTML(s, isNew), `祕境・${ISLES[s.isle].name}`, isNew ? '新發現！' : '');
   bridge.secretFound(id); bridge.focusSecret(id);
 }
-function showSecrets(){ interacted(); closeList(); state.view = 'secrets'; state.hex = null; setModes(''); openPanel(secretsHTML(), '祕境筆記'); }
-function hintSecret(id){
-  if (!secretById[id]) return; if (found.has(id)) return showSecret(id);
-  interacted(); closeList(); state.view = 'secrets'; state.hex = null; setModes('');
-  const y = body.scrollTop; openPanel(secretsHTML(id), '祕境筆記'); body.scrollTop = y;
-  bridge.focusSecret(id, false, false);
-}
 const suspectById = Object.fromEntries(SUSPECTS.map(s => [s.id, s])), evFound = new Set(), caught = new Set();
 const CREW = SUSPECTS.filter(s => !s.boss).map(s => s.id), crewDone = () => CREW.every(id => caught.has(id));
-function resetCase(){ evFound.clear(); caught.clear(); visited.clear(); state.lastHex = null; updateCaseCount(); bridge.caseReset(); if (state.view === 'case') openPanel(caseHTML(), 'CASE FILE ─ 通緝令'); }
+function resetCase(){ evFound.clear(); caught.clear(); visited.clear(); state.lastHex = null; updateCaseCount(); bridge.caseReset(); if (!list.hidden) buildList($('#listSearch').value); }
 function updateCaseCount(){ document.querySelectorAll('[data-case-count]').forEach(el => { el.textContent = `${caught.size}/${SUSPECTS.length}`; }); }
 const said = (s, line) => `<p class="witness" style="--isle:var(--${s.id})"><b>${ISLES[s.id].owner}：</b>「${esc(line)}」</p>`;
-function nextStep(s){
-  if (caught.has(s.id)) return `<button type="button" class="go-btn" data-case="file:${s.id}">看筆錄 ›</button>`;
-  if (!evFound.has(s.id)) return `<button type="button" class="go-btn" data-case="ev:${s.id}">請嗅嗅帶路 ›</button>`;
-  if (s.boss && !crewDone()) return `<p class="muted">先把四個手下抓齊，他就躲不住了。</p>`;
-  return `<button type="button" class="go-btn" data-case="lair:${s.id}">去抓他 ›</button>`;
-}
 const callingCard = () => `
   <aside class="note ccard">
     <h3>預告函</h3>
@@ -1241,34 +1218,16 @@ const callingCard = () => `
     <p>抓得到，就來抓吧。</p>
     <p class="sign">──怪盜變變</p>
   </aside>`;
-function suspectCard(s, active){
-  const I = ISLES[s.id], st = `style="--isle:var(--${s.id})"`;
-  const note = active === 'ev:' + s.id ? '<p class="secret-go">嗅嗅聞到味道了，就在這附近。找找哪裡有紅色的光點，點下去就是證物。</p>'
-    : active === 'lair:' + s.id ? '<p class="secret-go">他就躲在附近的樹叢後面，一下探頭一下躲起來。看到他就點下去，點樹叢也行！</p>' : '';
-  if (caught.has(s.id)) return `<li class="suspect" ${st}><span class="caught-stamp">已逮捕</span><b class="sn">${esc(s.name)}</b><small>${esc(s.title)}・${I.name}</small>${nextStep(s)}</li>`;
-  if (!evFound.has(s.id)) return `<li class="suspect unknown" ${st}><b class="sn">${s.boss ? '幕後主使' : '？？？'}</b><small>${I.name}</small>${said(s, s.witness)}${nextStep(s)}${note}</li>`;
-  return `<li class="suspect" ${st}><b class="sn">${esc(s.name)}</b><small>${esc(s.title)}・${I.name}</small><p>證物：${esc(s.ev)}</p>${nextStep(s)}${note}</li>`;
-}
-function caseHTML(active){
-  return `
-    <p class="eyebrow">通緝令</p>
-    <h2>怪盜變變事件</h2>
-    ${callingCard()}
-    <p class="lead" style="margin-top:18px">五座島各躲著一個嫌犯。先找到他留下的證物，才抓得到人；島主們都看到了一些事，聽聽他們怎麼說。離開碳寶島再回來，案子會重新開始。</p>
-    <p class="secret-progress">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}</p>
-    <ul class="wanted">${SUSPECTS.map(s => suspectCard(s, active)).join('')}</ul>
-    ${caught.size === SUSPECTS.length ? '<div class="btns"><button type="button" class="btn primary" data-case="end">看結案報告 ›</button></div>' : ''}`;
-}
 function evidenceHTML(s, isNew){
   const ready = !s.boss || crewDone();
   return `
-    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">通緝令</button><span aria-hidden="true">›</span><span>${esc(s.ev)}</span></nav>
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">任務簿</button><span aria-hidden="true">›</span><span>${esc(s.ev)}</span></nav>
     <p class="eyebrow">${isNew ? '找到證物！' : '證物'}</p>
     <h2>${esc(s.ev)}</h2>
     <p class="isle-meta">${ISLES[s.id].name}</p>
     <p class="lead" style="margin-top:10px">${esc(s.evNote)}</p>
     <aside class="note"><h3>嫌犯是……</h3><p>${esc(s.name)}，${esc(s.title)}。${esc(s.hide)}${ready ? '' : '先把四個手下抓齊，他就躲不住了。'}</p></aside>
-    <div class="btns">${ready ? `<button type="button" class="btn primary" data-look="lair:${s.id}">去抓他 ›</button>` : ''}${backToTour(s.id, !ready)}<button type="button" class="btn" data-go="case">通緝令</button></div>
+    <div class="btns">${ready ? `<button type="button" class="btn primary" data-look="lair:${s.id}">去抓他 ›</button>` : ''}${backToTour(s.id, !ready)}<button type="button" class="btn" data-go="case">任務簿</button></div>
     ${ready ? noteP('lair:' + s.id, s) : ''}`;
 }
 function caughtHTML(s, isNew){
@@ -1276,9 +1235,9 @@ function caughtHTML(s, isNew){
   const boss = SUSPECTS.find(x => x.boss);
   const links = s.hexes.map(id => { const h = byId[id]; return `<button type="button" class="linkbtn" data-hex="${id}"><i aria-hidden="true"></i><span><b>${ISLES[h.isle].name}・${esc(h.short)}</b><small>${esc(h.tag)}</small></span></button>`; }).join('');
   const next = all ? `<button type="button" class="btn primary" data-case="end">看結案報告 ›</button>`
-    : bossLeft ? `<button type="button" class="btn primary" data-case="${evFound.has(boss.id) ? 'lair' : 'ev'}:${boss.id}">手下全抓到了，換怪盜變變 ›</button>` : '';
+    : bossLeft ? `<button type="button" class="btn primary" data-go="isle:${boss.id}">手下全抓到了，換怪盜變變 ›</button>` : '';
   return `
-    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">通緝令</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="case">任務簿</button><span aria-hidden="true">›</span><span>${esc(s.name)}</span></nav>
     <p class="eyebrow">${isNew ? '逮到了！' : '筆錄'}</p>
     <h2>${esc(s.name)}・${esc(s.title)}</h2>
     <p class="isle-meta">${ISLES[s.id].name}</p>
@@ -1287,7 +1246,7 @@ function caughtHTML(s, isNew){
     <h3>回島上查證</h3><div class="linkrow">${links}</div>
     ${said(s, s.thanks)}
     <p class="secret-progress">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}${all ? '，全部到案！' : ''}</p>
-    <div class="btns">${next}${backToTour(s.id, !next)}<button type="button" class="btn" data-go="case">通緝令</button></div>`;
+    <div class="btns">${next}${backToTour(s.id, !next)}<button type="button" class="btn" data-go="case">任務簿</button></div>`;
 }
 function slipHTML(s, why){
   if (why === 'noev') return `
@@ -1295,14 +1254,15 @@ function slipHTML(s, why){
     <h2>證據不足</h2>
     <p class="lead">有個影子一閃，又躲回樹叢後面了。手上沒有證物，抓到也問不出什麼。先在島上找找他留下的東西。</p>
     ${said(s, s.witness)}
-    <div class="btns"><button type="button" class="btn primary" data-case="ev:${s.id}">請嗅嗅帶路 ›</button><button type="button" class="btn" data-go="case">通緝令</button></div>`;
+    <div class="btns"><button type="button" class="btn primary" data-look="ev:${s.id}">請嗅嗅帶路 ›</button>${backToTour(s.id)}<button type="button" class="btn" data-go="case">任務簿</button></div>
+    ${noteP('ev:' + s.id, s)}`;
   const left = CREW.filter(id => !caught.has(id)).map(id => suspectById[id]);
   return `
     <p class="eyebrow">差一點！</p>
     <h2>又溜走了！</h2>
     <p class="lead">變變一下子變成草地的顏色，混進樹叢裡不見了。手下還沒抓齊，他總有地方躲。</p>
     <p class="muted" style="margin-top:8px">還沒到案：${left.map(x => evFound.has(x.id) ? x.name : `${ISLES[x.id].name}的嫌犯`).join('、')}</p>
-    <div class="btns"><button type="button" class="btn primary" data-go="case">通緝令</button></div>`;
+    <div class="btns"><button type="button" class="btn primary" data-go="case">任務簿</button></div>`;
 }
 function finaleHTML(){
   return `
@@ -1310,21 +1270,13 @@ function finaleHTML(){
     <h2>五個嫌犯全部到案</h2>
     <p class="lead">漏漏把藏起來的排放源一個一個交了出來；剪剪把吊牌黏回去，五個階段一格不少；拖拖說，今天就開始減；雙雙把多賣的那張證書退了，一個序號只用一次；變變……正蹲在潟湖邊，把油漆一點一點擦掉。</p>
     <aside class="note"><h3>碳寶的辦案筆記</h3><p>帳要算全、邊界要畫清楚、目標從現在開始、額度用掉就註銷。這些都做到了，才有資格說「碳中和」。</p></aside>
-    <div class="btns"><button type="button" class="btn primary" data-go="home">回全覽</button><button type="button" class="btn" data-go="case">通緝令</button></div>`;
-}
-function showCase(active){
-  interacted(); closeList(); state.view = 'case'; state.hex = null; setModes('');
-  const y = body.scrollTop, keep = active && !panel.hidden && /通緝令/.test(fileLabel.textContent);
-  openPanel(caseHTML(active), 'CASE FILE ─ 通緝令'); if (keep) body.scrollTop = y;
-  const on = active && body.querySelector('.secret-go'); if (on) on.closest('li').scrollIntoView({ block:'nearest' });
+    <div class="btns"><button type="button" class="btn primary" data-go="home">回全覽</button><button type="button" class="btn" data-go="case">任務簿</button></div>`;
 }
 function caseGo(cmd){
   const [what, id] = cmd.split(':');
   if (what === 'end') return showFinale();
   const s = suspectById[id]; if (!s) return;
   if (what === 'file') return showCaught(id, false);
-  if (what === 'ev'){ if (evFound.has(id)) return showEvidence(id, false); showCase('ev:' + id); bridge.focusCase(id, 'ev', false, false); return; }
-  if (what === 'lair'){ showCase('lair:' + id); bridge.focusCase(id, 'lair', false, true); }
 }
 function showEvidence(id, isNew){
   const s = suspectById[id]; state.view = 'case'; state.hex = null; setModes('');
@@ -1377,7 +1329,7 @@ function isleNext(k){
   const sec = isleSecrets(k).find(x => !found.has(x.id));
   if (sec) return { label:'找島上的祕境', attr:`data-look="secret:${sec.id}"`, note:'secret:' + sec.id };
   const nk = KEYS[KEYS.indexOf(k) + 1];
-  return nk ? { label:`下一座島：${ISLES[nk].name}`, attr:`data-go="isle:${nk}"` } : { label:'看通緝令', attr:'data-go="case"' };
+  return nk ? { label:`下一座島：${ISLES[nk].name}`, attr:`data-go="isle:${nk}"` } : { label:'看任務簿', attr:'data-go="case"' };
 }
 const noteP = (key, sus, extra = '') => `<p class="ev-note secret-go" data-for="${key}" hidden>${key.startsWith('lair') ? NOTES.lair(sus) : key.startsWith('ev') ? NOTES.ev() : NOTES.secret()}${extra}</p>`;
 function missionHTML(k){
@@ -1464,9 +1416,8 @@ function homeHTML(){
     <p class="eyebrow">案件檔案</p>
     <h2>五座島</h2>
     <p class="lead">碳盤查、碳足跡、碳減量、碳抵換、碳中和，一座島查一個案子。每一塊六角形是一條線索，點下去就能看；打開線索時，紅線會連到其他島上有關的線索。</p>
-    <p class="secret-cta"><span>✉ 怪盜變變寄來一封預告函。已逮捕 <b data-case-count>${caught.size}/${SUSPECTS.length}</b></span><button type="button" class="btn primary" data-go="case">打開通緝令</button></p>
+    <p class="secret-cta"><span>✉ 怪盜變變寄來一封預告函。已逮捕 <b data-case-count>${caught.size}/${SUSPECTS.length}</b>・祕境 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn primary" data-go="case">打開任務簿</button></p>
     <div class="isles">${cards}</div>
-    <p class="secret-cta"><span>✦ 地圖上藏了幾個祕境，已經找到 <b data-secret-count>${foundCount()}/${SECRETS.length}</b></span><button type="button" class="btn" data-go="secrets">打開祕境筆記</button></p>
     <h3>五案對照</h3>
     <div class="tablewrap"><table class="cmp wide">
       <thead><tr><th scope="col"><span hidden>項目</span></th><th scope="col">碳盤查</th><th scope="col">碳足跡</th><th scope="col">碳減量</th><th scope="col">碳抵換</th><th scope="col">碳中和</th></tr></thead>
@@ -1584,8 +1535,28 @@ function step(d){
 function interacted(){ if (state.interacted) return; state.interacted = true; const hint = $('#hint'); if (hint) hint.hidden = true; document.dispatchEvent(new CustomEvent('isle:interacted')); }
 
 let listPrevMode = 'home';
+function bookHTML(){
+  const all = caught.size === SUSPECTS.length, fresh = !caught.size && !visited.size && !evFound.size;
+  const isles = SUSPECTS.map(sus => {
+    const k = sus.id, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length, seen = ORDER[k].filter(id => visited.has(id)).length, got = caught.has(k), known = got || evFound.has(k);
+    const act = got ? `<button type="button" class="go-btn" data-case="file:${k}">看筆錄 ›</button>` : `<button type="button" class="go-btn" data-go="isle:${k}">${seen || evFound.has(k) ? '繼續任務' : '出任務'} ›</button>`;
+    return `<li class="suspect${known ? '' : ' unknown'}" style="--isle:var(--${k})">
+      <b class="sn">${ISLES[k].name}</b>${got ? '<span class="caught-stamp">已逮捕</span>' : ''}
+      <small>嫌犯：${known ? `${esc(sus.name)}・${esc(sus.title)}` : (sus.boss ? '幕後主使' : '？？？')}</small>
+      <small>線索 ${seen}/${ORDER[k].length}・證物 ${evFound.has(k) ? '✓' : '？'}・祕境 ${sf}/${secs.length}</small>
+      ${sus.boss && !got && !crewDone() ? '<p class="muted" style="font-size:13px">四個手下抓齊之前，他一碰就變色溜走。</p>' : ''}${act}</li>`;
+  }).join('');
+  return `
+    <details class="book-letter"${fresh ? ' open' : ''}><summary>怪盜變變的預告函</summary>${callingCard()}</details>
+    <p class="book-prog">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}・祕境 <b>${foundCount()}</b> / ${SECRETS.length}${all ? '・全部到案！' : ''}</p>
+    <h3 class="book-h">五座島的任務</h3>
+    <ul class="wanted book-isles">${isles}</ul>
+    ${all ? '<div class="btns"><button type="button" class="btn primary" data-case="end">看結案報告 ›</button></div>' : ''}
+    <h3 class="book-h">全部線索</h3>`;
+}
 function buildList(q = ''){
   const term = q.trim().toLowerCase(); let hits = 0;
+  const bk = $('#listCase'); bk.hidden = !!term || state.no3d; if (!bk.hidden) bk.innerHTML = bookHTML();
   const cols = KEYS.map(k => {
     const rows = ORDER[k].map((id,i) => {
       const h = byId[id];
@@ -1607,16 +1578,14 @@ function openList(){
 function closeList(){ if (state.no3d || list.hidden) return; list.hidden = true; setModes(listPrevMode); }
 
 body.addEventListener('click', e => {
-  const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-hint],[data-case],[data-look]'); if (!t) return;
+  const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-case],[data-look]'); if (!t) return;
   if (t.dataset.look) return look(t);
   if (t.dataset.case) return caseGo(t.dataset.case);
-  if (t.dataset.hint) return hintSecret(t.dataset.hint);
   if (t.dataset.hex) return showHex(t.dataset.hex);
   if (t.dataset.secret) return showSecret(t.dataset.secret);
   const g = t.dataset.go;
   if (g === 'home') showHome();
-  else if (g === 'secrets') showSecrets();
-  else if (g === 'case') showCase();
+  else if (g === 'secrets' || g === 'case') openList();
   else if (g.startsWith('isle:')) showIsle(g.slice(5));
   else if (g.startsWith('tour:')) showHex(ORDER[g.slice(5)][0]);
 });
@@ -1629,14 +1598,17 @@ document.querySelector('.modes').addEventListener('click', e => {
   if (m === 'home') { closeList(); showHome(); } else if (m === 'list') { list.hidden ? openList() : closeList(); } else showIsle(m);
 });
 $('#listCols').addEventListener('click', e => { const b = e.target.closest('[data-hex]'); if (b) showHex(b.dataset.hex); });
+$('#listCase').addEventListener('click', e => {
+  const b = e.target.closest('[data-go],[data-case]'); if (!b) return;
+  if (b.dataset.case) return caseGo(b.dataset.case);
+  const g = b.dataset.go; if (g.startsWith('isle:')) showIsle(g.slice(5));
+});
 $('#listSearch').addEventListener('input', e => buildList(e.target.value));
 $('#listClose').addEventListener('click', closeList);
 list.addEventListener('click', e => { if (e.target === list) closeList(); });
 function toggle(btn, fn){ btn.addEventListener('click', () => { const on = btn.getAttribute('aria-pressed') !== 'true'; btn.setAttribute('aria-pressed', String(on)); fn(on); }); }
 toggle($('#tgTags'), on => bridge.setTags(on));
 toggle($('#tgLinks'), on => bridge.setLinks(on));
-$('#tgSecrets').addEventListener('click', showSecrets);
-$('#tgCase').addEventListener('click', () => showCase());
 updateSecretCount(); updateCaseCount();
 const dnBtns = document.querySelectorAll('.daynight button');
 const darkNow = () => { const a = document.documentElement.getAttribute('data-theme'); return a ? a === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
@@ -1655,7 +1627,7 @@ document.addEventListener('keydown', e => {
 new ResizeObserver(() => bridge.relayout()).observe(panel);
 
 window.UI = {
-  state, showHex, showIsle, showHome, closePanel, interacted, showSecret, showSecrets, isFound: id => found.has(id), evidenceFound, suspectClicked,
+  state, showHex, showIsle, showHome, closePanel, interacted, showSecret, isFound: id => found.has(id), evidenceFound, suspectClicked,
   mascotClicked(){ interacted(); if (state.view === 'hex') step(1); else showHex(ORDER[state.view === 'isle' ? state.isle : 'inv'][0]); },
   no3d(msg){
     if (state.no3d) return; state.no3d = true;
