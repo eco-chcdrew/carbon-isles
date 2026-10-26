@@ -2956,8 +2956,8 @@ const worldBase = t => t.userData.base.clone().add(isles[t.userData.isle].target
 const topOf = id => worldBase(tileById[id]).add(new V3(0, 0.03, 0));
 let layoutT = null, showLinks = false;
 const LAYOUTS = {
-  wide: { inv:[-11.5,-13.5], cfp:[-0.5,19.5], rdc:[-13.8,3.2], ofs:[12.8,3.6], neu:[11.5,-14] },
-  tall: { inv:[-3.5,-28], cfp:[7,-13.5], rdc:[-7,0], ofs:[7,13.5], neu:[-4,27.5] }
+  wide: { inv:[-11.5,-13.5], cfp:[12,-16], rdc:[-13.8,3.2], ofs:[12.8,3.6], neu:[-0.5,19.5] },
+  tall: { inv:[-3.5,-28], cfp:[-4,27.5], rdc:[-7,0], ofs:[7,13.5], neu:[7,-13.5] }
 };
 function layoutAll(st){ const L = LAYOUTS[st ? 'tall' : 'wide'], pos = {}; for (const k of D.KEYS){ const [x, z] = L[k]; pos[k] = new V3(x, 0, z); } return pos; }
 function setLayout(st, instant){
