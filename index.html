@@ -165,6 +165,41 @@ ul.items span{display:block;color:var(--muted);font-size:14px;line-height:1.6}
 .secret-cta b{font-weight:400;font-size:17px;color:var(--accent)}
 .toggle.case::before{background:#C7472F;border-color:#C7472F}
 .toggle.case b{font-weight:400}
+.mission{position:relative;margin:12px 0 18px;padding:12px 14px 14px;border:2px solid var(--line);border-radius:var(--wobble-2);background:var(--card);box-shadow:2px 3px 0 var(--shade)}
+.m-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin:0;font-family:var(--f-hand);font-size:18px;line-height:1.35}
+.m-tag{font-size:13px;line-height:1.3;color:#FFF;background:#B5382A;border-radius:4px;padding:1px 7px 2px;align-self:center}
+.m-head b{font-weight:400;color:var(--isle)}
+.m-bar{height:8px;border-radius:6px;background:var(--wash);margin:10px 0 3px;overflow:hidden}
+.m-bar i{display:block;height:100%;background:var(--isle);border-radius:6px;transition:width .4s ease}
+.m-count{margin:0;font-size:12.5px;color:var(--muted)}
+.m-steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:7px}
+.m-steps li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px;font-size:14.5px;line-height:1.5}
+.m-steps li::before{content:"";box-sizing:border-box;width:16px;height:16px;margin-top:3px;border:1.5px solid var(--line);border-radius:4px;font-size:11px;line-height:13px;text-align:center}
+.m-steps li.done::before{content:"✓";background:var(--isle);border-color:var(--isle);color:#FFF}
+.m-steps li.done > span{color:var(--muted)}
+.m-steps li.bonus::before{content:"✦";border:0;color:#D9A441;font-size:14px;line-height:16px}
+.m-steps small{display:block;color:var(--muted);font-size:12.5px}
+.m-keys{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.m-keys button{appearance:none;cursor:pointer;font-size:13px;line-height:1.4;border:1.5px solid var(--soft);background:var(--paper);color:var(--ink);border-radius:var(--wobble);padding:2px 9px}
+.m-keys button:hover{border-color:var(--isle)}
+.m-keys button.done{border-style:dashed;color:var(--muted)}
+.m-keys button.done::before{content:"✓ ";color:var(--isle)}
+.mission .btns{margin-top:12px}
+.mbar{appearance:none;display:flex;flex-wrap:wrap;gap:2px 12px;align-items:center;width:100%;box-sizing:border-box;margin:8px 0 2px;padding:6px 10px 7px;border:1.5px dashed var(--accent);border-radius:var(--wobble);background:transparent;font-family:var(--f-hand);font-size:14px;line-height:1.4;color:var(--ink);cursor:pointer;text-align:left}
+.mbar:hover{background:var(--wash)}
+.mbar .m-tag{font-family:var(--f-body)}
+.mbar b{font-weight:400;color:var(--accent)}
+.event{position:relative;margin:16px 0 6px;padding:12px 14px 13px;border:2px solid var(--accent);border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;background:color-mix(in srgb, var(--accent) 9%, var(--card));box-shadow:2px 3px 0 var(--shade)}
+.event.sniff{border-color:#C9A13B;background:color-mix(in srgb, #D9A441 12%, var(--card))}
+.ev-t{margin:0;font-family:var(--f-hand);font-size:18px;line-height:1.35;color:var(--accent)}
+.event.sniff .ev-t{color:var(--ink)}
+.event p{margin:6px 0 0;font-size:14.5px;line-height:1.65}
+.event .scrawl{font-family:var(--f-hand);font-size:16.5px;line-height:1.55;rotate:-.6deg;padding:6px 10px;border:1.5px dashed var(--soft);border-radius:6px;background:var(--paper)}
+.event .btns{margin-top:10px}
+.ev-note[hidden]{display:none}
+.isle-case{margin:6px 0 0;font-size:13.5px;color:var(--muted)}
+.isle-case b{font-weight:500;color:var(--ink)}
+.isle-case .got{color:#B5382A}
 .ccard p{margin:0}
 .ccard p + p{margin-top:6px}
 .ccard .sign{text-align:right;margin-top:8px}
@@ -1087,35 +1122,45 @@ const SUSPECTS = [
     hide:'煙味還很重，他一定還躲在島上。看到灰灰的影子從草叢後面探頭，就點他！',
     trick:'盤查的時候只算燒油和用電，把冷媒補充、化糞池、滅火器這些不起眼的排放源藏起來，排放量就少了一大截。',
     truth:'先把排放源一個一個列清楚，小的也要列，再用重大性評估決定怎麼算。冷媒漏掉的部分算範疇一的逸散排放：補了幾公斤冷媒，乘上那種冷媒的全球暖化潛勢（GWP），就是漏掉的排放量。',
-    thanks:'盤查表的空格都補回來了，謝謝碳寶！', hexes:['inv-s1', 'inv-material'] },
+    thanks:'盤查表的空格都補回來了，謝謝碳寶！', hexes:['inv-s1', 'inv-material'],
+    scrawl:'那幾公斤冷媒，誰會發現？', taunt:'哼，被你查到了？',
+    clue:{ 'inv-s1':'範疇一包含逸散排放：冷氣、冰箱漏出來的冷媒也要算。漏漏偷偷撕掉的，就是冷媒補充的紀錄。', 'inv-material':'重大性評估是用來決定哪些排放源要算、怎麼算，不是拿來把排放源藏起來。漏漏把小排放源全刪了，還說它們「不重要」。' } },
   { id:'cfp', name:'剪剪', title:'剪邊界螃蟹', ev:'剪成兩半的吊牌',
     evNote:'吊牌上的碳足跡只剩「製造」那一格，原料、運輸、使用、廢棄四格全被剪掉了，難怪數字小得不像話。',
     witness:'半夜一直聽到「喀嚓、喀嚓」的聲音，好像有人拿剪刀在剪東西。',
     hide:'剪刀聲還沒停。找找看哪裡有紅色的大鉗子冒出來！',
     trick:'把產品的一生剪掉一大段，只算工廠裡的製造。原料怎麼來、怎麼運、用的時候耗多少電、丟掉以後怎麼處理，全都不算。',
     truth:'碳足跡要照 PCR 把系統邊界畫清楚：從原料一路算到廢棄（搖籃到墳墓），或只算到出廠（搖籃到大門），都要寫明是哪一種。真的要排除一小段，得符合截斷準則，也要說明理由。',
-    thanks:'吊牌黏好了，五個階段一格不少。', hexes:['cfp-pcr', 'cfp-scope'] },
+    thanks:'吊牌黏好了，五個階段一格不少。', hexes:['cfp-pcr', 'cfp-scope'],
+    scrawl:'喀嚓！少算一點，標籤就好看多了。', taunt:'喀嚓喀嚓，追不到！',
+    clue:{ 'cfp-pcr':'PCR 規定了這類產品的系統邊界要畫到哪裡。剪剪偷偷把邊界剪短，只留下工廠裡那一段。', 'cfp-scope':'五個生命週期階段都對得到組織盤查的範疇。剪剪剪掉的，正好是範疇三最大的那幾塊。' } },
   { id:'rdc', name:'拖拖', title:'明天再減樹懶', ev:'每一頁都寫著「明天」的日曆',
     evNote:'從 2026 翻到 2049，每一頁都寫著「明天再減」，只有 2050 那一頁畫了一個大大的愛心。',
     witness:'有個慢吞吞的傢伙一直說「明天再減、明天再減」，說完就躺下去睡了。',
     hide:'他走路很慢，一定還沒走遠。找找看樹叢後面有沒有毛茸茸的頭。',
     trick:'只喊一句「2050 淨零」，中間什麼都不做，每天都說明天再開始減。',
     truth:'淨零要有路線圖。SBTi 要求先訂 5 到 10 年內的近期目標，2030 年前就得減下一大段；每年也要追蹤，減了多少、還差多少，一年一年算清楚。',
-    thanks:'拖拖今天真的開始減了，我們一起往下走！', hexes:['rdc-2030'] },
+    thanks:'拖拖今天真的開始減了，我們一起往下走！', hexes:['rdc-2030'],
+    scrawl:'急什麼？2050 還很久……呼……', taunt:'呼……明天再說……',
+    clue:{ 'rdc-2030':'2030 是淨零路上的第一個大里程碑。拖拖把每一年的減量都寫成「明天」，2030 根本到不了。' } },
   { id:'ofs', name:'雙雙', title:'重複計算浣熊兄弟', ev:'兩張一模一樣的額度證書',
     evNote:'兩張證書的序號都是 TW-0427。同一公噸的減量，被賣了兩次。',
     witness:'水晶旁邊有兩個長得一模一樣的影子，手上拿著同一張紙，一個往東跑、一個往西跑。',
     hide:'兩個都還在島上！注意看，有兩條條紋尾巴的地方就是了。',
     trick:'同一份減量額度，哥哥賣給 A 公司，弟弟再賣給 B 公司，兩家公司都拿去抵自己的排放。這就叫重複計算。',
     truth:'每一公噸額度都有自己的序號。拿去抵換時，要在登錄平台上註銷，註銷之後就不能再賣、再用，是誰用掉的也查得到。',
-    thanks:'多出來的那張證書，已經作廢了。', hexes:['ofs-retire'] },
+    thanks:'多出來的那張證書，已經作廢了。', hexes:['ofs-retire'],
+    scrawl:'一張變兩張，生意好好做！', taunt:'哥，快跑！',
+    clue:{ 'ofs-retire':'額度一定要註銷，才不會被用兩次。雙雙兄弟就是趁還沒註銷，把同一張證書賣給兩家公司。' } },
   { id:'neu', name:'怪盜變變', title:'漂綠變色龍', boss:true, ev:'一桶綠油漆和一疊貼紙',
     evNote:'貼紙上印著「100% 碳中和」，背面什麼數字都沒有。油漆還沒乾，他剛剛一定還在這裡。',
     witness:'有人把潟湖邊刷得綠油油的，油漆味好重！還聽到有人在笑：「看起來環保就好啦～」',
     hide:'他會變色，躲起來很難找。',
     trick:'不盤查也不減量，買一點便宜的額度，就在產品上貼「100% 碳中和」，再把整座島刷成綠色。看起來很環保，其實什麼都沒做，這就是漂綠。',
     truth:'碳中和要先盤查、先減量，剩下真的減不掉的，才用高品質的額度抵銷並註銷，還要經過查證；宣告時要說清楚是哪個產品、哪一段期間。歐盟從 2026 年 9 月起，也不准產品只靠買額度就說自己對氣候「零影響」。',
-    thanks:'潟湖的油漆擦乾淨了，這次是真的乾淨。', hexes:['neu-claim', 'neu-rules'] }
+    thanks:'潟湖的油漆擦乾淨了，這次是真的乾淨。', hexes:['neu-claim', 'neu-rules'],
+    scrawl:'綠綠的，看起來就很環保，不是嗎？', taunt:'呵呵，看得出來嗎？',
+    clue:{ 'neu-claim':'碳中和宣告要寫清楚標的、期間和做法。變變的貼紙只有「100% 碳中和」幾個大字，背面什麼都沒有。', 'neu-rules':'只靠買額度、什麼都沒做就喊碳中和，這就是漂綠。變變最拿手的就是這一招。' } }
 ];
 window.ISLE_DATA = { ISLES, HEXES, LINKS, ORDER, CHAINS, DISTRICTS, KEYS, LETTER, byId, SECRETS, SUSPECTS };
 
@@ -1149,7 +1194,7 @@ function secretHTML(s, isNew){
     <p class="isle-meta">${ISLES[s.isle].name}</p>
     <p class="lead" style="margin-top:10px">${esc(s.note)}</p>
     <p class="secret-progress">已發現 <b>${n}</b> / ${SECRETS.length} 個祕境${all ? '，全部找到了！' : '。'}</p>
-    <div class="btns"><button type="button" class="btn" data-go="secrets">祕境筆記</button><button type="button" class="btn primary" data-go="isle:${s.isle}">回到${ISLES[s.isle].name}</button></div>`;
+    <div class="btns">${backToTour(s.isle, true) || `<button type="button" class="btn primary" data-go="isle:${s.isle}">回到${ISLES[s.isle].name}</button>`}<button type="button" class="btn" data-go="secrets">祕境筆記</button></div>`;
 }
 function secretsHTML(active){
   const items = SECRETS.map(s => found.has(s.id)
@@ -1179,7 +1224,7 @@ function hintSecret(id){
 }
 const suspectById = Object.fromEntries(SUSPECTS.map(s => [s.id, s])), evFound = new Set(), caught = new Set();
 const CREW = SUSPECTS.filter(s => !s.boss).map(s => s.id), crewDone = () => CREW.every(id => caught.has(id));
-function resetCase(){ evFound.clear(); caught.clear(); updateCaseCount(); bridge.caseReset(); if (state.view === 'case') openPanel(caseHTML(), 'CASE FILE ─ 通緝令'); }
+function resetCase(){ evFound.clear(); caught.clear(); visited.clear(); state.lastHex = null; updateCaseCount(); bridge.caseReset(); if (state.view === 'case') openPanel(caseHTML(), 'CASE FILE ─ 通緝令'); }
 function updateCaseCount(){ document.querySelectorAll('[data-case-count]').forEach(el => { el.textContent = `${caught.size}/${SUSPECTS.length}`; }); }
 const said = (s, line) => `<p class="witness" style="--isle:var(--${s.id})"><b>${ISLES[s.id].owner}：</b>「${esc(line)}」</p>`;
 function nextStep(s){
@@ -1223,7 +1268,8 @@ function evidenceHTML(s, isNew){
     <p class="isle-meta">${ISLES[s.id].name}</p>
     <p class="lead" style="margin-top:10px">${esc(s.evNote)}</p>
     <aside class="note"><h3>嫌犯是……</h3><p>${esc(s.name)}，${esc(s.title)}。${esc(s.hide)}${ready ? '' : '先把四個手下抓齊，他就躲不住了。'}</p></aside>
-    <div class="btns">${ready ? `<button type="button" class="btn primary" data-case="lair:${s.id}">去抓他 ›</button>` : ''}<button type="button" class="btn" data-go="case">通緝令</button></div>`;
+    <div class="btns">${ready ? `<button type="button" class="btn primary" data-look="lair:${s.id}">去抓他 ›</button>` : ''}${backToTour(s.id, !ready)}<button type="button" class="btn" data-go="case">通緝令</button></div>
+    ${ready ? noteP('lair:' + s.id, s) : ''}`;
 }
 function caughtHTML(s, isNew){
   const all = caught.size === SUSPECTS.length, bossLeft = crewDone() && !all;
@@ -1241,7 +1287,7 @@ function caughtHTML(s, isNew){
     <h3>回島上查證</h3><div class="linkrow">${links}</div>
     ${said(s, s.thanks)}
     <p class="secret-progress">已逮捕 <b>${caught.size}</b> / ${SUSPECTS.length}${all ? '，全部到案！' : ''}</p>
-    <div class="btns">${next}<button type="button" class="btn" data-go="case">通緝令</button></div>`;
+    <div class="btns">${next}${backToTour(s.id, !next)}<button type="button" class="btn" data-go="case">通緝令</button></div>`;
 }
 function slipHTML(s, why){
   if (why === 'noev') return `
@@ -1307,6 +1353,101 @@ function suspectClicked(id){
   bridge.taunt(id, s.boss ? '我、我只是想看起來環保嘛……' : '嗚……被抓到了');
   showCaught(id, true);
 }
+const visited = new Set();
+const isleSecrets = k => SECRETS.filter(x => x.isle === k);
+const suspectLabel = sus => caught.has(sus.id) || evFound.has(sus.id) ? sus.name : (sus.boss ? '幕後主使' : '躲在島上的嫌犯');
+const NOTES = {
+  ev:() => '嗅嗅聞到味道了！鏡頭帶到附近，找找哪裡在閃紅光，點下去就是證物。',
+  lair:sus => `${suspectLabel(sus)}就躲在樹叢後面，一下探頭一下躲起來。看到就點他，點樹叢也行！`,
+  secret:() => '嗅嗅對著這一帶叫個不停。找找哪裡在閃金光，點下去就算找到祕境。'
+};
+function isleNext(k){
+  const sus = suspectById[k], order = ORDER[k], seen = order.filter(id => visited.has(id)).length;
+  if (!sus) return null;
+  if (!seen) return { label:'開始調查', attr:`data-hex="${order[0]}"` };
+  const key = sus.hexes.find(id => !visited.has(id));
+  if (key) return { label:`去查關鍵線索：${byId[key].short}`, attr:`data-hex="${key}"` };
+  if (!evFound.has(k)) return { label:'請嗅嗅帶路找證物', attr:`data-look="ev:${k}"`, note:'ev:' + k };
+  if (!caught.has(k)){
+    if (sus.boss && !crewDone()) return { label:'先抓齊四個手下', attr:'data-go="case"' };
+    return { label:`去抓${sus.name}`, attr:`data-look="lair:${k}"`, note:'lair:' + k };
+  }
+  const left = order.find(id => !visited.has(id));
+  if (left) return { label:`把線索查完（第 ${order.indexOf(left) + 1} 條）`, attr:`data-hex="${left}"` };
+  const sec = isleSecrets(k).find(x => !found.has(x.id));
+  if (sec) return { label:'找島上的祕境', attr:`data-look="secret:${sec.id}"`, note:'secret:' + sec.id };
+  const nk = KEYS[KEYS.indexOf(k) + 1];
+  return nk ? { label:`下一座島：${ISLES[nk].name}`, attr:`data-go="isle:${nk}"` } : { label:'看通緝令', attr:'data-go="case"' };
+}
+const noteP = (key, sus, extra = '') => `<p class="ev-note secret-go" data-for="${key}" hidden>${key.startsWith('lair') ? NOTES.lair(sus) : key.startsWith('ev') ? NOTES.ev() : NOTES.secret()}${extra}</p>`;
+function missionHTML(k){
+  const sus = suspectById[k]; if (!sus) return '';
+  const order = ORDER[k], seen = order.filter(id => visited.has(id)).length, secs = isleSecrets(k), sf = secs.filter(x => found.has(x.id)).length;
+  const keysDone = sus.hexes.every(id => visited.has(id)), nx = isleNext(k);
+  const keys = sus.hexes.map(id => `<button type="button" class="${visited.has(id) ? 'done' : ''}" data-hex="${id}">${esc(byId[id].short)}</button>`).join('');
+  const crewNote = sus.boss && !crewDone() ? `<small>四個手下還沒抓齊，他一碰就會變色溜走。</small>` : '';
+  const secList = secs.filter(x => !found.has(x.id)).map(x => `<button type="button" data-look="secret:${x.id}">？？？・${esc(x.hint)}</button>`).join('');
+  return `
+    <section class="mission" style="--isle:var(--${k})">
+      <p class="m-head"><span class="m-tag">任務</span>抓到<b>${esc(suspectLabel(sus))}</b>${caught.has(k) ? '<span class="caught-stamp" style="position:static;rotate:-6deg">已逮捕</span>' : ''}</p>
+      ${said(sus, caught.has(k) ? sus.thanks : sus.witness)}
+      <div class="m-bar" aria-hidden="true"><i style="width:${Math.round(seen/order.length*100)}%"></i></div>
+      <p class="m-count">線索已查 ${seen} / ${order.length}</p>
+      <ol class="m-steps">
+        <li class="${keysDone ? 'done' : ''}"><span>查出關鍵線索<small>${keysDone ? '嫌犯的手法摸清楚了。' : '這幾條線索藏著嫌犯動手腳的痕跡：'}</small><span class="m-keys">${keys}</span></span></li>
+        <li class="${evFound.has(k) ? 'done' : ''}"><span>找到證物${evFound.has(k) ? `<small>${esc(sus.ev)}</small>` : '<small>請嗅嗅帶路，地圖上閃紅光的就是。</small>'}</span></li>
+        <li class="${caught.has(k) ? 'done' : ''}"><span>逮捕${esc(suspectLabel(sus))}${crewNote}</span></li>
+        <li class="bonus"><span>島上祕境 ${sf} / ${secs.length}${secList ? `<span class="m-keys">${secList}</span>` : '<small>全部找到了！</small>'}</span></li>
+      </ol>
+      ${nx ? `<div class="btns"><button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>${seen ? `<button type="button" class="btn" data-hex="${order[0]}">從第 1 條看起</button>` : ''}</div>` : ''}
+      ${['ev:' + k, 'lair:' + k].map(key => noteP(key, sus)).join('')}${secs.map(x => noteP('secret:' + x.id, sus)).join('')}
+    </section>`;
+}
+function backToTour(k, primary){
+  const h = byId[state.lastHex]; if (!h || h.isle !== k) return '';
+  return `<button type="button" class="btn${primary ? ' primary' : ''}" data-hex="${h.id}">繼續調查：第 ${ORDER[k].indexOf(h.id) + 1} 條線索 ›</button>`;
+}
+function tourEvent(h, i){
+  const k = h.isle, sus = suspectById[k], order = ORDER[k]; if (!sus) return '';
+  const here = `<button type="button" class="btn" data-hex="${h.id}">回到這條線索</button>`;
+  if (sus.clue && sus.clue[h.id]){
+    let act = '';
+    if (!evFound.has(k)) act = `<button type="button" class="btn primary" data-look="ev:${k}">請嗅嗅帶路找證物 ›</button>`;
+    else if (!caught.has(k)) act = sus.boss && !crewDone() ? `<button type="button" class="btn" data-go="case">先抓齊四個手下</button>` : `<button type="button" class="btn primary" data-look="lair:${k}">去抓${esc(sus.name)} ›</button>`;
+    return `
+      <aside class="event">
+        <p class="ev-t">${caught.has(k) ? '關鍵線索' : '關鍵線索！'}</p>
+        <p>${esc(sus.clue[h.id])}</p>
+        ${caught.has(k) ? '' : `<p class="scrawl">「${esc(sus.scrawl)}」──${evFound.has(k) ? esc(sus.name) : '？？？'}</p>`}
+        ${act ? `<div class="btns">${act}</div>` : ''}
+        ${noteP('ev:' + k, sus)}${noteP('lair:' + k, sus)}
+      </aside>`;
+  }
+  if (i === order.length - 1 && !caught.has(k)){
+    const nk = KEYS[KEYS.indexOf(k) + 1], nx = isleNext(k);
+    return `
+      <aside class="event">
+        <p class="ev-t">還差一步！</p>
+        <p>線索都查完了，可是${esc(suspectLabel(sus))}還在島上逍遙。</p>
+        <div class="btns">${nx ? `<button type="button" class="btn primary" ${nx.attr}>${esc(nx.label)} ›</button>` : ''}${nk ? `<button type="button" class="btn" data-hex="${ORDER[nk][0]}">先去${ISLES[nk].name}</button>` : ''}</div>
+        ${nx && nx.note ? noteP(nx.note, sus) : ''}
+      </aside>`;
+  }
+  const secs = isleSecrets(k).filter(x => !found.has(x.id));
+  const spots = [Math.floor(order.length*0.3), Math.floor(order.length*0.65)].filter(n => n > 0 && !sus.hexes.includes(order[n]));
+  const si = spots.indexOf(i);
+  if (si >= 0 && secs.length){
+    const sec = secs[si % secs.length];
+    return `
+      <aside class="event sniff">
+        <p class="ev-t">嗅嗅豎起耳朵……</p>
+        <p>牠對著${esc(sec.hint)}一直叫，那邊好像藏著什麼。</p>
+        <div class="btns"><button type="button" class="btn" data-look="secret:${sec.id}">去看看 ›</button></div>
+        ${noteP('secret:' + sec.id, sus)}
+      </aside>`;
+  }
+  return '';
+}
 function openPanel(html, label = 'CASE FILE', stamp = ''){ body.innerHTML = html; fileLabel.textContent = label; stampEl.textContent = stamp; stampEl.hidden = !stamp; panel.hidden = false; body.scrollTop = 0; }
 
 function homeHTML(){
@@ -1316,7 +1457,8 @@ function homeHTML(){
       <p class="isle-owner">島主・${I.owner}</p>
       <p class="isle-q">${I.q}</p>
       <p class="isle-meta">${I.std}・${ORDER[k].length} 條線索</p>
-      <div class="btns"><button type="button" class="btn" data-go="isle:${k}">看整座島</button><button type="button" class="btn primary" data-go="tour:${k}">開始調查</button></div>
+      ${suspectById[k] ? `<p class="isle-case">任務：抓到 <b class="${caught.has(k) ? 'got' : ''}">${esc(suspectLabel(suspectById[k]))}${caught.has(k) ? '（已逮捕）' : ''}</b>　線索 ${ORDER[k].filter(id => visited.has(id)).length}/${ORDER[k].length}　祕境 ${isleSecrets(k).filter(x => found.has(x.id)).length}/${isleSecrets(k).length}</p>` : ''}
+      <div class="btns"><button type="button" class="btn" data-go="isle:${k}">看整座島</button><button type="button" class="btn primary" data-go="isle:${k}">${ORDER[k].some(id => visited.has(id)) ? '繼續任務' : '出任務'}</button></div>
     </article>`; }).join('');
   return `
     <p class="eyebrow">案件檔案</p>
@@ -1349,21 +1491,25 @@ function isleHTML(k){
     <nav class="crumb" aria-label="位置"><button type="button" data-go="home">全覽</button><span aria-hidden="true">›</span><span>${I.name}</span></nav>
     <h2>${I.q}</h2>
     <p class="owner-line" style="--isle:var(--${k})">島主：<b>${I.owner}</b></p>
-    ${suspectById[k] ? said(suspectById[k], caught.has(k) ? suspectById[k].thanks : suspectById[k].witness) + (caught.has(k) ? '' : nextStep(suspectById[k])) : ''}
+    ${suspectById[k] ? missionHTML(k) : ''}
+
     <p class="isle-meta">${I.std}</p>
     <p class="lead" style="margin-top:10px">${I.intro}</p>
     <p class="isle-shape">${I.shape}</p>
     <p class="isle-fac">島上設施：<b>${I.facilities.join('・')}</b></p>
     <p class="isle-fac">永續行動：<b>${I.eco.join('・')}</b></p>
-    <div class="btns"><button type="button" class="btn primary" data-go="tour:${k}">開始調查</button></div>
+    ${suspectById[k] ? '' : `<div class="btns"><button type="button" class="btn primary" data-go="tour:${k}">開始調查</button></div>`}
     <h3>${ORDER[k].length} 條線索</h3>
     <ol class="stations">${stationsHTML(k)}</ol>`;
 }
 
 function hexHTML(h){
   const I = ISLES[h.isle], order = ORDER[h.isle], i = order.indexOf(h.id);
+  const sus = suspectById[h.isle], secs = isleSecrets(h.isle);
+  const mbar = sus ? `<button type="button" class="mbar" data-go="isle:${h.isle}"><span class="m-tag">任務</span><span>抓到 <b>${esc(suspectLabel(sus))}</b>${caught.has(h.isle) ? '（已逮捕）' : ''}</span><span>證物 ${evFound.has(h.isle) ? '✓' : '？'}</span><span>祕境 ${secs.filter(x => found.has(x.id)).length}/${secs.length}</span></button>` : '';
   let s = `<nav class="crumb" aria-label="位置"><button type="button" data-go="isle:${h.isle}">${I.name}</button><span aria-hidden="true">›</span><span>${esc(h.tag)}</span><span class="station">第 ${i+1}／${order.length} 條線索</span></nav>
-    <h2>${esc(h.title)}</h2><p class="lead">${esc(h.lead)}</p>`;
+    ${mbar}
+    <h2>${esc(h.title)}</h2><p class="lead">${esc(h.lead)}</p>${tourEvent(h, i)}`;
   const how = (h.formula || h.how) ? `<h3>怎麼算</h3>${h.formula ? `<p class="formula">${esc(h.formula)}</p>` : ''}${h.how ? `<p class="how">${esc(h.how)}</p>` : ''}` : '';
   const items = h.items ? `<h3>${esc(h.itemsTitle || '重點')}</h3><ul class="items" style="--c:${h.c}">${h.items.map(([b,t]) => `<li><div><b>${esc(b)}</b><span>${esc(t)}</span></div></li>`).join('')}</ul>` : '';
   s += h.first ? how + items : items + how;
@@ -1392,11 +1538,19 @@ function hexHTML(h){
   const prev = i > 0 ? `<button type="button" class="btn" data-hex="${order[i-1]}">‹ ${esc(byId[order[i-1]].short)}</button>` : `<button type="button" class="btn" data-go="isle:${h.isle}">‹ ${I.name} CASE FILE</button>`;
   let next;
   if (i < order.length - 1) next = `<button type="button" class="btn primary" data-hex="${order[i+1]}">${esc(byId[order[i+1]].short)} ›</button>`;
-  else { const nk = KEYS[KEYS.indexOf(h.isle) + 1]; next = nk ? `<button type="button" class="btn primary" data-hex="${ORDER[nk][0]}">下一座島：${ISLES[nk].name} ›</button>` : `<button type="button" class="btn primary" data-go="home">五座島都走完了，回全覽 ›</button>`; }
+  else { const nk = KEYS[KEYS.indexOf(h.isle) + 1], free = sus && !caught.has(sus.id), cls = free ? 'btn' : 'btn primary'; next = nk ? `<button type="button" class="${cls}" data-hex="${ORDER[nk][0]}">下一座島：${ISLES[nk].name} ›</button>` : `<button type="button" class="${cls}" data-go="home">五座島都走完了，回全覽 ›</button>`; }
   s += `<div class="navrow">${prev}${next}</div>`;
   return s;
 }
 
+function look(btn){
+  const key = btn.dataset.look, [what, id] = key.split(':'); interacted(); closeList();
+  if (what === 'secret'){ if (found.has(id)) return showSecret(id); bridge.focusSecret(id, false, false); }
+  else bridge.focusCase(id, what, false, what === 'lair');
+  const box = btn.closest('.event, .mission, .panel-body');
+  box.querySelectorAll('.ev-note').forEach(n => { n.hidden = n.dataset.for !== key; });
+  const n = box.querySelector(`.ev-note[data-for="${key}"]`); if (n) n.scrollIntoView({ block:'nearest', behavior:'smooth' });
+}
 function calcUpdate(src){
   const pre = $('#calcPreset'), act = $('#calcAct'), ef = $('#calcEf'), out = $('#calcOut'), unit = $('#calcUnit');
   if (!pre) return;
@@ -1414,7 +1568,9 @@ function showHex(id){
   const h = byId[id]; if (!h) return;
   closeList(); state.view='hex'; state.hex=id; state.isle=h.isle; setModes(h.isle);
   const o = ORDER[h.isle], n = o.indexOf(id);
-  openPanel(hexHTML(h), `CASE FILE ─ ${ISLES[h.isle].name}・第 ${n+1} 條線索`, n === o.length - 1 ? '破案！' : ''); if (h.calc) calcUpdate();
+  const sus = suspectById[h.isle], first = !visited.has(id); visited.add(id); state.lastHex = id;
+  if (first && sus && sus.clue && sus.clue[id] && !caught.has(sus.id)) bridge.taunt(sus.id, sus.taunt);
+  openPanel(hexHTML(h), `CASE FILE ─ ${ISLES[h.isle].name}・第 ${n+1} 條線索`, n === o.length - 1 ? (!sus || caught.has(sus.id) ? '破案！' : '未破案') : sus && sus.clue && sus.clue[id] && !caught.has(sus.id) ? '關鍵！' : ''); if (h.calc) calcUpdate();
   bridge.focusHex(id); interacted();
 }
 function closePanel(){ panel.hidden = true; state.view='none'; state.hex=null; setModes(''); bridge.clear(); }
@@ -1451,7 +1607,8 @@ function openList(){
 function closeList(){ if (state.no3d || list.hidden) return; list.hidden = true; setModes(listPrevMode); }
 
 body.addEventListener('click', e => {
-  const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-hint],[data-case]'); if (!t) return;
+  const t = e.target.closest('[data-go],[data-hex],[data-secret],[data-hint],[data-case],[data-look]'); if (!t) return;
+  if (t.dataset.look) return look(t);
   if (t.dataset.case) return caseGo(t.dataset.case);
   if (t.dataset.hint) return hintSecret(t.dataset.hint);
   if (t.dataset.hex) return showHex(t.dataset.hex);
