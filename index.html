@@ -216,7 +216,7 @@ button.secret-item:hover{border-color:var(--line)}
 
 .labels{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .labels .isle-title{transition:top .25s ease,left .25s ease,opacity .2s ease}
-.labels:not(.far) .isle-title i{display:none}
+.labels:not(.far) .isle-title i,.labels.tq2 .isle-title i,.labels.tq3 .isle-title i,.labels.tq3 .isle-title em{display:none}
 .labels .tagwrap,.labels .owner-tag{transition:opacity .2s ease}
 .labels .lbl-off,.labels .lbl-off *{opacity:0 !important;pointer-events:none !important}
 .tagwrap{pointer-events:none}
@@ -235,12 +235,12 @@ button.secret-item:hover{border-color:var(--line)}
 .labels.mid .tagwrap:hover,.labels.mid .tagwrap:focus-within{z-index:100000 !important}
 .isle-title{pointer-events:none;text-align:center;white-space:nowrap;color:var(--isle);
   text-shadow:0 0 1px var(--halo),0 0 2px var(--halo),0 0 2px var(--halo),0 0 3px var(--halo),0 0 4px var(--halo),0 0 6px var(--halo)}
-.isle-title em{display:inline-grid;place-items:center;width:26px;height:26px;margin-bottom:2px;font-style:normal;font-family:var(--f-hand);font-weight:700;font-size:15px;line-height:1;text-shadow:none;color:var(--isle);background:var(--halo);border:1.5px solid var(--isle);border-radius:52% 48% 55% 45% / 47% 55% 45% 53%}
-.isle-title b{display:block;font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1.05;letter-spacing:.06em;padding:0 4px}
-.isle-title b::after{content:"";display:block;height:9px;margin:2px 6% 1px;background:var(--isle);
+.isle-title em{display:inline-grid;place-items:center;width:calc(26px*var(--ts,1));height:calc(26px*var(--ts,1));margin-bottom:2px;font-style:normal;font-family:var(--f-hand);font-weight:700;font-size:calc(15px*var(--ts,1));line-height:1;text-shadow:none;color:var(--isle);background:var(--halo);border:1.5px solid var(--isle);border-radius:52% 48% 55% 45% / 47% 55% 45% 53%}
+.isle-title b{display:block;font-family:var(--f-display);font-weight:700;font-size:calc(30px*var(--ts,1));line-height:1.05;letter-spacing:.06em;padding:0 4px}
+.isle-title b::after{content:"";display:block;height:calc(9px*var(--ts,1));margin:2px 6% 1px;background:var(--isle);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6 C 18 1, 30 9, 46 5 S 76 1, 92 6 S 112 8, 118 4' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6 C 18 1, 30 9, 46 5 S 76 1, 92 6 S 112 8, 118 4' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat}
-.isle-title i{display:block;font-style:normal;font-family:var(--f-hand);font-weight:700;font-size:15px;line-height:1.3;color:var(--ink)}
+.isle-title i{display:block;font-style:normal;font-family:var(--f-hand);font-weight:700;font-size:calc(15px*var(--ts,1));line-height:1.3;color:var(--ink)}
 .isle-title small{display:none}
 .owner-tag{pointer-events:none;display:flex;align-items:baseline;gap:5px;background:var(--card);border:1.5px solid var(--isle);border-radius:var(--wobble);padding:2px 11px 4px;box-shadow:2px 2px 0 var(--shade);white-space:nowrap}
 .owner-tag small{font-family:var(--f-hand);font-size:12px;color:var(--muted)}
@@ -296,10 +296,10 @@ button.secret-item:hover{border-color:var(--line)}
   .panel-body h2{font-size:23px}
   .tag{font-size:13px;padding:2px 8px 3px 3px}
   .tag b{min-width:19px;height:19px;font-size:12.5px}
-  .isle-title em{width:22px;height:22px;font-size:13px}
-  .isle-title b{font-size:20px}
-  .isle-title b::after{height:7px}
-  .isle-title i{font-size:13.5px}
+  .isle-title em{width:calc(22px*var(--ts,1));height:calc(22px*var(--ts,1));font-size:calc(13px*var(--ts,1))}
+  .isle-title b{font-size:calc(20px*var(--ts,1))}
+  .isle-title b::after{height:calc(7px*var(--ts,1))}
+  .isle-title i{font-size:calc(13.5px*var(--ts,1))}
   .owner-tag{padding:2px 8px 3px}
   .owner-tag b{font-size:14px}
   .mascot-tag{font-size:13px;padding:3px 9px 4px}
@@ -1351,6 +1351,9 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 stage.appendChild(renderer.domElement);
 const labelRenderer = new CSS2DRenderer();
 const labelsEl = labelRenderer.domElement;
+let tq = 0;
+const TQ = [1, 0.84, 0.7, 0.6];
+function setTq(n){ tq = n; labelsEl.style.setProperty('--ts', TQ[n]); labelsEl.classList.toggle('tq2', n === 2); labelsEl.classList.toggle('tq3', n === 3); }
 labelsEl.className = 'labels';
 stage.appendChild(labelsEl);
 
@@ -2847,6 +2850,7 @@ function placeBubble(){
   let best = '', bs = Infinity;
   ['b', 'br', 'bl', 'r', 'l'].forEach((k, rank) => { for (let n = 0; n < 9; n++){ const key = k + ':' + n, s = cost(key, rank); if (s < bs){ bs = s; best = key; } } });
   if (bubKey && cost(bubKey, 0) <= bs + 50) best = bubKey;
+  { const [x, y] = spot(best), x2 = x + w, y2 = y + h; let ov = false; for (const o of obs){ if (Math.min(x2, o[2]) - Math.max(x, o[0]) > 0 && Math.min(y2, o[3]) - Math.max(y, o[1]) > 0){ ov = true; break; } } mtag.classList.toggle('lbl-off', ov); }
   if (best !== bubKey){ bubKey = best; mtag.dataset.tail = best.split(':')[0]; }
   const [x, y] = spot(bubKey);
   mtag.style.left = Math.round(x - ax) + 'px'; mtag.style.top = Math.round(y - ay) + 'px';
@@ -3251,7 +3255,7 @@ const off = { x:0, y:0 }, offTarget = { x:0, y:0 };
 const LAND = { fov:58, el:22, shift:0.16, pad:0.27 }, MAP_FOV = 36;
 let landMode = true, fovTarget = LAND.fov;
 const offBase = { x:0, y:0 };
-function setLand(on){ landMode = on; fovTarget = on ? LAND.fov : MAP_FOV; }
+function setLand(on){ landMode = on; fovTarget = on ? LAND.fov : MAP_FOV; setTq(0); }
 function setOffset(cam, o){
   if (Math.abs(o.x) < 0.5 && Math.abs(o.y) < 0.5){ cam.clearViewOffset(); cam.aspect = W/H; }
   else { const fw = W + 2*Math.abs(o.x), fh = H + 2*Math.abs(o.y); cam.aspect = fw/fh; cam.setViewOffset(fw, fh, o.x < 0 ? 2*Math.abs(o.x) : 0, o.y < 0 ? 2*Math.abs(o.y) : 0, W, H); }
@@ -3267,6 +3271,7 @@ function measure(){
   if (!panelEl.hidden){ const pr = panelEl.getBoundingClientRect(); if (phone) b = Math.min(b, pr.top - sr.top - 6); else r = Math.min(r, pr.left - sr.left - 6); }
   if (b - t < 80) t = Math.max(0, b - 80);
   vis = { l, t, r, b };
+  if (tq) setTq(0);
   offBase.x = (l + r)/2 - W/2; offBase.y = (t + b)/2 - H/2;
   offTarget.x = offBase.x; offTarget.y = offBase.y + (landMode ? (b - t)*LAND.shift : 0);
   const flipped = setLayout((r - l) / Math.max(1, b - t) < 0.95, !bridge.ready);
@@ -3496,19 +3501,27 @@ function declutter(){
   items.sort((a, b) => a.kind - b.kind || b.z - a.z);
   const clash = (r, dx, dy) => { for (const q of placed){ if (Math.min(r[2] + dx, q[2]) - Math.max(r[0] + dx, q[0]) > -3 && Math.min(r[3] + dy, q[3]) - Math.max(r[1] + dy, q[1]) > -3) return true; } return false; };
   const steps = DC_STEPS;
-  let bubbleIn = false;
+  let bubbleIn = false, missed = 0;
   for (const it of items){
-    if (it.kind >= 2 && !bubbleIn){ bubbleIn = true; if (!mtag.hidden && mlabel.visible && mtag.style.display !== 'none'){ const r = mtag.getBoundingClientRect(); if (r.width) placed.push([r.left - ox, r.top - oy, r.right - ox, r.bottom - oy]); } }
+    if (it.kind >= 2 && !bubbleIn){ bubbleIn = true; if (!mtag.hidden && mlabel.visible && mtag.style.display !== 'none' && !mtag.classList.contains('lbl-off')){ const r = mtag.getBoundingClientRect(); if (r.width) placed.push([r.left - ox, r.top - oy, r.right - ox, r.bottom - oy]); } }
     let pick = null;
+    const inView = it.kind !== 1 ? () => true : (dx, dy) => it.r[0] + dx >= 2 && it.r[2] + dx <= W - 2 && it.r[1] + dy >= 2 && it.r[3] + dy <= H - 2;
     if (it.kind === 1){
       const later = items.filter(o => o.kind >= 2); let best = Infinity;
       steps[1].forEach(([dx, dy], k) => {
-        if ((it.r[1] + dy < 0 && dy < 0) || clash(it.r, dx, dy)) return;
+        if (!inView(dx, dy) || clash(it.r, dx, dy)) return;
         let n = 0; for (const o of later){ if (Math.min(it.r[2] + dx, o.r[2]) - Math.max(it.r[0] + dx, o.r[0]) > -3 && Math.min(it.r[3] + dy, o.r[3]) - Math.max(it.r[1] + dy, o.r[1]) > -3) n++; }
         const sc = n*100 + k; if (sc < best){ best = sc; pick = [dx, dy]; }
       });
     }
     else for (const [dx, dy] of steps[it.kind]){ if (it.r[1] + dy < 0 && dy < 0) continue; if (!clash(it.r, dx, dy)){ pick = [dx, dy]; break; } }
+    if (it.kind === 1 && !pick){
+      if (landMode) missed++;
+      if (landMode && tq === 3){
+        let least = Infinity;
+        for (const [dx, dy] of steps[1]){ let a = 0; for (const q of placed){ const wx = Math.min(it.r[2] + dx, q[2]) - Math.max(it.r[0] + dx, q[0]), wy = Math.min(it.r[3] + dy, q[3]) - Math.max(it.r[1] + dy, q[1]); if (wx > 0 && wy > 0) a += wx*wy; } if (!inView(dx, dy)) a += 1e5; if (a < least){ least = a; pick = [dx, dy]; } }
+      }
+    }
     const off = !pick, el = it.el;
     if (el.classList.contains('lbl-off') !== off) el.classList.toggle('lbl-off', off);
     if (!off){ const [dx, dy] = pick;
@@ -3516,6 +3529,7 @@ function declutter(){
       if ((el._dy || 0) !== dy){ el._dy = dy; el.style.top = dy ? dy + 'px' : ''; }
       placed.push([it.r[0] + dx, it.r[1] + dy, it.r[2] + dx, it.r[3] + dy]); }
   }
+  if (missed && landMode && tq < 3 && !tween && !layoutT){ setTq(tq + 1); dcAt = 0; }
 }
 
 resize();
