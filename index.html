@@ -359,19 +359,19 @@ button.secret-item:hover{border-color:var(--line)}
         </div>
       </div>
       <nav class="modes" aria-label="切換視角">
-        <button type="button" data-mode="home" aria-pressed="true">全景</button>
+        <button type="button" data-mode="home" aria-pressed="true">全覽</button>
         <button type="button" data-mode="inv" aria-pressed="false" aria-label="碳盤查島"><span class="l">碳盤查島</span><span class="s">盤查</span></button>
         <button type="button" data-mode="cfp" aria-pressed="false" aria-label="碳足跡島"><span class="l">碳足跡島</span><span class="s">足跡</span></button>
         <button type="button" data-mode="rdc" aria-pressed="false" aria-label="碳減量島"><span class="l">碳減量島</span><span class="s">減量</span></button>
         <button type="button" data-mode="ofs" aria-pressed="false" aria-label="碳抵換島"><span class="l">碳抵換島</span><span class="s">抵換</span></button>
         <button type="button" data-mode="neu" aria-pressed="false" aria-label="碳中和島"><span class="l">碳中和島</span><span class="s">中和</span></button>
-        <button type="button" data-mode="list" aria-pressed="false" aria-label="案件清單"><span class="l">案件清單</span><span class="s">清單</span></button>
+        <button type="button" data-mode="list" aria-pressed="false" aria-label="任務簿"><span class="l">任務簿</span><span class="s">任務簿</span></button>
       </nav>
     </header>
 
     <aside id="panel" aria-label="CASE FILE">
       <div class="file-head">
-        <span class="file-label" id="fileLabel">CASE FILE ─ 案件簡報</span>
+        <span class="file-label" id="fileLabel">CASE FILE ─ 案件檔案</span>
         <span class="stamp" id="stamp" hidden></span>
         <button type="button" class="icon-btn" id="panelClose" aria-label="闔上 CASE FILE">✕</button>
       </div>
@@ -387,10 +387,10 @@ button.secret-item:hover{border-color:var(--line)}
     </div>
   </div>
 
-  <section id="list" hidden aria-label="案件清單">
+  <section id="list" hidden aria-label="任務簿">
     <div class="list-card">
       <div class="list-head">
-        <h2>案件清單</h2>
+        <h2>任務簿</h2>
         <input id="listSearch" type="search" placeholder="找線索，例如冷媒、電力、PCR" aria-label="搜尋線索">
         <button type="button" class="btn" id="listClose">關閉</button>
       </div>
@@ -1264,7 +1264,7 @@ function finaleHTML(){
     <h2>五個嫌犯全部到案</h2>
     <p class="lead">漏漏把藏起來的排放源一個一個交了出來；剪剪把吊牌黏回去，五個階段一格不少；拖拖說，今天就開始減；雙雙把多賣的那張證書退了，一個序號只用一次；變變……正蹲在潟湖邊，把油漆一點一點擦掉。</p>
     <aside class="note"><h3>碳寶的辦案筆記</h3><p>帳要算全、邊界要畫清楚、目標從現在開始、額度用掉就註銷。這些都做到了，才有資格說「碳中和」。</p></aside>
-    <div class="btns"><button type="button" class="btn primary" data-go="home">回全景</button><button type="button" class="btn" data-go="case">通緝令</button></div>`;
+    <div class="btns"><button type="button" class="btn primary" data-go="home">回全覽</button><button type="button" class="btn" data-go="case">通緝令</button></div>`;
 }
 function showCase(active){
   interacted(); closeList(); state.view = 'case'; state.hex = null; setModes('');
@@ -1319,7 +1319,7 @@ function homeHTML(){
       <div class="btns"><button type="button" class="btn" data-go="isle:${k}">看整座島</button><button type="button" class="btn primary" data-go="tour:${k}">開始調查</button></div>
     </article>`; }).join('');
   return `
-    <p class="eyebrow">案件簡報</p>
+    <p class="eyebrow">案件檔案</p>
     <h2>五座島</h2>
     <p class="lead">碳盤查、碳足跡、碳減量、碳抵換、碳中和，一座島查一個案子。每一塊六角形是一條線索，點下去就能看；打開線索時，紅線會連到其他島上有關的線索。</p>
     <p class="secret-cta"><span>✉ 怪盜變變寄來一封預告函。已逮捕 <b data-case-count>${caught.size}/${SUSPECTS.length}</b></span><button type="button" class="btn primary" data-go="case">打開通緝令</button></p>
@@ -1346,7 +1346,7 @@ function stationsHTML(k){
 function isleHTML(k){
   const I = ISLES[k];
   return `
-    <nav class="crumb" aria-label="位置"><button type="button" data-go="home">全景</button><span aria-hidden="true">›</span><span>${I.name}</span></nav>
+    <nav class="crumb" aria-label="位置"><button type="button" data-go="home">全覽</button><span aria-hidden="true">›</span><span>${I.name}</span></nav>
     <h2>${I.q}</h2>
     <p class="owner-line" style="--isle:var(--${k})">島主：<b>${I.owner}</b></p>
     ${suspectById[k] ? said(suspectById[k], caught.has(k) ? suspectById[k].thanks : suspectById[k].witness) + (caught.has(k) ? '' : nextStep(suspectById[k])) : ''}
@@ -1392,7 +1392,7 @@ function hexHTML(h){
   const prev = i > 0 ? `<button type="button" class="btn" data-hex="${order[i-1]}">‹ ${esc(byId[order[i-1]].short)}</button>` : `<button type="button" class="btn" data-go="isle:${h.isle}">‹ ${I.name} CASE FILE</button>`;
   let next;
   if (i < order.length - 1) next = `<button type="button" class="btn primary" data-hex="${order[i+1]}">${esc(byId[order[i+1]].short)} ›</button>`;
-  else { const nk = KEYS[KEYS.indexOf(h.isle) + 1]; next = nk ? `<button type="button" class="btn primary" data-hex="${ORDER[nk][0]}">下一座島：${ISLES[nk].name} ›</button>` : `<button type="button" class="btn primary" data-go="home">五座島都走完了，回全景 ›</button>`; }
+  else { const nk = KEYS[KEYS.indexOf(h.isle) + 1]; next = nk ? `<button type="button" class="btn primary" data-hex="${ORDER[nk][0]}">下一座島：${ISLES[nk].name} ›</button>` : `<button type="button" class="btn primary" data-go="home">五座島都走完了，回全覽 ›</button>`; }
   s += `<div class="navrow">${prev}${next}</div>`;
   return s;
 }
@@ -1408,7 +1408,7 @@ function calcUpdate(src){
   out.innerHTML = `<b>${fmt(kg, kg < 100 ? 2 : 0)}</b> kg CO₂e　≈　<b>${fmt(kg/1000, 2)}</b> 公噸 CO₂e`;
 }
 
-function showHome(opts = {}){ state.view='home'; state.hex=null; state.isle=null; setModes('home'); openPanel(homeHTML(), 'CASE FILE ─ 案件簡報'); bridge.focusHome(!!opts.instant); }
+function showHome(opts = {}){ state.view='home'; state.hex=null; state.isle=null; setModes('home'); openPanel(homeHTML(), 'CASE FILE ─ 案件檔案'); bridge.focusHome(!!opts.instant); }
 function showIsle(k){ closeList(); state.view='isle'; state.hex=null; state.isle=k; setModes(k); openPanel(isleHTML(k), `CASE FILE ─ ${ISLES[k].name}`); bridge.focusIsle(k); }
 function showHex(id){
   const h = byId[id]; if (!h) return;
