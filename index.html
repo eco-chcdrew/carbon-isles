@@ -2294,7 +2294,7 @@ function briefHTML(k){
     <div class="brief-inv"><span>道具</span>${Object.keys(ITEMS).map(id => `<span class="g-chipx" title="${esc(ITEMS[id].note)}">${ic(id)}${ITEMS[id].name} ×${GP.items[id] || 0}</span>`).join('')}</div>
     <p class="brief-note">放大鏡：${ITEMS.lens.note}。沙漏：${ITEMS.glass.note}。防護罩：${ITEMS.shield.note}。找到祕境也會得到道具。</p>
     <div class="brief-set">
-      <div class="route-sw" role="group" aria-label="計時"><button type="button" data-g="relax:0" aria-pressed="${!relax}">標準 ${L.time} 秒</button><button type="button" data-g="relax:1" aria-pressed="${relax}">寬鬆 ${Math.round(L.time*1.5)} 秒</button></div>
+      <div class="route-sw" role="group" aria-label="計時"><button type="button" data-g="relax:0" aria-pressed="${!relax}">標準 ${L.time} 秒</button><button type="button" data-g="relax:1" aria-pressed="${relax}">彈性挑戰 ${Math.round(L.time*1.5)} 秒</button></div>
       <div class="route-sw" role="group" aria-label="音效"><button type="button" data-g="snd:1" aria-pressed="${SFX.on}">音效開</button><button type="button" data-g="snd:0" aria-pressed="${!SFX.on}">音效關</button></div>
     </div>
     ${locked ? '' : `<div class="btns"><button type="button" class="btn primary go-big" data-g="start:${k}">${rec ? '再挑戰' : '開始倒數'}！</button><button type="button" class="btn" data-go="isle:${k}">先讀線索</button></div>`}`;
