@@ -279,6 +279,7 @@ details.adv > .stations,details.adv > .tablewrap{margin-top:10px}
 .ccard .cc-ask{padding-left:12px;border-left:2px solid color-mix(in srgb, var(--accent) 45%, transparent);line-height:1.85}
 .ccard .cc-seal{margin:10px 0;text-align:center;font-family:var(--f-display);font-weight:700;font-size:24px;letter-spacing:.12em;color:#B5382A}
 .ccard .cc-laugh{letter-spacing:.2em;color:var(--muted)}
+.ccard .cc-mark{font-weight:900;color:var(--red)}
 .wanted{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
 .suspect{position:relative;background:var(--card);border:1.5px solid var(--soft);border-left:4px solid var(--isle);border-radius:var(--wobble-2);padding:10px 14px 12px;box-shadow:2px 3px 0 var(--shade)}
 .suspect.unknown{border-style:dashed;border-left-style:solid;background:transparent;box-shadow:none}
@@ -2206,17 +2207,12 @@ const callingCard = () => `
   <aside class="note ccard">
     <h3>【神祕預告函】</h3>
     <p>致　碳寶偵探：</p>
-    <p>今晚，我將讓五座島嶼，全部披上「環保」的外衣。</p>
-    <p class="cc-ask">碳排數據？只算一半就好。<br>產品標籤？悄悄剪去一截。<br>減碳目標？明天再說吧。<br>碳權額度？一張賣兩次，又有何妨？</p>
-    <p>等一切安排妥當，我便會在五座島嶼上，逐一蓋下那枚最耀眼的印章——</p>
+    <p>今晚，我要讓五座島嶼全都披上「環保」的外衣！</p>
+    <p class="cc-ask">碳排只算一半、標籤剪去一截、減碳目標一拖再拖，甚至一張碳權賣兩次！</p>
+    <p>最後，再蓋上最耀眼的印章——</p>
     <p class="cc-seal">「碳中和」！</p>
-    <p>至於真相？</p>
-    <p>誰在乎呢？</p>
-    <p>只要數字夠漂亮、標章夠醒目，誰還會懷疑這場完美的騙局？</p>
-    <p class="cc-laugh">呵呵呵……</p>
-    <p>碳寶偵探，這場遊戲已經開始了。</p>
-    <p>如果你有本事，就揭穿我的伎倆，找出五座島嶼背後的真相吧！</p>
-    <p>我等著你。</p>
+    <p>數字夠漂亮，就沒人懷疑？</p>
+    <p>碳寶偵探，想揭穿我的騙局，就來挑戰吧！</p>
     <p class="sign">—— 怪盜變變</p>
   </aside>`;
 const RULES = k => [
